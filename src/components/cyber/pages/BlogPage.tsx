@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { BLOGS } from "@/data/cybersec";
+import { BLOGS, type BlogItem } from "@/data/cybersec";
+import { BLOG_CONTENT } from "@/data/articleContent";
 import { BlogCard } from "../Cards";
 import { SearchBar, SectionHeader } from "../Misc";
+import { ArticleReader } from "../ArticleReader";
 
 export function BlogPage() {
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
+  const [open, setOpen] = useState<BlogItem | null>(null);
   const cats = ["All", ...Array.from(new Set(BLOGS.map(b => b.cat)))];
   const filtered = BLOGS.filter(b =>
     (cat === "All" || b.cat === cat) &&
@@ -32,7 +35,7 @@ export function BlogPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map(b => <BlogCard key={b.id} item={b} />)}
+        {filtered.map(b => <BlogCard key={b.id} item={b} onClick={() => setOpen(b)} />)}
       </div>
 
       {filtered.length === 0 && (
@@ -40,6 +43,21 @@ export function BlogPage() {
           <div className="text-6xl mb-4">📭</div>
           <div className="font-display font-bold text-white text-xl tracking-wider">NO ARTICLES FOUND</div>
         </div>
+      )}
+
+      {open && (
+        <ArticleReader
+          onClose={() => setOpen(null)}
+          meta={{
+            eyebrow: open.cat,
+            title: open.title,
+            byline: open.author,
+            date: open.date,
+            read: open.read,
+            icon: open.img,
+          }}
+          body={BLOG_CONTENT[open.id]}
+        />
       )}
     </section>
   );
