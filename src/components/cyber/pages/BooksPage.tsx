@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { BOOKS } from "@/data/cybersec";
+import { BOOKS, type BookItem } from "@/data/cybersec";
 import { BookCard } from "../Cards";
 import { SearchBar, SectionHeader } from "../Misc";
+import { BookReader } from "../BookReader";
 
 export function BooksPage() {
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
+  const [reading, setReading] = useState<BookItem | null>(null);
   const cats = ["All", ...Array.from(new Set(BOOKS.map(b => b.cat)))];
   const filtered = BOOKS.filter(b =>
     (cat === "All" || b.cat === cat) &&
@@ -32,8 +34,10 @@ export function BooksPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filtered.map(b => <BookCard key={b.id} item={b} />)}
+        {filtered.map(b => <BookCard key={b.id} item={b} onRead={() => setReading(b)} />)}
       </div>
+
+      {reading && <BookReader book={reading} onClose={() => setReading(null)} />}
     </section>
   );
 }
