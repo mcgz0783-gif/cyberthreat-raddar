@@ -56,11 +56,18 @@ export function BlogCard({ item, onClick }: { item: BlogItem; onClick?: () => vo
   );
 }
 
-export function BookCard({ item }: { item: BookItem }) {
+export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void }) {
   return (
     <article className="card-cyber p-5 fade-in flex flex-col gap-3">
-      <div className="h-40 bg-gradient-primary border border-border flex items-center justify-center text-7xl relative">
-        {item.icon}
+      <div
+        onClick={onRead}
+        className="h-48 bg-gradient-primary border border-border flex flex-col items-center justify-center text-center px-3 py-4 relative cursor-pointer group overflow-hidden"
+      >
+        <div className="absolute inset-0 opacity-10 bg-[linear-gradient(135deg,transparent_45%,hsl(var(--primary))_50%,transparent_55%)]" />
+        <div className="text-5xl mb-2 transition-transform group-hover:scale-110">{item.icon}</div>
+        <p className="font-mono text-[9px] tracking-[0.25em] text-primary uppercase mb-1">{item.cat}</p>
+        <p className="font-display font-bold text-white text-[13px] leading-tight line-clamp-3">{item.title}</p>
+        <p className="font-mono text-[10px] text-foreground/70 mt-1">{item.author}</p>
         <div className="absolute bottom-2 right-2 font-mono text-[10px] text-primary bg-background/70 px-2 py-0.5 border border-primary/40">
           {item.pages}p
         </div>
@@ -70,8 +77,8 @@ export function BookCard({ item }: { item: BookItem }) {
       <p className="font-mono text-xs text-muted-foreground">by {item.author} · {item.year}</p>
       <p className="text-sm text-foreground/70 leading-relaxed flex-1">{item.desc}</p>
       <div className="flex gap-2 mt-2">
-        <button className="btn-cyber flex-1 text-[11px] py-2">📖 READ</button>
-        <button className="btn-ghost-cyber flex-1 text-[11px] py-2">⬇ PDF</button>
+        <button onClick={onRead} className="btn-cyber flex-1 text-[11px] py-2">📖 READ</button>
+        <button onClick={onRead} className="btn-ghost-cyber flex-1 text-[11px] py-2">📑 CONTENTS</button>
       </div>
     </article>
   );
