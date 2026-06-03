@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { NEWS } from "@/data/cybersec";
+import { NEWS, type NewsItem } from "@/data/cybersec";
+import { NEWS_CONTENT } from "@/data/articleContent";
 import { NewsCard } from "../Cards";
 import { SearchBar, SectionHeader } from "../Misc";
+import { ArticleReader } from "../ArticleReader";
 
 export function NewsPage() {
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
+  const [open, setOpen] = useState<NewsItem | null>(null);
   const cats = ["All","Threat Intel","Data Breach","AI Security","Tools","Ransomware","Nation State"];
   const filtered = NEWS.filter(n =>
     (cat === "All" || n.cat === cat) &&
@@ -36,7 +39,7 @@ export function NewsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map(n => <NewsCard key={n.id} item={n} />)}
+        {filtered.map(n => <NewsCard key={n.id} item={n} onClick={() => setOpen(n)} />)}
       </div>
 
       {filtered.length === 0 && (
@@ -44,6 +47,21 @@ export function NewsPage() {
           <div className="text-6xl mb-4">🔍</div>
           <div className="font-display font-bold text-white text-xl tracking-wider">NO RESULTS FOUND</div>
         </div>
+      )}
+
+      {open && (
+        <ArticleReader
+          onClose={() => setOpen(null)}
+          meta={{
+            eyebrow: open.cat,
+            title: open.title,
+            date: open.date,
+            read: open.read,
+            icon: open.icon,
+            tags: open.tags,
+          }}
+          body={NEWS_CONTENT[open.id]}
+        />
       )}
     </section>
   );

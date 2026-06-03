@@ -1,9 +1,14 @@
-import { INSIGHTS } from "@/data/cybersec";
+import { useState } from "react";
+import { INSIGHTS, type InsightItem } from "@/data/cybersec";
+import { INSIGHT_CONTENT } from "@/data/articleContent";
 import { InsightCard } from "../Cards";
 import { SectionHeader } from "../Misc";
+import { ArticleReader } from "../ArticleReader";
 
 export function InsightsPage() {
   const featured = INSIGHTS[0];
+  const [open, setOpen] = useState<InsightItem | null>(null);
+
   return (
     <section className="container mx-auto px-6 py-14">
       <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports from top security analysts and institutions." />
@@ -22,13 +27,13 @@ export function InsightsPage() {
           <p className="text-foreground/70 leading-relaxed mb-6">
             A comprehensive examination of how ransomware operations have evolved from opportunistic attacks to sophisticated, enterprise-scale criminal enterprises with dedicated R&D teams, affiliate networks, and PR departments.
           </p>
-          <button className="btn-cyber">READ FULL REPORT →</button>
+          <button onClick={() => setOpen(featured)} className="btn-cyber">READ FULL REPORT →</button>
         </div>
         <div className="text-9xl text-center hidden lg:block float-anim">{featured.img}</div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-        {INSIGHTS.slice(1).map(item => <InsightCard key={item.id} item={item} />)}
+        {INSIGHTS.slice(1).map(item => <InsightCard key={item.id} item={item} onClick={() => setOpen(item)} />)}
       </div>
 
       {/* Key Takeaways */}
@@ -48,6 +53,21 @@ export function InsightsPage() {
           ))}
         </div>
       </div>
+
+      {open && (
+        <ArticleReader
+          onClose={() => setOpen(null)}
+          meta={{
+            eyebrow: open.cat,
+            title: open.title,
+            byline: open.author,
+            date: open.date,
+            read: open.read,
+            icon: open.img,
+          }}
+          body={INSIGHT_CONTENT[open.id]}
+        />
+      )}
     </section>
   );
 }

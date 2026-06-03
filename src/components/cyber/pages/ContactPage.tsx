@@ -15,7 +15,7 @@ export function ContactPage() {
   const channels = [
     { icon:"✉", label:"Email", val:"kevlarmackenzie@gmail.com" },
     { icon:"📞", label:"Phone", val:"0783699626" },
-    { icon:"💬", label:"WhatsApp", val:"078823106" },
+    { icon:"💬", label:"WhatsApp", val:"0788213106" },
     { icon:"🔐", label:"PGP", val:"0xA1B2 C3D4 E5F6 7890" },
   ];
 
