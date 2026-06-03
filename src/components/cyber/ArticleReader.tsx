@@ -33,7 +33,7 @@ export function ArticleReader({
   return (
     <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-start sm:items-center justify-center p-3 sm:p-6 fade-in overflow-y-auto">
       <div className="relative w-full max-w-3xl my-4 card-cyber flex flex-col max-h-[92vh]">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border sticky top-0 bg-surface z-10">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-border sticky top-0 bg-background z-10">
           <div className="flex items-center gap-3 min-w-0">
             {meta.icon && <span className="text-2xl">{meta.icon}</span>}
             <p className="font-mono text-[10px] tracking-[0.3em] text-primary uppercase truncate">
