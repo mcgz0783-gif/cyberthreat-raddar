@@ -3,7 +3,6 @@
 
 export type Chapter = { title: string; pages: string[] };
 export type BookContent = {
-  id: number;
   cover: { tagline: string; blurb: string };
   toc: string[];
   chapters: Chapter[];
