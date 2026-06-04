@@ -1,6 +1,8 @@
 // Long-form readable content for each book. Each chapter now contains
 // multi-paragraph pages designed to read as a full printable page.
 
+import { AI_AGENTS_BOOK } from "./aiAgentsBook";
+
 export type Chapter = { title: string; pages: string[] };
 export type BookContent = {
   cover: { tagline: string; blurb: string };
@@ -11,6 +13,7 @@ export type BookContent = {
 const p = (s: string) => s.trim();
 
 export const BOOK_CONTENT: Record<number, BookContent> = {
+  9: AI_AGENTS_BOOK,
   // ─────────────────────────── 1. The Art of Intrusion ───────────────────────────
   1: {
     cover: {
