@@ -145,9 +145,14 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
           >
             ← Prev
           </button>
-          <span className="font-mono text-[11px] text-muted-foreground">
-            Page {idx + 1} / {pages.length}
-          </span>
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="font-mono text-[11px] text-muted-foreground">
+              Page {idx + 1} / {pages.length}
+            </span>
+            <span className="font-mono text-[9px] tracking-[0.2em] text-primary/70 uppercase">
+              www.cyberhawk-ug.store
+            </span>
+          </div>
           <button
             onClick={() => setIdx(i => Math.min(i + 1, pages.length - 1))}
             disabled={idx === pages.length - 1}
