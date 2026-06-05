@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { type BookItem } from "@/data/cybersec";
 import { BOOK_CONTENT } from "@/data/bookContent";
+import aiAgentsCover from "@/assets/ai-agents-cover.jpg";
+
+const CUSTOM_COVERS: Record<number, string> = { 9: aiAgentsCover };
 
 type Page =
   | { kind: "cover" }
@@ -71,24 +74,31 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
         {/* page body */}
         <div className="flex-1 overflow-y-auto px-6 sm:px-12 py-8 text-foreground/90">
           {page.kind === "cover" && (
-            <div className="h-full flex flex-col items-center justify-center text-center gap-6">
-              <div className="text-8xl">{book.icon}</div>
-              <div>
-                <p className="font-mono text-[11px] tracking-[0.3em] text-primary uppercase mb-3">
-                  {book.cat}
-                </p>
-                <h1 className="font-display font-black text-white text-3xl sm:text-5xl leading-tight mb-3">
-                  {book.title}
-                </h1>
-                <p className="font-mono text-sm text-muted-foreground">
-                  by {book.author} · {book.year}
+            CUSTOM_COVERS[book.id] ? (
+              <div className="h-full flex flex-col items-center justify-center gap-6">
+                <img src={CUSTOM_COVERS[book.id]} alt={`${book.title} cover`} className="max-h-full max-w-full object-contain border border-primary/40 shadow-[0_0_40px_hsl(var(--primary)/0.3)]" />
+                <p className="italic text-foreground/80 max-w-xl text-center">{content.cover.tagline}</p>
+              </div>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-center gap-6">
+                <div className="text-8xl">{book.icon}</div>
+                <div>
+                  <p className="font-mono text-[11px] tracking-[0.3em] text-primary uppercase mb-3">
+                    {book.cat}
+                  </p>
+                  <h1 className="font-display font-black text-white text-3xl sm:text-5xl leading-tight mb-3">
+                    {book.title}
+                  </h1>
+                  <p className="font-mono text-sm text-muted-foreground">
+                    by {book.author} · {book.year}
+                  </p>
+                </div>
+                <p className="italic text-foreground/80 max-w-xl">{content.cover.tagline}</p>
+                <p className="text-sm text-foreground/70 max-w-xl leading-relaxed">
+                  {content.cover.blurb}
                 </p>
               </div>
-              <p className="italic text-foreground/80 max-w-xl">{content.cover.tagline}</p>
-              <p className="text-sm text-foreground/70 max-w-xl leading-relaxed">
-                {content.cover.blurb}
-              </p>
-            </div>
+            )
           )}
 
           {page.kind === "toc" && (
