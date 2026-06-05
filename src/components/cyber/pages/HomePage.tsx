@@ -94,7 +94,7 @@ export function HomePage({ setPage }: { setPage: (p: string) => void }) {
           <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free utilities to assess, analyze, and harden your digital infrastructure." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {TOOLS.map(tool => (
-              <div key={tool.name} className="card-cyber p-6 cursor-pointer group">
+              <div key={tool.name} onClick={() => setPage("Tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
                 <div className="text-4xl mb-3">{tool.icon}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{tool.name}</h3>
                 <p className="text-sm text-foreground/70 mb-4">{tool.desc}</p>

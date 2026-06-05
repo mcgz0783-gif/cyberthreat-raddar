@@ -108,18 +108,18 @@ export function Footer({ setPage }: { setPage: (p: string) => void }) {
               ))}
             </div>
           </div>
-          {Object.entries(links).map(([section, items]) => (
+          {links.map(({ section, items }) => (
             <div key={section}>
               <div className="font-display font-bold text-white text-sm tracking-wider uppercase mb-4">
                 {section}
               </div>
               {items.map(item => (
                 <div
-                  key={item}
-                  onClick={() => { setPage(item.split(" ")[0]); window.scrollTo(0,0); }}
+                  key={item.label}
+                  onClick={() => { setPage(item.page); window.scrollTo(0,0); }}
                   className="text-sm text-muted-foreground mb-2.5 cursor-pointer hover:text-primary transition-colors"
                 >
-                  {item}
+                  {item.label}
                 </div>
               ))}
             </div>
@@ -131,7 +131,7 @@ export function Footer({ setPage }: { setPage: (p: string) => void }) {
             {[
               { icon:"✉", val:"kevlarmackenzie@gmail.com" },
               { icon:"📞", val:"0783699626" },
-              { icon:"💬", val:"WhatsApp: 078823106" },
+              { icon:"💬", val:"WhatsApp: 0788213106" },
             ].map(c => (
               <div key={c.val} className="flex items-center gap-2 text-xs text-muted-foreground mb-2.5 break-all">
                 <span className="text-primary">{c.icon}</span>{c.val}
