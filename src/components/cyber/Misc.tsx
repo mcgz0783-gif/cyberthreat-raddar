@@ -70,11 +70,27 @@ export function Newsletter() {
 }
 
 export function Footer({ setPage }: { setPage: (p: string) => void }) {
-  const links: Record<string, string[]> = {
-    Platform: ["Home","News","Insights","Blog","Books"],
-    Company: ["About","Contact","Privacy Policy","Terms"],
-    Resources: ["CVE Database","Security Tools","Free Courses","Threat Map"],
-  };
+  const links: { section: string; items: { label: string; page: string }[] }[] = [
+    { section: "Platform", items: [
+      { label: "Home", page: "Home" },
+      { label: "News", page: "News" },
+      { label: "Insights", page: "Insights" },
+      { label: "Blog", page: "Blog" },
+      { label: "Books", page: "Books" },
+    ]},
+    { section: "Company", items: [
+      { label: "About", page: "About" },
+      { label: "Contact", page: "Contact" },
+      { label: "Privacy Policy", page: "Privacy" },
+      { label: "Terms", page: "Terms" },
+    ]},
+    { section: "Resources", items: [
+      { label: "CVE Database", page: "Tools" },
+      { label: "Security Tools", page: "Tools" },
+      { label: "Free Courses", page: "Courses" },
+      { label: "Threat Map", page: "Tools" },
+    ]},
+  ];
   return (
     <footer className="border-t border-border bg-surface/50 mt-12">
       <div className="container mx-auto px-6 py-14">
