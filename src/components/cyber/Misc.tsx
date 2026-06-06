@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
 
 export function SearchBar({ placeholder, value, onChange }: { placeholder: string; value: string; onChange: (v: string) => void }) {
@@ -69,26 +70,26 @@ export function Newsletter() {
   );
 }
 
-export function Footer({ setPage }: { setPage: (p: string) => void }) {
-  const links: { section: string; items: { label: string; page: string }[] }[] = [
+export function Footer() {
+  const links: { section: string; items: { label: string; path: string }[] }[] = [
     { section: "Platform", items: [
-      { label: "Home", page: "Home" },
-      { label: "News", page: "News" },
-      { label: "Insights", page: "Insights" },
-      { label: "Blog", page: "Blog" },
-      { label: "Books", page: "Books" },
+      { label: "Home", path: "/" },
+      { label: "News", path: "/news" },
+      { label: "Insights", path: "/insights" },
+      { label: "Blog", path: "/blog" },
+      { label: "Books", path: "/books" },
     ]},
     { section: "Company", items: [
-      { label: "About", page: "About" },
-      { label: "Contact", page: "Contact" },
-      { label: "Privacy Policy", page: "Privacy" },
-      { label: "Terms", page: "Terms" },
+      { label: "About", path: "/about" },
+      { label: "Contact", path: "/contact" },
+      { label: "Privacy Policy", path: "/privacy" },
+      { label: "Terms", path: "/terms" },
     ]},
     { section: "Resources", items: [
-      { label: "CVE Database", page: "Tools" },
-      { label: "Security Tools", page: "Tools" },
-      { label: "Free Courses", page: "Courses" },
-      { label: "Threat Map", page: "Tools" },
+      { label: "CVE Database", path: "/tools" },
+      { label: "Security Tools", path: "/tools" },
+      { label: "Free Courses", path: "/courses" },
+      { label: "Threat Map", path: "/tools" },
     ]},
   ];
   return (
@@ -96,7 +97,9 @@ export function Footer({ setPage }: { setPage: (p: string) => void }) {
       <div className="container mx-auto px-6 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
           <div className="lg:col-span-2">
-            <Logo onClick={() => { setPage("Home"); window.scrollTo(0,0); }} />
+            <Link to="/" onClick={() => window.scrollTo(0, 0)}>
+              <Logo />
+            </Link>
             <p className="text-sm text-foreground/60 mt-4 max-w-sm leading-relaxed">
               The definitive platform for cybersecurity professionals. Global intelligence, expert analysis, and continuous education.
             </p>
@@ -114,13 +117,14 @@ export function Footer({ setPage }: { setPage: (p: string) => void }) {
                 {section}
               </div>
               {items.map(item => (
-                <div
+                <Link
                   key={item.label}
-                  onClick={() => { setPage(item.page); window.scrollTo(0,0); }}
-                  className="text-sm text-muted-foreground mb-2.5 cursor-pointer hover:text-primary transition-colors"
+                  to={item.path}
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="block text-sm text-muted-foreground mb-2.5 cursor-pointer hover:text-primary transition-colors"
                 >
                   {item.label}
-                </div>
+                </Link>
               ))}
             </div>
           ))}

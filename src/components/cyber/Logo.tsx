@@ -2,7 +2,7 @@ interface LogoProps { onClick?: () => void; }
 
 export function Logo({ onClick }: LogoProps) {
   return (
-    <button onClick={onClick} className="flex items-center gap-3 bg-transparent border-0 cursor-pointer">
+    <div onClick={onClick} className={`flex items-center gap-3 bg-transparent border-0 ${onClick ? "cursor-pointer" : ""}`}>
       <div className="hex-badge w-10 h-10 bg-primary/15 border border-primary flex items-center justify-center text-primary text-xl font-bold shadow-glow">
         🛡
       </div>
@@ -14,6 +14,6 @@ export function Logo({ onClick }: LogoProps) {
           UPDATES // v2.5
         </div>
       </div>
-    </button>
+    </div>
   );
 }

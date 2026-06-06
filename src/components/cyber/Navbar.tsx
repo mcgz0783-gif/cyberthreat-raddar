@@ -1,14 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Logo } from "./Logo";
 
-const NAV = ["Home","News","Insights","Blog","Books","About","Contact"] as const;
-export type PageKey = typeof NAV[number];
+const NAV = [
+  { label: "Home", path: "/" },
+  { label: "News", path: "/news" },
+  { label: "Insights", path: "/insights" },
+  { label: "Blog", path: "/blog" },
+  { label: "Books", path: "/books" },
+  { label: "About", path: "/about" },
+  { label: "Contact", path: "/contact" },
+];
 
-interface NavbarProps { page: string; setPage: (p: string) => void; }
-
-export function Navbar({ page, setPage }: NavbarProps) {
+export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+
+  const activePage = useMemo(() => {
+    const path = location.pathname;
+    if (path === "/") return "Home";
+    const segment = path.slice(1);
+    return segment.charAt(0).toUpperCase() + segment.slice(1);
+  }, [location.pathname]);
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 40);
@@ -16,20 +30,27 @@ export function Navbar({ page, setPage }: NavbarProps) {
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-  const go = (p: string) => { setPage(p); setMobileOpen(false); window.scrollTo(0,0); };
-
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/85 backdrop-blur-md border-b border-border" : "bg-transparent"}`}>
       <div className="container mx-auto flex items-center justify-between py-4">
-        <Logo onClick={() => go("Home")} />
+        <Link to="/" onClick={() => window.scrollTo(0, 0)}>
+          <Logo />
+        </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          {NAV.map(n => (
-            <button key={n} onClick={() => go(n)} className={`nav-link-item ${page===n?"active":""}`}>
-              {n}
-            </button>
+          {NAV.map((n) => (
+            <Link
+              key={n.label}
+              to={n.path}
+              onClick={() => window.scrollTo(0, 0)}
+              className={`nav-link-item ${activePage === n.label ? "active" : ""}`}
+            >
+              {n.label}
+            </Link>
           ))}
-          <button className="btn-cyber text-xs" onClick={() => go("Contact")}>SUBSCRIBE</button>
+          <Link to="/contact" className="btn-cyber text-xs" onClick={() => window.scrollTo(0, 0)}>
+            SUBSCRIBE
+          </Link>
         </div>
 
         <button
@@ -43,14 +64,15 @@ export function Navbar({ page, setPage }: NavbarProps) {
 
       {mobileOpen && (
         <div className="md:hidden bg-surface border-t border-border container mx-auto py-2">
-          {NAV.map(n => (
-            <button
-              key={n}
-              onClick={() => go(n)}
-              className={`block w-full text-left py-3 font-bold text-base tracking-[2px] uppercase border-b border-border/40 ${page===n?"text-primary":"text-foreground"}`}
+          {NAV.map((n) => (
+            <Link
+              key={n.label}
+              to={n.path}
+              onClick={() => setMobileOpen(false)}
+              className={`block w-full text-left py-3 font-bold text-base tracking-[2px] uppercase border-b border-border/40 ${activePage === n.label ? "text-primary" : "text-foreground"}`}
             >
-              {n}
-            </button>
+              {n.label}
+            </Link>
           ))}
         </div>
       )}
