@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
 
-export function HomePage({ setPage }: { setPage: (p: string) => void }) {
+export function HomePage() {
+  const navigate = useNavigate();
   const [count, setCount] = useState(0);
   useEffect(() => {
     const t = setInterval(() => setCount(c => { if (c < 2365) return c + 47; clearInterval(t); return 2365; }), 20);
@@ -34,8 +36,8 @@ export function HomePage({ setPage }: { setPage: (p: string) => void }) {
                 Global insights, breaking threats, expert analysis — your command center for all things cybersecurity.
               </p>
               <div className="flex flex-wrap gap-3 mb-10">
-                <button className="btn-cyber" onClick={() => setPage("News")}>EXPLORE THREATS</button>
-                <button className="btn-ghost-cyber" onClick={() => setPage("Blog")}>READ INSIGHTS</button>
+                <button className="btn-cyber" onClick={() => navigate("/news")}>EXPLORE THREATS</button>
+                <button className="btn-ghost-cyber" onClick={() => navigate("/blog")}>READ INSIGHTS</button>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {STATS.map((s, i) => (
@@ -81,10 +83,10 @@ export function HomePage({ setPage }: { setPage: (p: string) => void }) {
       <section className="container mx-auto px-6 py-20">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
           <SectionHeader eyebrow="Real-time" title="Latest Threats" subtitle="Breaking cybersecurity news from across the globe, curated and analyzed by our research team." />
-          <button onClick={() => setPage("News")} className="btn-ghost-cyber text-xs">VIEW ALL →</button>
+          <button onClick={() => navigate("/news")} className="btn-ghost-cyber text-xs">VIEW ALL →</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {NEWS.slice(0,3).map(n => <NewsCard key={n.id} item={n} onClick={() => setPage("News")} />)}
+          {NEWS.slice(0,3).map(n => <NewsCard key={n.id} item={n} onClick={() => navigate("/news")} />)}
         </div>
       </section>
 
@@ -94,7 +96,7 @@ export function HomePage({ setPage }: { setPage: (p: string) => void }) {
           <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free utilities to assess, analyze, and harden your digital infrastructure." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {TOOLS.map(tool => (
-              <div key={tool.name} onClick={() => setPage("Tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
+              <div key={tool.name} onClick={() => navigate("/tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
                 <div className="text-4xl mb-3">{tool.icon}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{tool.name}</h3>
                 <p className="text-sm text-foreground/70 mb-4">{tool.desc}</p>
@@ -109,10 +111,10 @@ export function HomePage({ setPage }: { setPage: (p: string) => void }) {
       <section className="container mx-auto px-6 py-20">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
           <SectionHeader eyebrow="Editorial" title="Featured Blog Posts" subtitle="In-depth technical guides and analyses from leading practitioners." />
-          <button onClick={() => setPage("Blog")} className="btn-ghost-cyber text-xs">ALL POSTS →</button>
+          <button onClick={() => navigate("/blog")} className="btn-ghost-cyber text-xs">ALL POSTS →</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => setPage("Blog")} />)}
+          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate("/blog")} />)}
         </div>
       </section>
 
