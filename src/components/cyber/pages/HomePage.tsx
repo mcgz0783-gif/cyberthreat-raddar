@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SEO } from "@/components/SEO";
 import { useNavigate } from "react-router-dom";
 import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
@@ -14,6 +15,8 @@ export function HomePage() {
   }, []);
 
   return (
+    <>
+      <SEO title="CyberSec Updates — Live Threat Intelligence Platform" description="Global cybersecurity news, threat intelligence, expert blog posts, and curated security books for professionals." path="/" />
     <>
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
