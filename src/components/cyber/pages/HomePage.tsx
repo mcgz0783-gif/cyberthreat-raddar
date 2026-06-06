@@ -17,7 +17,6 @@ export function HomePage() {
   return (
     <>
       <SEO title="CyberSec Updates — Live Threat Intelligence Platform" description="Global cybersecurity news, threat intelligence, expert blog posts, and curated security books for professionals." path="/" />
-    <>
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
         <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
