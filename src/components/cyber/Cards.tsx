@@ -40,10 +40,17 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => vo
 }
 
 export function BlogCard({ item, onClick }: { item: BlogItem; onClick?: () => void }) {
+  const cover = (item as any).cover as string | undefined;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in overflow-hidden flex flex-col">
-      <div className="relative h-48 bg-gradient-primary flex items-center justify-center text-7xl border-b border-border">
-        {item.img}
+      <div className="relative h-48 bg-gradient-primary border-b border-border overflow-hidden">
+        {cover ? (
+          <img src={cover} alt={item.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+        ) : null}
+        <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-card/30 to-transparent flex items-center justify-center text-7xl">
+          <span className="drop-shadow-lg">{item.img}</span>
+        </div>
+
         {item.featured && (
           <div className="absolute top-3 right-3 bg-warning text-background font-mono text-[10px] tracking-widest px-2 py-1 font-bold">
             FEATURED
