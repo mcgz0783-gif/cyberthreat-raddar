@@ -5,6 +5,32 @@ import aiAgentsCover from "@/assets/ai-agents-cover.jpg";
 
 const CUSTOM_COVERS: Record<number, string> = { 9: aiAgentsCover };
 
+// Pick relevant Unsplash imagery from chapter title keywords.
+const KEYWORD_MAP: { match: RegExp; q: string }[] = [
+  { match: /agent|ai|llm|brain/i, q: "artificial-intelligence,robot" },
+  { match: /money|payment|stripe|bank|pricing|sell/i, q: "money,finance" },
+  { match: /crypto|wallet|trad/i, q: "cryptocurrency,bitcoin" },
+  { match: /tiktok|youtube|instagram|social|content/i, q: "social-media,creator" },
+  { match: /deploy|vercel|cloud|scaling|observ/i, q: "server,cloud-computing" },
+  { match: /supabase|database|data|memory/i, q: "database,data" },
+  { match: /github|cursor|lovable|build|stack|code/i, q: "code,developer" },
+  { match: /ecommerce|shop|dropship/i, q: "ecommerce,shopping" },
+  { match: /security|compliance|intrusion|hacker|attack|phish|threat/i, q: "cybersecurity,hacker" },
+  { match: /social engineering|human|insider|mindset|people/i, q: "office,people" },
+  { match: /phone|network|telecom/i, q: "telecom,network" },
+  { match: /physical|tailgate|access/i, q: "office-door,badge" },
+  { match: /lesson|foreword|afterword|case|study|number/i, q: "notebook,study" },
+  { match: /architecture|design|tool/i, q: "blueprint,architecture" },
+  { match: /workflow|hybrid|manual|automation/i, q: "automation,workflow" },
+  { match: /niche|market/i, q: "marketing,strategy" },
+];
+
+function chapterImage(title: string, bookId: number, idx: number): string {
+  const hit = KEYWORD_MAP.find(k => k.match.test(title));
+  const q = hit?.q ?? "technology,abstract";
+  return `https://source.unsplash.com/featured/640x260/?${encodeURIComponent(q)}&sig=${bookId}-${idx}`;
+}
+
 type Page =
   | { kind: "cover" }
   | { kind: "toc" }
