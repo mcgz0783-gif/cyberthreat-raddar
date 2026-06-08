@@ -112,19 +112,26 @@ export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void
 }
 
 export function InsightCard({ item, onClick }: { item: InsightItem; onClick?: () => void }) {
+  const cover = (item as any).cover as string | undefined;
   return (
-    <article onClick={onClick} className="card-cyber p-6 cursor-pointer fade-in flex flex-col gap-4">
-      <Tag text={item.cat} color="hsl(var(--primary))" />
-      <div className="flex items-start gap-4">
-        <div className="text-5xl">{item.img}</div>
-        <h3 className="font-display font-bold text-white text-lg leading-tight flex-1">{item.title}</h3>
-      </div>
-      <div className="bg-primary/5 border-l-2 border-primary p-3 text-sm text-foreground/80 italic leading-relaxed">
-        🔑 {item.key}
-      </div>
-      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono pt-2 border-t border-border/50">
-        <span>{item.author} · {item.date}</span>
-        <span>⏱ {item.read}</span>
+    <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col overflow-hidden">
+      {cover && (
+        <div className="relative h-40 overflow-hidden border-b border-border">
+          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+          <div className="absolute top-2 right-2 text-4xl drop-shadow-lg">{item.img}</div>
+        </div>
+      )}
+      <div className="p-6 flex flex-col gap-4 flex-1">
+        <Tag text={item.cat} color="hsl(var(--primary))" />
+        <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
+        <div className="bg-primary/5 border-l-2 border-primary p-3 text-sm text-foreground/80 italic leading-relaxed">
+          🔑 {item.key}
+        </div>
+        <div className="flex items-center justify-between text-xs text-muted-foreground font-mono pt-2 border-t border-border/50 mt-auto">
+          <span>{item.author} · {item.date}</span>
+          <span>⏱ {item.read}</span>
+        </div>
       </div>
     </article>
   );
