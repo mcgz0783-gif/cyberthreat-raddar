@@ -5,6 +5,7 @@ import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
+import { CyberBackdrop } from "../CyberBackdrop";
 
 export function HomePage() {
   const navigate = useNavigate();
