@@ -10,33 +10,47 @@ export function Tag({ text, color = "hsl(var(--primary))" }: { text: string; col
 
 export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => void }) {
   const c = colorVar(item.color);
+  const cover = (item as any).cover as string | undefined;
   return (
-    <article onClick={onClick} className="card-cyber p-6 cursor-pointer fade-in flex flex-col gap-3 relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: c, boxShadow: `0 0 12px ${c}` }} />
-      <div className="flex items-center justify-between">
-        <Tag text={item.cat} color={c} />
-        <span className="font-mono text-[11px] text-muted-foreground">{item.date}</span>
-      </div>
-      <div className="flex items-start gap-3">
-        <div className="text-3xl">{item.icon}</div>
-        <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
-      </div>
-      <p className="text-sm text-foreground/70 leading-relaxed">{item.summary}</p>
-      <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50">
-        <div className="flex flex-wrap gap-1.5">
-          {item.tags.map(t => <Tag key={t} text={t} color="hsl(var(--muted-foreground))" />)}
+    <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-[2px] z-10" style={{ background: c, boxShadow: `0 0 12px ${c}` }} />
+      {cover && (
+        <div className="relative h-40 overflow-hidden border-b border-border">
+          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+          <div className="absolute top-2 right-2 text-3xl drop-shadow-lg">{item.icon}</div>
         </div>
-        <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">⏱ {item.read}</span>
+      )}
+      <div className="p-6 flex flex-col gap-3 flex-1">
+        <div className="flex items-center justify-between">
+          <Tag text={item.cat} color={c} />
+          <span className="font-mono text-[11px] text-muted-foreground">{item.date}</span>
+        </div>
+        <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
+        <p className="text-sm text-foreground/70 leading-relaxed">{item.summary}</p>
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50">
+          <div className="flex flex-wrap gap-1.5">
+            {item.tags.map(t => <Tag key={t} text={t} color="hsl(var(--muted-foreground))" />)}
+          </div>
+          <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">⏱ {item.read}</span>
+        </div>
       </div>
     </article>
   );
 }
 
 export function BlogCard({ item, onClick }: { item: BlogItem; onClick?: () => void }) {
+  const cover = (item as any).cover as string | undefined;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in overflow-hidden flex flex-col">
-      <div className="relative h-48 bg-gradient-primary flex items-center justify-center text-7xl border-b border-border">
-        {item.img}
+      <div className="relative h-48 bg-gradient-primary border-b border-border overflow-hidden">
+        {cover ? (
+          <img src={cover} alt={item.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+        ) : null}
+        <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-card/30 to-transparent flex items-center justify-center text-7xl">
+          <span className="drop-shadow-lg">{item.img}</span>
+        </div>
+
         {item.featured && (
           <div className="absolute top-3 right-3 bg-warning text-background font-mono text-[10px] tracking-widest px-2 py-1 font-bold">
             FEATURED
@@ -63,7 +77,7 @@ const CUSTOM_COVERS: Record<number, string> = {
 };
 
 export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void }) {
-  const cover = CUSTOM_COVERS[item.id];
+  const cover = CUSTOM_COVERS[item.id] || ((item as any).cover as string | undefined);
   return (
     <article className="card-cyber p-5 fade-in flex flex-col gap-3">
       <div
@@ -98,19 +112,26 @@ export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void
 }
 
 export function InsightCard({ item, onClick }: { item: InsightItem; onClick?: () => void }) {
+  const cover = (item as any).cover as string | undefined;
   return (
-    <article onClick={onClick} className="card-cyber p-6 cursor-pointer fade-in flex flex-col gap-4">
-      <Tag text={item.cat} color="hsl(var(--primary))" />
-      <div className="flex items-start gap-4">
-        <div className="text-5xl">{item.img}</div>
-        <h3 className="font-display font-bold text-white text-lg leading-tight flex-1">{item.title}</h3>
-      </div>
-      <div className="bg-primary/5 border-l-2 border-primary p-3 text-sm text-foreground/80 italic leading-relaxed">
-        🔑 {item.key}
-      </div>
-      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono pt-2 border-t border-border/50">
-        <span>{item.author} · {item.date}</span>
-        <span>⏱ {item.read}</span>
+    <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col overflow-hidden">
+      {cover && (
+        <div className="relative h-40 overflow-hidden border-b border-border">
+          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+          <div className="absolute top-2 right-2 text-4xl drop-shadow-lg">{item.img}</div>
+        </div>
+      )}
+      <div className="p-6 flex flex-col gap-4 flex-1">
+        <Tag text={item.cat} color="hsl(var(--primary))" />
+        <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
+        <div className="bg-primary/5 border-l-2 border-primary p-3 text-sm text-foreground/80 italic leading-relaxed">
+          🔑 {item.key}
+        </div>
+        <div className="flex items-center justify-between text-xs text-muted-foreground font-mono pt-2 border-t border-border/50 mt-auto">
+          <span>{item.author} · {item.date}</span>
+          <span>⏱ {item.read}</span>
+        </div>
       </div>
     </article>
   );

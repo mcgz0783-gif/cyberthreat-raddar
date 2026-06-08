@@ -5,6 +5,7 @@ import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
+import { CyberBackdrop } from "../CyberBackdrop";
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export function HomePage() {
     <>
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
+        <CyberBackdrop />
         <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary/5 blur-3xl" />
 
