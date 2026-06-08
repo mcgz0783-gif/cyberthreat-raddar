@@ -5,6 +5,32 @@ import aiAgentsCover from "@/assets/ai-agents-cover.jpg";
 
 const CUSTOM_COVERS: Record<number, string> = { 9: aiAgentsCover };
 
+// Pick relevant Unsplash imagery from chapter title keywords.
+const KEYWORD_MAP: { match: RegExp; q: string }[] = [
+  { match: /agent|ai|llm|brain/i, q: "artificial-intelligence,robot" },
+  { match: /money|payment|stripe|bank|pricing|sell/i, q: "money,finance" },
+  { match: /crypto|wallet|trad/i, q: "cryptocurrency,bitcoin" },
+  { match: /tiktok|youtube|instagram|social|content/i, q: "social-media,creator" },
+  { match: /deploy|vercel|cloud|scaling|observ/i, q: "server,cloud-computing" },
+  { match: /supabase|database|data|memory/i, q: "database,data" },
+  { match: /github|cursor|lovable|build|stack|code/i, q: "code,developer" },
+  { match: /ecommerce|shop|dropship/i, q: "ecommerce,shopping" },
+  { match: /security|compliance|intrusion|hacker|attack|phish|threat/i, q: "cybersecurity,hacker" },
+  { match: /social engineering|human|insider|mindset|people/i, q: "office,people" },
+  { match: /phone|network|telecom/i, q: "telecom,network" },
+  { match: /physical|tailgate|access/i, q: "office-door,badge" },
+  { match: /lesson|foreword|afterword|case|study|number/i, q: "notebook,study" },
+  { match: /architecture|design|tool/i, q: "blueprint,architecture" },
+  { match: /workflow|hybrid|manual|automation/i, q: "automation,workflow" },
+  { match: /niche|market/i, q: "marketing,strategy" },
+];
+
+function chapterImage(title: string, bookId: number, idx: number): string {
+  const hit = KEYWORD_MAP.find(k => k.match.test(title));
+  const q = hit?.q ?? "technology,abstract";
+  return `https://source.unsplash.com/featured/640x260/?${encodeURIComponent(q)}&sig=${bookId}-${idx}`;
+}
+
 type Page =
   | { kind: "cover" }
   | { kind: "toc" }
@@ -139,6 +165,22 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
               <p className="font-mono text-[11px] tracking-[0.3em] text-primary uppercase mb-2">
                 {page.chapterTitle}
               </p>
+              {page.pageIndex === 0 && (
+                <figure className="my-4 border border-primary/30 overflow-hidden bg-card">
+                  <img
+                    src={chapterImage(page.chapterTitle, book.id, page.chapterIndex)}
+                    alt={`Illustration for ${page.chapterTitle}`}
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/${book.id}-${page.chapterIndex}/640/260`;
+                    }}
+                    className="w-full h-44 sm:h-52 object-cover"
+                  />
+                  <figcaption className="px-3 py-1.5 font-mono text-[10px] text-muted-foreground border-t border-border">
+                    Fig. {page.chapterIndex + 1} — {page.chapterTitle}
+                  </figcaption>
+                </figure>
+              )}
               <p className="whitespace-pre-line text-[15px] leading-[1.85] text-foreground/90">
                 {content.chapters[page.chapterIndex].pages[page.pageIndex]}
               </p>
