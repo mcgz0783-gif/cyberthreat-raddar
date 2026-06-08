@@ -77,7 +77,7 @@ const CUSTOM_COVERS: Record<number, string> = {
 };
 
 export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void }) {
-  const cover = CUSTOM_COVERS[item.id];
+  const cover = CUSTOM_COVERS[item.id] || ((item as any).cover as string | undefined);
   return (
     <article className="card-cyber p-5 fade-in flex flex-col gap-3">
       <div
