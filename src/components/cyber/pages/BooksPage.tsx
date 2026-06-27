@@ -16,6 +16,11 @@ export function BooksPage() {
 
   return (
     <section className="container mx-auto px-6 py-14">
+      <SEO 
+        title="Curated Books — CyberSec Updates" 
+        description="Essential cybersecurity bookshelf — offensive techniques, defense architecture, and security theory."
+        path="/books"
+      />
       <SectionHeader eyebrow="Library" title="Curated Books" subtitle="The essential cybersecurity bookshelf — from offensive techniques to defense architecture." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">

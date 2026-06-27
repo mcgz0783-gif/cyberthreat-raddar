@@ -3,6 +3,11 @@ import { SectionHeader } from "../Misc";
 export function TermsPage() {
   return (
     <section className="container mx-auto px-6 py-14 max-w-4xl">
+      <SEO 
+        title="Terms of Service — CyberSec Updates" 
+        description="Guidelines for using the CyberSec Updates platform."
+        path="/terms"
+      />
       <SectionHeader eyebrow="Legal" title="Terms of Service" subtitle="Last updated: June 2026" />
       <div className="card-cyber p-8 space-y-6 text-foreground/85 text-[15px] leading-relaxed">
         <div>

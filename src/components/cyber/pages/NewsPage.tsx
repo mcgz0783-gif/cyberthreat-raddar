@@ -17,6 +17,11 @@ export function NewsPage() {
 
   return (
     <section className="container mx-auto px-6 py-14">
+      <SEO 
+        title="Threat News — CyberSec Updates" 
+        description="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity."
+        path="/news"
+      />
       <SectionHeader eyebrow="Live Feed" title="Threat News" subtitle="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">

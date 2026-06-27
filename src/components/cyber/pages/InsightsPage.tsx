@@ -11,6 +11,11 @@ export function InsightsPage() {
 
   return (
     <section className="container mx-auto px-6 py-14">
+      <SEO 
+        title="Expert Insights — CyberSec Updates" 
+        description="Deep analysis of the cybersecurity landscape, research, and technical reports."
+        path="/insights"
+      />
       <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports from top security analysts and institutions." />
 
       {/* Featured */}

@@ -17,6 +17,11 @@ export function BlogPage() {
 
   return (
     <section className="container mx-auto px-6 py-14">
+      <SEO 
+        title="The Blog — CyberSec Updates" 
+        description="Long-form technical writing, war stories, and tactical guides from the security community."
+        path="/blog"
+      />
       <SectionHeader eyebrow="Editorial" title="The Blog" subtitle="Long-form technical writing, war stories, and tactical guides from the security community." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">

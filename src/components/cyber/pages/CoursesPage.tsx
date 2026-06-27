@@ -14,6 +14,11 @@ const COURSES = [
 export function CoursesPage() {
   return (
     <section className="container mx-auto px-6 py-14">
+      <SEO 
+        title="Free Courses — CyberSec Updates" 
+        description="Hand-picked, world-class cybersecurity training programs and certifications."
+        path="/courses"
+      />
       <SectionHeader eyebrow="Education" title="Free Cybersecurity Courses" subtitle="Hand-picked, world-class training programmes that cost nothing to start." />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {COURSES.map(c => (

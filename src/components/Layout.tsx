@@ -10,7 +10,7 @@ const PAGE_SEO: Record<string, { title: string; description: string }> = {
   "/insights": { title: "Expert Insights — CyberSec Updates", description: "Deep-dive research, policy briefs, and industry analysis from leading security professionals and institutions." },
   "/blog": { title: "Security Blog — CyberSec Updates", description: "Technical guides, war stories, and tactical cybersecurity writing from practitioners." },
   "/books": { title: "Curated Books — CyberSec Updates", description: "The essential cybersecurity bookshelf — curated books for offensive security, blue team, architecture, and more." },
-  "/about": { title: "About — CyberSec Updates", description: "Mission, values, and team behind the CyberSec Updates threat intelligence platform." },
+  "/about": { title: "About — CyberSec Updates", description: "Learn about our mission, our CEO Samuel Mucunguzi, our associate Dr. FadJuma, and the team behind CyberSec Updates." },
   "/contact": { title: "Contact — CyberSec Updates", description: "Get in touch with the CyberSec Updates team for partnerships, media, and general inquiries." },
   "/tools": { title: "Security Tools — CyberSec Updates", description: "Free security utilities: CVE search, hash checker, IP reputation lookup, SSL inspector, and threat map." },
   "/courses": { title: "Free Courses — CyberSec Updates", description: "Curated free cybersecurity certifications, training resources, and educational pathways." },

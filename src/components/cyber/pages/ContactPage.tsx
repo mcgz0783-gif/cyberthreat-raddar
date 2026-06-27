@@ -21,6 +21,11 @@ export function ContactPage() {
 
   return (
     <section className="container mx-auto px-6 py-14">
+      <SEO 
+        title="Contact — CyberSec Updates" 
+        description="Get in touch for tip-offs, partnerships, speaking requests, or general inquiries."
+        path="/contact"
+      />
       <SectionHeader eyebrow="Establish Connection" title="Get in Touch" subtitle="Tip-offs, partnerships, speaking requests, or general inquiries — drop us a line through any secure channel." />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

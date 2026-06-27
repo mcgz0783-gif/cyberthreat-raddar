@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
@@ -17,6 +17,11 @@ export function HomePage() {
 
   return (
     <>
+      <SEO 
+        title="CyberSec Updates — Live Threat Intelligence Platform" 
+        description="Global cybersecurity news, threat intelligence, expert blog posts, and curated security books for professionals."
+        path="/"
+      />
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
         <CyberBackdrop />
