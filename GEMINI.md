@@ -32,3 +32,12 @@
 ### Vertex AI Tools
 - Use the built-in Vertex tools (`list_prompts`, `create_prompt`, `run_data_driven_optimize`, etc.) for managing LLM interactions.
 - Optimized prompts should be stored and managed via the Vertex AI Prompt Management tools.
+
+## Supported Gemini Models
+The following models are available for use within this project:
+- **gemini-2.0-flash-001**: Fastest, most cost-efficient for high-volume tasks.
+- **gemini-2.0-flash-lite-preview-02-05**: Optimized for low latency.
+- **gemini-1.5-pro**: High intelligence for complex reasoning and large context windows (up to 2M tokens).
+- **gemini-1.5-flash**: Balanced performance and speed.
+- **gemini-1.5-flash-8b**: Ultra-lightweight for simple, fast tasks.
+- **text-embedding-004**: For semantic search and RAG implementations.
