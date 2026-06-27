@@ -52,6 +52,7 @@ export function AboutPage() {
               <div className="absolute -top-2 -left-2 w-12 h-12 border-t-2 border-l-2 border-primary" />
             </div>
           </div>
+          <div className="lg:col-span-2">
             <div className="font-mono text-xs text-primary tracking-[4px] mb-4 uppercase text-left">Leadership // Founder</div>
             <h2 className="font-display font-black text-white text-4xl lg:text-5xl mb-4 text-left">Samuel Mucunguzi</h2>
             <div className="font-mono text-sm text-primary/80 mb-6 tracking-wider uppercase text-left">Software Eng., Architecture & CEO @ cyberhawk-ug.store</div>
