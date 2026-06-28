@@ -42,11 +42,6 @@ export function AboutPage() {
           <div className="lg:col-span-1">
             {/* CEO PHOTO */}
             <div className="aspect-[3/4] w-full max-w-[300px] mx-auto bg-surface border-2 border-primary/30 relative group overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" 
-                alt="Samuel Mucunguzi" 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-              />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
               <div className="absolute -bottom-2 -right-2 w-12 h-12 border-b-2 border-r-2 border-primary" />
               <div className="absolute -top-2 -left-2 w-12 h-12 border-t-2 border-l-2 border-primary" />
@@ -75,11 +70,6 @@ export function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-center">
           <div className="lg:col-span-1 flex flex-col gap-4">
             <div className="aspect-square w-full max-w-[240px] mx-auto bg-surface border border-border/60 relative overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=600&q=80" 
-                alt="Dr. FadJuma" 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-              />
             </div>
             <div className="aspect-video w-full max-w-[240px] mx-auto bg-surface border border-border/60 relative overflow-hidden">
               <img 
