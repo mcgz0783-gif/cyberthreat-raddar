@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { type BookItem } from "@/data/cybersec";
-import { BOOK_CONTENT } from "@/data/bookContent";
-import aiAgentsCover from "@/assets/ai-agents-cover.jpg";
-
-const CUSTOM_COVERS: Record<number, string> = { 9: aiAgentsCover };
+import { BOOK_CONTENT, CUSTOM_COVERS } from "@/data/bookContent";
 
 // Pick relevant Unsplash imagery from chapter title keywords.
 const KEYWORD_MAP: { match: RegExp; q: string }[] = [
@@ -27,7 +24,8 @@ const KEYWORD_MAP: { match: RegExp; q: string }[] = [
 
 function chapterImage(title: string, bookId: number, idx: number): string {
   const hit = KEYWORD_MAP.find(k => k.match.test(title));
-  const q = hit?.q ?? "technology,abstract";
+  // Ensure the query is explicitly tech-focused and not related to geography or flags
+  const q = hit?.q ?? "technology,abstract,computing";
   return `https://source.unsplash.com/featured/640x260/?${encodeURIComponent(q)}&sig=${bookId}-${idx}`;
 }
 
