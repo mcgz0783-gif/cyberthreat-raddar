@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { BLOGS, type BlogItem } from "@/data/cybersec";
 import { BLOG_CONTENT } from "@/data/articleContent";
 import { BlogCard } from "../Cards";

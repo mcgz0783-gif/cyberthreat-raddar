@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 export function ContactPage() {
@@ -34,7 +35,7 @@ export function ContactPage() {
             <div className="text-center py-16">
               <div className="text-6xl mb-4">✓</div>
               <h3 className="font-display font-black text-white text-2xl tracking-wider uppercase mb-3">Transmission Received</h3>
-              <p className="text-foreground/70">We will respond within 24-48 hours through the secure channel.</p>
+              <p className="text-foreground/85">We will respond within 24-48 hours through the secure channel.</p>
             </div>
           ) : (
             <form onSubmit={submit} className="flex flex-col gap-4">
@@ -74,7 +75,7 @@ export function ContactPage() {
           <div className="card-cyber p-5 bg-gradient-primary border-primary/40">
             <div className="font-mono text-[11px] text-primary tracking-widest mb-2">RESPONSE TIME</div>
             <div className="font-display font-black text-white text-2xl">24–48h</div>
-            <div className="text-xs text-foreground/70 mt-1">For tip-offs marked URGENT, we respond within 4 hours.</div>
+            <div className="text-xs text-foreground/85 mt-1">For tip-offs marked URGENT, we respond within 4 hours.</div>
           </div>
         </div>
       </div>

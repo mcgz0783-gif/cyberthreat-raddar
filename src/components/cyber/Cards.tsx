@@ -10,7 +10,7 @@ export function Tag({ text, color = "hsl(var(--primary))" }: { text: string; col
 
 export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => void }) {
   const c = colorVar(item.color);
-  const cover = (item as any).cover as string | undefined;
+  const cover = item.cover;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[2px] z-10" style={{ background: c, boxShadow: `0 0 12px ${c}` }} />
@@ -27,7 +27,7 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => vo
           <span className="font-mono text-[11px] text-muted-foreground">{item.date}</span>
         </div>
         <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
-        <p className="text-sm text-foreground/70 leading-relaxed">{item.summary}</p>
+        <p className="text-sm text-foreground/85 leading-relaxed">{item.summary}</p>
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50">
           <div className="flex flex-wrap gap-1.5">
             {item.tags.map(t => <Tag key={t} text={t} color="hsl(var(--muted-foreground))" />)}
@@ -40,7 +40,7 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => vo
 }
 
 export function BlogCard({ item, onClick }: { item: BlogItem; onClick?: () => void }) {
-  const cover = (item as any).cover as string | undefined;
+  const cover = item.cover;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in overflow-hidden flex flex-col">
       <div className="relative h-48 bg-gradient-primary border-b border-border overflow-hidden">
@@ -77,7 +77,7 @@ const CUSTOM_COVERS: Record<number, string> = {
 };
 
 export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void }) {
-  const cover = CUSTOM_COVERS[item.id] || ((item as any).cover as string | undefined);
+  const cover = CUSTOM_COVERS[item.id] || item.cover;
   return (
     <article className="card-cyber p-5 fade-in flex flex-col gap-3">
       <div
@@ -112,7 +112,7 @@ export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void
 }
 
 export function InsightCard({ item, onClick }: { item: InsightItem; onClick?: () => void }) {
-  const cover = (item as any).cover as string | undefined;
+  const cover = item.cover;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col overflow-hidden">
       {cover && (

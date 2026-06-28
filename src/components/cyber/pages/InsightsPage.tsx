@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { INSIGHTS, type InsightItem } from "@/data/cybersec";
 import { INSIGHT_CONTENT } from "@/data/articleContent";
 import { InsightCard } from "../Cards";
@@ -29,7 +30,7 @@ export function InsightsPage() {
             <span className="tag-chip bg-warning/15 border border-warning/50 text-warning">FEATURED</span>
           </div>
           <h2 className="font-display font-black text-white text-3xl lg:text-4xl leading-tight mb-4">{featured.title}</h2>
-          <p className="text-foreground/70 leading-relaxed mb-6">
+          <p className="text-foreground/85 leading-relaxed mb-6">
             A comprehensive examination of how ransomware operations have evolved from opportunistic attacks to sophisticated, enterprise-scale criminal enterprises with dedicated R&D teams, affiliate networks, and PR departments.
           </p>
           <button onClick={() => setOpen(featured)} className="btn-cyber">READ FULL REPORT →</button>

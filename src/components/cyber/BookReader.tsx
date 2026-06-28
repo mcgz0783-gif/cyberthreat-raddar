@@ -179,7 +179,7 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
                   </figcaption>
                 </figure>
               )}
-              <p className="whitespace-pre-line text-[15px] leading-[1.85] text-foreground/90">
+              <p className="whitespace-pre-line text-base leading-[1.85] text-foreground">
                 {content.chapters[page.chapterIndex].pages[page.pageIndex]}
               </p>
             </article>

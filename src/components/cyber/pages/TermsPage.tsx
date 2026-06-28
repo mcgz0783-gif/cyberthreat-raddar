@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 export function TermsPage() {

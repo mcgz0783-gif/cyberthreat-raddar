@@ -27,7 +27,7 @@ export function SectionHeader({ eyebrow, title, subtitle }: { eyebrow?: string; 
         </div>
       )}
       <h2 className="section-title mb-3">{title}</h2>
-      {subtitle && <p className="text-foreground/70 text-base leading-relaxed">{subtitle}</p>}
+      {subtitle && <p className="text-foreground/85 text-base leading-relaxed">{subtitle}</p>}
     </div>
   );
 }
@@ -100,7 +100,7 @@ export function Footer() {
             <Link to="/" onClick={() => window.scrollTo(0, 0)}>
               <Logo />
             </Link>
-            <p className="text-sm text-foreground/60 mt-4 max-w-sm leading-relaxed">
+            <p className="text-sm text-foreground/80 mt-4 max-w-sm leading-relaxed">
               The definitive platform for cybersecurity professionals. Global intelligence, expert analysis, and continuous education.
             </p>
             <div className="flex gap-2 mt-5">

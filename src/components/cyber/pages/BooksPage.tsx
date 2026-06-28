@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { BOOKS, type BookItem } from "@/data/cybersec";
 import { BookCard } from "../Cards";
 import { SearchBar, SectionHeader } from "../Misc";

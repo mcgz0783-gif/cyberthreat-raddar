@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 const COURSES = [
@@ -29,7 +30,7 @@ export function CoursesPage() {
             </div>
             <h3 className="font-display font-bold text-white text-lg leading-tight">{c.title}</h3>
             <p className="text-xs font-mono text-muted-foreground">{c.provider} · ~{c.hours}h</p>
-            <p className="text-sm text-foreground/75 leading-relaxed flex-1">{c.desc}</p>
+            <p className="text-sm text-foreground/85 leading-relaxed flex-1">{c.desc}</p>
             <span className="font-mono text-xs text-primary tracking-widest mt-1">▸ START LEARNING →</span>
           </a>
         ))}

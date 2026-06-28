@@ -40,7 +40,7 @@ export function HomePage() {
                 CYBERSECURITY<br/>
                 <span className="glow-text">UPDATES</span>
               </h1>
-              <p className="text-foreground/70 text-lg leading-relaxed max-w-xl mb-8">
+              <p className="text-foreground/85 text-lg leading-relaxed max-w-xl mb-8">
                 Global insights, breaking threats, expert analysis — your command center for all things cybersecurity.
               </p>
               <div className="flex flex-wrap gap-3 mb-10">
@@ -107,7 +107,7 @@ export function HomePage() {
               <div key={tool.name} onClick={() => navigate("/tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
                 <div className="text-4xl mb-3">{tool.icon}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{tool.name}</h3>
-                <p className="text-sm text-foreground/70 mb-4">{tool.desc}</p>
+                <p className="text-sm text-foreground/85 mb-4">{tool.desc}</p>
                 <div className="font-mono text-xs tracking-widest" style={{ color: tool.color }}>▸ LAUNCH TOOL</div>
               </div>
             ))}

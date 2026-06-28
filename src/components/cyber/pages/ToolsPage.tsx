@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -14,10 +15,28 @@ async function sha1(text: string) {
 }
 
 // ── CVE Search ───────────────────────────────────────────────────────────────
+interface CVEMetric {
+  cvssData: {
+    baseScore: number;
+    baseSeverity: string;
+  };
+}
+
+interface CVEItem {
+  cve: {
+    id: string;
+    descriptions: { lang: string; value: string }[];
+    metrics?: {
+      cvssMetricV31?: CVEMetric[];
+      cvssMetricV30?: CVEMetric[];
+    };
+  };
+}
+
 function CVESearch() {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<CVEItem[]>([]);
   const [err, setErr] = useState("");
 
   const search = async () => {
@@ -32,8 +51,9 @@ function CVESearch() {
       if (!r.ok) throw new Error(`NVD ${r.status}`);
       const data = await r.json();
       setResults(data.vulnerabilities || []);
-    } catch (e: any) {
-      setErr(e.message || "Lookup failed");
+    } catch (e: unknown) {
+      const error = e as Error;
+      setErr(error.message || "Lookup failed");
     } finally {
       setLoading(false);
     }
@@ -57,9 +77,9 @@ function CVESearch() {
       </div>
       {err && <p className="text-danger text-sm font-mono">{err}</p>}
       <div className="space-y-3 max-h-96 overflow-y-auto">
-        {results.map((v: any) => {
+        {results.map((v) => {
           const c = v.cve;
-          const desc = c.descriptions?.find((d: any) => d.lang === "en")?.value || "";
+          const desc = c.descriptions?.find((d) => d.lang === "en")?.value || "";
           const metric = c.metrics?.cvssMetricV31?.[0]?.cvssData || c.metrics?.cvssMetricV30?.[0]?.cvssData;
           return (
             <div key={c.id} className="border border-border p-3 hover:border-primary/50 transition-colors">
@@ -121,9 +141,21 @@ function HashChecker() {
 }
 
 // ── IP Reputation ────────────────────────────────────────────────────────────
+interface IPData {
+  ip: string;
+  country_name: string;
+  country_code: string;
+  city: string;
+  region: string;
+  asn: string;
+  org: string;
+  error?: boolean;
+  reason?: string;
+}
+
 function IPReputation() {
   const [ip, setIp] = useState("");
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<IPData | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
@@ -133,11 +165,15 @@ function IPReputation() {
     try {
       const r = await fetch(`https://ipapi.co/${encodeURIComponent(ip.trim())}/json/`);
       if (!r.ok) throw new Error(`Lookup ${r.status}`);
-      const d = await r.json();
+      const d = (await r.json()) as IPData;
       if (d.error) throw new Error(d.reason || "Invalid IP");
       setData(d);
-    } catch (e: any) { setErr(e.message); }
-    finally { setLoading(false); }
+    } catch (e: unknown) {
+      const error = e as Error;
+      setErr(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

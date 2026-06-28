@@ -63,10 +63,10 @@ export const TOOLS = [
   { name:"News API", icon:"📡", desc:"Live cybersecurity feed aggregator", color:"hsl(var(--warning))" },
 ];
 
-export type NewsItem = typeof NEWS[number];
-export type BlogItem = typeof BLOGS[number];
-export type InsightItem = typeof INSIGHTS[number];
-export type BookItem = typeof BOOKS[number];
+export type NewsItem = typeof NEWS[number] & { cover?: string };
+export type BlogItem = typeof BLOGS[number] & { cover?: string };
+export type InsightItem = typeof INSIGHTS[number] & { cover?: string };
+export type BookItem = typeof BOOKS[number] & { cover?: string };
 
 export const colorVar = (c: string) => {
   if (c === "danger" || c === "success" || c === "warning" || c === "primary") return `hsl(var(--${c}))`;
