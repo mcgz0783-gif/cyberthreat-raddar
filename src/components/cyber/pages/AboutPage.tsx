@@ -89,12 +89,12 @@ export function AboutPage() {
               />
             </div>
             <a 
-              href="https://www.heritageent.com" 
+              href="https://www.eritageentcare.com" 
               target="_blank" 
               rel="noopener noreferrer"
               className="font-mono text-[10px] text-primary tracking-widest text-center hover:underline mt-2"
             >
-              WWW.HERITAGEENT.COM →
+              WWW.ERITAGEENTCARE.COM →
             </a>
           </div>
           <div className="lg:col-span-2">
