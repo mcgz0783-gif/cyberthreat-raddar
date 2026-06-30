@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { NEWS, type NewsItem } from "@/data/cybersec";
 import { NEWS_CONTENT } from "@/data/articleContent";
 import { NewsCard } from "../Cards";
