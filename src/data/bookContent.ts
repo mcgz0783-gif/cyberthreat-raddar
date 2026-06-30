@@ -13,11 +13,13 @@ export const CUSTOM_COVERS: Record<number, string> = {
   9: aiAgentsCover
 };
 
-export const BOOK_CONTENT: Record<number, {
+export interface BookContent {
   cover: { tagline: string; blurb: string };
   toc: string[];
   chapters: { title: string; pages: string[]; images?: string[] }[];
-}> = {
+}
+
+export const BOOK_CONTENT: Record<number, BookContent> = {
   1: BOOK1_CONTENT,
   2: BOOK2_CONTENT,
   3: BOOK3_CONTENT,
