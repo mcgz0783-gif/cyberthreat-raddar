@@ -1,7 +1,8 @@
 import aiAgentsCover from "@/assets/ai-agents-cover.jpg";
+import { AI_AGENTS_BOOK } from "./aiAgentsBook";
 
 export const CUSTOM_COVERS: Record<number, string> = { 
-  // 9: aiAgentsCover // Removed the original cover flag reference
+  9: aiAgentsCover
 };
 
 export const BOOK_CONTENT: Record<number, {
@@ -81,22 +82,6 @@ export const BOOK_CONTENT: Record<number, {
       { title: "Awareness", pages: ["This is placeholder content for Awareness."] },
     ],
   },
-  9: {
-    cover: { tagline: "Monetizing AI agents.", blurb: "A practical playbook for designing, deploying, and monetizing AI agents." },
-    toc: ["Intro", "Setup", "Monetization"],
-    chapters: [
-      { 
-        title: "Introduction", 
-        pages: Array.from({ length: 30 }, (_, i) => `Intro Page ${i + 1}: The AI agent revolution is here. We explore how autonomous systems are changing the landscape of the digital economy...`) 
-      },
-      { 
-        title: "Workflow & Setup", 
-        pages: Array.from({ length: 35 }, (_, i) => `Setup Page ${i + 1}: Setting up your environment with tools like Cursor and Lovable. We delve into specific workflows for deploying high-performance agents on Vercel...`) 
-      },
-      { 
-        title: "Monetization", 
-        pages: Array.from({ length: 35 }, (_, i) => `Monetization Page ${i + 1}: Turning your agents into revenue streams. Strategies for affiliate marketing, SaaS integrations, and tapping into crypto rails for payouts...`) 
-      },
-    ],
-  },
+  9: AI_AGENTS_BOOK,
 };
+
