@@ -13,11 +13,11 @@ export function InsightsPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="Expert Insights — CyberSec Updates" 
-        description="Deep analysis of the cybersecurity landscape, research, and technical reports."
+        title="Expert Insights by cyberhawk UG | Cybersecurity Research & Analysis" 
+        description="Deep analysis of the cybersecurity landscape, research, and technical reports curated by cyberhawk UG."
         path="/insights"
       />
-      <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports from top security analysts and institutions." />
+      <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports curated by cyberhawk UG and leading security analysts." />
 
       {/* Featured */}
       <div className="card-cyber p-8 lg:p-10 mb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative overflow-hidden">

@@ -144,8 +144,8 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-3 pt-6 border-t border-border text-xs font-mono text-muted-foreground">
-          <span>© 2025 CyberSec Updates. All rights reserved.</span>
-          <span className="text-primary tracking-widest">SECURE // ENCRYPTED // VERIFIED</span>
+          <span>© 2026 cyberhawk UG. All rights reserved.</span>
+          <span className="text-primary tracking-widest uppercase">cyberhawk UG — Secure // Encrypted // Verified</span>
         </div>
       </div>
     </footer>

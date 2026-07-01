@@ -17,11 +17,6 @@ export function HomePage() {
 
   return (
     <>
-      <SEO 
-        title="CyberSec Updates — Live Threat Intelligence Platform" 
-        description="Global cybersecurity news, threat intelligence, expert blog posts, and curated security books for professionals."
-        path="/"
-      />
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
         <CyberBackdrop />
@@ -37,11 +32,11 @@ export function HomePage() {
               </div>
               <h1 className="font-display font-black text-white leading-[0.95] tracking-tight mb-6"
                   style={{ fontSize: "clamp(40px, 7vw, 84px)" }}>
-                CYBERSECURITY<br/>
-                <span className="glow-text">UPDATES</span>
+                cyberhawk UG<br/>
+                <span className="glow-text">SECURITY UPDATES</span>
               </h1>
               <p className="text-foreground/85 text-lg leading-relaxed max-w-xl mb-8">
-                Global insights, breaking threats, expert analysis — your command center for all things cybersecurity.
+                Global insights, breaking threats, expert analysis, and foundational cybersecurity books by cyberhawk UG — your command center for all things security.
               </p>
               <div className="flex flex-wrap gap-3 mb-10">
                 <button className="btn-cyber" onClick={() => navigate("/news")}>EXPLORE THREATS</button>

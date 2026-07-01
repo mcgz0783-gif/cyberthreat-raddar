@@ -305,11 +305,11 @@ export function ToolsPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="Security Tools — CyberSec Updates" 
-        description="Free browser-based utilities for CVE search, hash checking, IP reputation, and more."
+        title="Security Tools by cyberhawk UG | CVE, Hash, IP & Map" 
+        description="Free browser-based security utilities by cyberhawk UG: CVE search, hash checking, IP reputation, and live threat map."
         path="/tools"
       />
-      <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free, browser-based utilities for everyday defensive and investigative work." />
+      <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free, browser-based utilities by cyberhawk UG for everyday defensive and investigative work." />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CVESearch />
         <HashChecker />

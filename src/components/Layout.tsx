@@ -9,7 +9,7 @@ const PAGE_SEO: Record<string, { title: string; description: string }> = {
   "/news": { title: "Threat News — CyberSec Updates", description: "Latest cybersecurity threats, breaches, exploits, and vulnerability disclosures from across the globe." },
   "/insights": { title: "Expert Insights — CyberSec Updates", description: "Deep-dive research, policy briefs, and industry analysis from leading security professionals and institutions." },
   "/blog": { title: "Security Blog — CyberSec Updates", description: "Technical guides, war stories, and tactical cybersecurity writing from practitioners." },
-  "/books": { title: "Curated Books — CyberSec Updates", description: "The essential cybersecurity bookshelf — curated books for offensive security, blue team, architecture, and more." },
+  "/books": { title: "Cybersecurity Books by cyberhawk UG | The Art of Intrusion, Hacking, and more", description: "The essential cybersecurity bookshelf by cyberhawk UG — including The Art of Intrusion, Hacking: The Art of Exploitation, and specialized guides for offensive security, blue team, and AI agents." },
   "/about": { title: "About — CyberSec Updates", description: "Learn about our mission, our CEO Samuel Mucunguzi, our associate Dr. FadJuma, and the team behind CyberSec Updates." },
   "/contact": { title: "Contact — CyberSec Updates", description: "Get in touch with the CyberSec Updates team for partnerships, media, and general inquiries." },
   "/tools": { title: "Security Tools — CyberSec Updates", description: "Free security utilities: CVE search, hash checker, IP reputation lookup, SSL inspector, and threat map." },

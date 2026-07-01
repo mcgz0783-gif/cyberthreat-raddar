@@ -23,8 +23,8 @@ export function ContactPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="Contact — CyberSec Updates" 
-        description="Get in touch for tip-offs, partnerships, speaking requests, or general inquiries."
+        title="Contact cyberhawk UG | Cybersecurity Intelligence Platform" 
+        description="Get in touch with cyberhawk UG for tip-offs, partnerships, speaking requests, or general inquiries."
         path="/contact"
       />
       <SectionHeader eyebrow="Establish Connection" title="Get in Touch" subtitle="Tip-offs, partnerships, speaking requests, or general inquiries — drop us a line through any secure channel." />

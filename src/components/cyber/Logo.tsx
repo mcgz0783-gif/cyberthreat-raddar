@@ -8,10 +8,10 @@ export function Logo({ onClick }: LogoProps) {
       </div>
       <div className="text-left">
         <div className="font-display font-black text-white text-lg leading-none tracking-wider">
-          CyberSec
+          cyberhawk UG
         </div>
-        <div className="font-mono text-[10px] text-primary tracking-[3px] mt-0.5">
-          UPDATES // v2.5
+        <div className="font-mono text-[10px] text-primary tracking-[3px] mt-0.5 uppercase">
+          Intelligence // v2.6
         </div>
       </div>
     </div>

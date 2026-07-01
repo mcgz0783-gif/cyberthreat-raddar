@@ -5,15 +5,15 @@ export function PrivacyPage() {
   return (
     <section className="container mx-auto px-6 py-14 max-w-4xl">
       <SEO 
-        title="Privacy Policy — CyberSec Updates" 
-        description="Information on how we collect and use your data."
+        title="Privacy Policy by cyberhawk UG | Data & Privacy" 
+        description="Information on how cyberhawk UG collects, uses, and protects your data."
         path="/privacy"
       />
       <SectionHeader eyebrow="Legal" title="Privacy Policy" subtitle="Last updated: June 2026" />
       <div className="card-cyber p-8 space-y-6 text-foreground/85 text-[15px] leading-relaxed">
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">1. Information We Collect</h2>
-          <p>CyberHawk ("we", "us") collects only what is needed to deliver the platform: email addresses for newsletter subscribers, messages submitted via the contact form, and anonymized analytics through Vercel Analytics and other privacy-respecting tools.</p>
+          <p>cyberhawk UG ("we", "us") collects only what is needed to deliver the platform: email addresses for newsletter subscribers, messages submitted via the contact form, and anonymized analytics through Vercel Analytics and other privacy-respecting tools.</p>
         </div>
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">2. How We Use Your Data</h2>

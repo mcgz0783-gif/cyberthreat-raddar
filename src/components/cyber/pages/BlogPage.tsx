@@ -19,11 +19,11 @@ export function BlogPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="The Blog — CyberSec Updates" 
-        description="Long-form technical writing, war stories, and tactical guides from the security community."
+        title="Security Blog by cyberhawk UG | Technical Guides & Insights" 
+        description="Long-form technical writing, war stories, and tactical guides from the cyberhawk UG security community."
         path="/blog"
       />
-      <SectionHeader eyebrow="Editorial" title="The Blog" subtitle="Long-form technical writing, war stories, and tactical guides from the security community." />
+      <SectionHeader eyebrow="Editorial" title="The Blog" subtitle="Long-form technical writing, war stories, and tactical guides from the cyberhawk UG security community." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="lg:w-96"><SearchBar placeholder="Search articles..." value={search} onChange={setSearch} /></div>

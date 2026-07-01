@@ -6,7 +6,7 @@ export function AboutPage() {
     { 
       name: "Samuel Mucunguzi", 
       role: "Software Eng., Architecture & CEO", 
-      bio: "Visionary lead at cyberhawk-ug.store. Architect of our global threat intelligence systems and author of essential cybersecurity literature designed to empower professionals in the digital economy.", 
+      bio: "Visionary lead at cyberhawk-ug.store. Architect of our global threat intelligence systems and author of essential cybersecurity literature by cyberhawk UG, designed to empower professionals in the digital economy.", 
       icon: "🛡️" 
     },
     { 
@@ -57,7 +57,7 @@ export function AboutPage() {
                 As the driving force behind CyberHawk, Samuel Mucunguzi has revolutionized how threat intelligence is processed and distributed. With a deep background in software engineering and systems architecture, he built the core infrastructure that powers our real-time global monitoring network.
               </p>
               <p>
-                Beyond technical leadership, Samuel is a prolific author who has published a series of foundational cybersecurity books. These works are essential for anyone looking to explore the digital world, providing the roadmap to not only defend critical systems but to thrive and create value in the modern cyber economy. His mission is to ensure that the tools for digital success are available to everyone.
+                Beyond technical leadership, Samuel is the prolific author behind the cyberhawk UG series of foundational cybersecurity books. These works are essential for anyone looking to explore the digital world, providing the roadmap to not only defend critical systems but to thrive and create value in the modern cyber economy. His mission is to ensure that the tools for digital success are available to everyone.
               </p>
             </div>
           </div>
