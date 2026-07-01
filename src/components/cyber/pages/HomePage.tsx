@@ -142,6 +142,28 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* ABOUT & CONTACT QUICK LINK */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="card-cyber p-8 flex flex-col gap-4">
+            <div className="font-mono text-xs text-primary tracking-[3px] uppercase">▸ Our Story</div>
+            <h3 className="font-display font-black text-white text-3xl">ABOUT CYBERHAWK UG</h3>
+            <p className="text-foreground/80 leading-relaxed">
+              We are a global threat intelligence platform and publisher of foundational cybersecurity literature, led by Samuel Mucunguzi.
+            </p>
+            <button onClick={() => navigate("/about")} className="btn-ghost-cyber self-start text-xs mt-2">LEARN MORE →</button>
+          </div>
+          <div className="card-cyber p-8 flex flex-col gap-4 bg-gradient-to-br from-primary/5 to-transparent">
+            <div className="font-mono text-xs text-primary tracking-[3px] uppercase">▸ Connection</div>
+            <h3 className="font-display font-black text-white text-3xl">SECURE CHANNELS</h3>
+            <p className="text-foreground/80 leading-relaxed">
+              Need to transmit a tip-off or inquire about partnerships? Our secure lines are always open.
+            </p>
+            <button onClick={() => navigate("/contact")} className="btn-cyber self-start text-xs mt-2">ESTABLISH CONNECTION →</button>
+          </div>
+        </div>
+      </section>
+
       <Newsletter />
     </>
   );

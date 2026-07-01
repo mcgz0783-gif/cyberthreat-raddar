@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
@@ -29,11 +30,30 @@ export function AboutPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="About — CyberSec Updates" 
-        description="Learn about our mission, our CEO Samuel Mucunguzi, our associate Dr. FadJuma, and the team behind CyberSec Updates."
+        title="About cyberhawk UG | Leadership & Mission" 
+        description="Learn about our mission, our CEO Samuel Mucunguzi, and the team behind cyberhawk UG — the leaders in cybersecurity threat intelligence and literature."
         path="/about"
       />
-      <SectionHeader eyebrow="Mission" title="About CyberSec Updates" subtitle="We are builders, breakers, and defenders dedicated to making the global digital ecosystem safer through clear-eyed reporting and rigorous analysis." />
+
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "cyberhawk UG",
+            "url": "https://www.cyberhawk-ug.store",
+            "logo": "https://www.cyberhawk-ug.store/placeholder.svg",
+            "founder": {
+              "@type": "Person",
+              "name": "Samuel Mucunguzi",
+              "jobTitle": "CEO & Software Architect"
+            },
+            "description": "A global threat intelligence platform and publisher of foundational cybersecurity literature."
+          })}
+        </script>
+      </Helmet>
+
+      <SectionHeader eyebrow="Mission" title="About cyberhawk UG" subtitle="We are builders, breakers, and defenders dedicated to making the global digital ecosystem safer through clear-eyed reporting and rigorous analysis." />
 
       {/* CEO SPOTLIGHT */}
       <div className="card-cyber p-8 lg:p-12 mb-10 relative overflow-hidden">

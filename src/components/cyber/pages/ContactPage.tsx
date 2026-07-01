@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
@@ -27,7 +28,26 @@ export function ContactPage() {
         description="Get in touch with cyberhawk UG for tip-offs, partnerships, speaking requests, or general inquiries."
         path="/contact"
       />
-      <SectionHeader eyebrow="Establish Connection" title="Get in Touch" subtitle="Tip-offs, partnerships, speaking requests, or general inquiries — drop us a line through any secure channel." />
+
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact cyberhawk UG",
+            "description": "Secure communication channels for cybersecurity intelligence and inquiries.",
+            "url": "https://www.cyberhawk-ug.store/contact",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "kevlarmackenzie@gmail.com",
+              "telephone": "+256-783699626",
+              "contactType": "customer service"
+            }
+          })}
+        </script>
+      </Helmet>
+
+      <SectionHeader eyebrow="Establish Connection" title="Contact cyberhawk UG" subtitle="Tip-offs, partnerships, speaking requests, or general inquiries — drop us a line through any secure channel." />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 card-cyber p-8">
