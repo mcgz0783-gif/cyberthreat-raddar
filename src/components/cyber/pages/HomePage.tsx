@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEO } from "@/components/SEO";
-import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
+import { NEWS, BLOGS, STATS, TOOLS, BOOKS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
