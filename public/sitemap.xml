@@ -20,7 +20,7 @@
     <priority>0.6</priority>
   </url>
   
-  <!-- Content Pages -->
+  <!-- Content List Pages -->
   <url>
     <loc>https://www.cyberhawk-ug.store/news</loc>
     <lastmod>2026-07-01</lastmod>
@@ -57,6 +57,39 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <!-- Individual Books -->
+  <url><loc>https://www.cyberhawk-ug.store/books/1</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/2</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/3</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/4</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/5</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/6</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/7</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/8</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/books/9</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Individual Blog Posts -->
+  <url><loc>https://www.cyberhawk-ug.store/blog/1</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/blog/2</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/blog/3</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/blog/4</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/blog/5</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/blog/6</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Individual News Articles -->
+  <url><loc>https://www.cyberhawk-ug.store/news/1</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/news/2</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/news/3</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/news/4</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/news/5</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/news/6</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- Individual Expert Insights -->
+  <url><loc>https://www.cyberhawk-ug.store/insights/1</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/insights/2</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/insights/3</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cyberhawk-ug.store/insights/4</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   
   <!-- Legal Pages -->
   <url>

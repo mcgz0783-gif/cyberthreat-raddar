@@ -117,7 +117,28 @@ export function HomePage() {
           <button onClick={() => navigate("/blog")} className="btn-ghost-cyber text-xs">ALL POSTS →</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate("/blog")} />)}
+          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate(`/blog/${b.id}`)} />)}
+        </div>
+      </section>
+
+      {/* FEATURED BOOKS */}
+      <section className="bg-surface/30 border-y border-border">
+        <div className="container mx-auto px-6 py-20">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+            <SectionHeader eyebrow="Library" title="Foundational Books" subtitle="Essential cybersecurity literature by cyberhawk UG for professionals and students." />
+            <button onClick={() => navigate("/books")} className="btn-ghost-cyber text-xs">VIEW LIBRARY →</button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {BOOKS.slice(0, 4).map(b => (
+              <div key={b.id} onClick={() => navigate(`/books/${b.id}`)} className="card-cyber p-4 cursor-pointer group hover:border-primary/60 transition-all">
+                <div className="aspect-[3/4] bg-gradient-primary mb-4 flex items-center justify-center text-5xl group-hover:scale-105 transition-transform">
+                  {b.icon}
+                </div>
+                <h3 className="font-display font-bold text-white text-sm leading-tight mb-1">{b.title}</h3>
+                <p className="text-[10px] text-muted-foreground font-mono">by {b.author}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { BOOKS, type BookItem } from "@/data/cybersec";
 import { BookCard } from "../Cards";
@@ -7,22 +8,54 @@ import { SearchBar, SectionHeader } from "../Misc";
 import { BookReader } from "../BookReader";
 
 export function BooksPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [reading, setReading] = useState<BookItem | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      const book = BOOKS.find(b => b.id.toString() === id);
+      if (book) {
+        setReading(book);
+      } else {
+        navigate("/books", { replace: true });
+      }
+    } else {
+      setReading(null);
+    }
+  }, [id, navigate]);
+
   const cats = ["All", ...Array.from(new Set(BOOKS.map(b => b.cat)))];
   const filtered = BOOKS.filter(b =>
     (cat === "All" || b.cat === cat) &&
     (b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()))
   );
 
+  const handleRead = (book: BookItem) => {
+    navigate(`/books/${book.id}`);
+  };
+
+  const handleClose = () => {
+    navigate("/books");
+  };
+
   return (
     <section className="container mx-auto px-6 py-14">
-      <SEO 
-        title="Cybersecurity Books by cyberhawk UG | The Art of Intrusion, Hacking, and more" 
-        description="The essential cybersecurity bookshelf by cyberhawk UG — including The Art of Intrusion, Hacking: The Art of Exploitation, and specialized guides for offensive security, blue team, and AI agents."
-        path="/books"
-      />
+      {reading ? (
+        <SEO 
+          title={`${reading.title} | by ${reading.author} — cyberhawk UG`} 
+          description={reading.desc}
+          path={`/books/${reading.id}`}
+        />
+      ) : (
+        <SEO 
+          title="Cybersecurity Books by cyberhawk UG | The Art of Intrusion, Hacking, and more" 
+          description="The essential cybersecurity bookshelf by cyberhawk UG — including The Art of Intrusion, Hacking: The Art of Exploitation, and specialized guides for offensive security, blue team, and AI agents."
+          path="/books"
+        />
+      )}
       
       <Helmet>
         <meta name="keywords" content="Cybersecurity Books, cyberhawk UG, The Art of Intrusion, Hacking The Art of Exploitation, Web Application Hacker's Handbook, Blue Team Handbook, Threat Intelligence, Zero Trust Networks, Practical Malware Analysis, Social Engineering, AI Agents for Money" />
@@ -42,7 +75,8 @@ export function BooksPage() {
                 },
                 "description": book.desc,
                 "genre": book.cat,
-                "datePublished": book.year.toString()
+                "datePublished": book.year.toString(),
+                "url": `https://www.cyberhawk-ug.store/books/${book.id}`
               }
             }))
           })}
@@ -67,10 +101,10 @@ export function BooksPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filtered.map(b => <BookCard key={b.id} item={b} onRead={() => setReading(b)} />)}
+        {filtered.map(b => <BookCard key={b.id} item={b} onRead={() => handleRead(b)} />)}
       </div>
 
-      {reading && <BookReader book={reading} onClose={() => setReading(null)} />}
+      {reading && <BookReader book={reading} onClose={handleClose} />}
     </section>
   );
 }

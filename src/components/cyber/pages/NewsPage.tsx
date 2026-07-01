@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { NEWS, type NewsItem } from "@/data/cybersec";
 import { NEWS_CONTENT } from "@/data/articleContent";
@@ -7,22 +8,55 @@ import { SearchBar, SectionHeader } from "../Misc";
 import { ArticleReader } from "../ArticleReader";
 
 export function NewsPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [open, setOpen] = useState<NewsItem | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      const news = NEWS.find(n => n.id.toString() === id);
+      if (news) {
+        setOpen(news);
+      } else {
+        navigate("/news", { replace: true });
+      }
+    } else {
+      setOpen(null);
+    }
+  }, [id, navigate]);
+
   const cats = ["All","Threat Intel","Data Breach","AI Security","Tools","Ransomware","Nation State"];
   const filtered = NEWS.filter(n =>
     (cat === "All" || n.cat === cat) &&
     (n.title.toLowerCase().includes(search.toLowerCase()) || n.summary.toLowerCase().includes(search.toLowerCase()))
   );
 
+  const handleOpen = (news: NewsItem) => {
+    navigate(`/news/${news.id}`);
+  };
+
+  const handleClose = () => {
+    navigate("/news");
+  };
+
   return (
     <section className="container mx-auto px-6 py-14">
-      <SEO 
-        title="Threat News by cyberhawk UG | Live Breach & Vulnerability Feed" 
-        description="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity curated by cyberhawk UG."
-        path="/news"
-      />
+      {open ? (
+        <SEO 
+          title={`${open.title} | Threat Feed — cyberhawk UG`} 
+          description={open.summary}
+          path={`/news/${open.id}`}
+        />
+      ) : (
+        <SEO 
+          title="Threat News by cyberhawk UG | Live Breach & Vulnerability Feed" 
+          description="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity curated by cyberhawk UG."
+          path="/news"
+        />
+      )}
+      
       <SectionHeader eyebrow="Live Feed" title="Threat News" subtitle="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity curated by cyberhawk UG." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
@@ -45,7 +79,7 @@ export function NewsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map(n => <NewsCard key={n.id} item={n} onClick={() => setOpen(n)} />)}
+        {filtered.map(n => <NewsCard key={n.id} item={n} onClick={() => handleOpen(n)} />)}
       </div>
 
       {filtered.length === 0 && (
@@ -57,7 +91,7 @@ export function NewsPage() {
 
       {open && (
         <ArticleReader
-          onClose={() => setOpen(null)}
+          onClose={handleClose}
           meta={{
             eyebrow: open.cat,
             title: open.title,
