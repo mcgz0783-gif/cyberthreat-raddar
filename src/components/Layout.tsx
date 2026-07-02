@@ -5,17 +5,17 @@ import { FloatingCTA } from "@/components/cyber/FloatingCTA";
 import { SEO } from "@/components/SEO";
 
 const PAGE_SEO: Record<string, { title: string; description: string }> = {
-  "/": { title: "CyberSec Updates — Live Threat Intelligence Platform", description: "Global cybersecurity news, threat intelligence, expert blog posts, and curated security books for professionals." },
-  "/news": { title: "Threat News — CyberSec Updates", description: "Latest cybersecurity threats, breaches, exploits, and vulnerability disclosures from across the globe." },
-  "/insights": { title: "Expert Insights — CyberSec Updates", description: "Deep-dive research, policy briefs, and industry analysis from leading security professionals and institutions." },
-  "/blog": { title: "Security Blog — CyberSec Updates", description: "Technical guides, war stories, and tactical cybersecurity writing from practitioners." },
-  "/books": { title: "Cybersecurity Books by cyberhawk UG | The Art of Intrusion, Hacking, and more", description: "The essential cybersecurity bookshelf by cyberhawk UG — including The Art of Intrusion, Hacking: The Art of Exploitation, and specialized guides for offensive security, blue team, and AI agents." },
-  "/about": { title: "About — CyberSec Updates", description: "Learn about our mission, our CEO Samuel Mucunguzi, our associate Dr. FadJuma, and the team behind CyberSec Updates." },
-  "/contact": { title: "Contact — CyberSec Updates", description: "Get in touch with the CyberSec Updates team for partnerships, media, and general inquiries." },
-  "/tools": { title: "Security Tools — CyberSec Updates", description: "Free security utilities: CVE search, hash checker, IP reputation lookup, SSL inspector, and threat map." },
-  "/courses": { title: "Free Courses — CyberSec Updates", description: "Curated free cybersecurity certifications, training resources, and educational pathways." },
-  "/privacy": { title: "Privacy Policy — CyberSec Updates", description: "How CyberSec Updates handles your data, cookies, and privacy commitments." },
-  "/terms": { title: "Terms of Service — CyberSec Updates", description: "Terms and conditions for using the CyberSec Updates platform and services." },
+  "/": { title: "CyberHawk UG | Global Cybersecurity & AI Education", description: "The leading cybersecurity and AI education platform in Africa and globally. Explore high-quality books, real-time threat intelligence, and expert insights." },
+  "/news": { title: "Threat Intelligence Feed | Real-Time Security Updates", description: "Stay ahead of the curve with CyberHawk UG's live threat intelligence feed. Breaking news on breaches, zero-days, and global cyber threats." },
+  "/insights": { title: "Security Insights | Expert Analysis & Research", description: "Deep-dive research and industry analysis from CyberHawk UG. Understand the evolving threat landscape and modern defense strategies." },
+  "/blog": { title: "Cybersecurity Blog | Technical Guides & Tactical Writing", description: "High-quality technical articles, ethical hacking guides, and AI tutorials from the CyberHawk UG research community." },
+  "/books": { title: "Cybersecurity Library | Foundational Books by CyberHawk UG", description: "The essential cybersecurity bookshelf. Original literature by CyberHawk UG covering ethical hacking, AI agents, and security fundamentals." },
+  "/about": { title: "About CyberHawk UG | Leadership & Vision", description: "Learn about our mission, our CEO Samuel Mucunguzi, and our commitment to making high-quality security education accessible globally." },
+  "/contact": { title: "Secure Channels | Establish Connection with CyberHawk UG", description: "Get in touch with CyberHawk UG for partnerships, tip-offs, or inquiries about our educational resources." },
+  "/tools": { title: "Security Toolkit | Free Assessment & Defense Utilities", description: "Free security tools by CyberHawk UG: Threat maps, CVE search, and reputation lookup utilities to harden your infrastructure." },
+  "/courses": { title: "Cybersecurity Courses | Training & Certification Paths", description: "Curated cybersecurity training paths and certification resources to accelerate your career in the digital economy." },
+  "/privacy": { title: "Privacy Policy | Your Data Security at CyberHawk UG", description: "Our commitment to your privacy and data protection at CyberHawk UG." },
+  "/terms": { title: "Terms of Service | Platform Usage & Licensing", description: "Terms and conditions for accessing the CyberHawk UG platform and educational materials." },
 };
 
 function RouteSEO() {
