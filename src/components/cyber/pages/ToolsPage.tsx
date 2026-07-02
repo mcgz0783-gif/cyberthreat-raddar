@@ -301,16 +301,52 @@ function ThreatMap() {
   );
 }
 
+// ── AI Tools for Students ───────────────────────────────────────────────────
+function AIToolsForStudents() {
+  const tools = [
+    { name: "Gemini", role: "Research & Summarization", desc: "Best for processing large documents and generating complex reports." },
+    { name: "GitHub Copilot", role: "Code Assistance", desc: "The essential tool for students learning to code in any language." },
+    { name: "Perplexity", role: "AI Search Engine", desc: "Source-backed answers for academic research and fact-checking." },
+    { name: "Claude", role: "Creative Writing", desc: "Excellent for refining essays and improving narrative flow." }
+  ];
+
+  return (
+    <div className="card-cyber p-6 bg-gradient-to-br from-primary/10 to-transparent border-primary/40">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="text-3xl">🎓</div>
+        <div>
+          <h3 className="font-display font-bold text-white text-lg leading-none">AI Tools for Students</h3>
+          <p className="font-mono text-[10px] text-primary mt-1 uppercase tracking-widest">Featured Resource // v1.0</p>
+        </div>
+      </div>
+      <p className="text-sm text-foreground/80 mb-6 leading-relaxed">
+        We've curated the most effective AI tools to help students maximize their learning efficiency and technical output.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        {tools.map(t => (
+          <div key={t.name} className="p-3 border border-border bg-surface/50">
+            <div className="font-display font-bold text-white text-sm mb-1">{t.name}</div>
+            <div className="font-mono text-[9px] text-primary uppercase mb-2 tracking-tighter">{t.role}</div>
+            <p className="text-[11px] text-muted-foreground leading-tight">{t.desc}</p>
+          </div>
+        ))}
+      </div>
+      <button className="btn-cyber w-full text-xs">DOWNLOAD COMPLETE GUIDE (FREE)</button>
+    </div>
+  );
+}
+
 export function ToolsPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="Security Tools by cyberhawk UG | CVE, Hash, IP & Map" 
-        description="Free browser-based security utilities by cyberhawk UG: CVE search, hash checking, IP reputation, and live threat map."
+        title="Security Tools | CVE, Hash, IP & AI for Students" 
+        description="Free browser-based security utilities and curated AI tools for students by CyberHawk UG. CVE search, hash checking, and AI productivity guides."
         path="/tools"
       />
-      <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free, browser-based utilities by cyberhawk UG for everyday defensive and investigative work." />
+      <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free, browser-based utilities by CyberHawk UG for everyday defensive and investigative work." />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AIToolsForStudents />
         <CVESearch />
         <HashChecker />
         <IPReputation />
