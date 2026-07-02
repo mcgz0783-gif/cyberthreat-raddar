@@ -45,45 +45,23 @@ export function BooksPage() {
     <section className="container mx-auto px-6 py-14">
       {reading ? (
         <SEO 
-          title={`${reading.title} | by ${reading.author} — cyberhawk UG`} 
+          title={reading.title} 
           description={reading.desc}
           path={`/books/${reading.id}`}
+          type="book"
+          author={reading.author}
+          keywords={`${reading.cat}, cybersecurity books, ${reading.title}, CyberHawk UG library`}
         />
       ) : (
         <SEO 
-          title="Cybersecurity Books by cyberhawk UG | The Art of Intrusion, Hacking, and more" 
-          description="The essential cybersecurity bookshelf by cyberhawk UG — including The Art of Intrusion, Hacking: The Art of Exploitation, and specialized guides for offensive security, blue team, and AI agents."
+          title="Cybersecurity Books | The Essential Library" 
+          description="The essential cybersecurity bookshelf by CyberHawk UG — including guides for offensive security, blue team, and AI agents."
           path="/books"
+          keywords="Cybersecurity Books, CyberHawk UG, hacking books, AI agents, security literature Africa"
         />
       )}
       
-      <Helmet>
-        <meta name="keywords" content="Cybersecurity Books, cyberhawk UG, The Art of Intrusion, Hacking The Art of Exploitation, Web Application Hacker's Handbook, Blue Team Handbook, Threat Intelligence, Zero Trust Networks, Practical Malware Analysis, Social Engineering, AI Agents for Money" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "itemListElement": BOOKS.map((book, index) => ({
-              "@type": "ListItem",
-              "position": index + 1,
-              "item": {
-                "@type": "Book",
-                "name": book.title,
-                "author": {
-                  "@type": "Person",
-                  "name": book.author
-                },
-                "description": book.desc,
-                "genre": book.cat,
-                "datePublished": book.year.toString(),
-                "url": `https://www.cyberhawk-ug.store/books/${book.id}`
-              }
-            }))
-          })}
-        </script>
-      </Helmet>
-
-      <SectionHeader eyebrow="Library" title="Cybersecurity Books by cyberhawk UG" subtitle="The essential cybersecurity bookshelf — from offensive techniques to defense architecture by cyberhawk UG." />
+      <SectionHeader eyebrow="Library" title="Cybersecurity Books by CyberHawk UG" subtitle="The essential cybersecurity bookshelf — from offensive techniques to defense architecture by CyberHawk UG." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="lg:w-96"><SearchBar placeholder="Search by title or author..." value={search} onChange={setSearch} /></div>

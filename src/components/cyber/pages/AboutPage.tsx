@@ -7,7 +7,7 @@ export function AboutPage() {
     { 
       name: "Samuel Mucunguzi", 
       role: "Software Eng., Architecture & CEO", 
-      bio: "Visionary lead at cyberhawk-ug.store. Architect of our global threat intelligence systems and author of essential cybersecurity literature by cyberhawk UG, designed to empower professionals in the digital economy.", 
+      bio: "Visionary lead at cyberhawk-ug.store. Architect of our global threat intelligence systems and author of essential cybersecurity literature by CyberHawk UG, designed to empower professionals in the digital economy.", 
       icon: "🛡️" 
     },
     { 
@@ -30,30 +30,13 @@ export function AboutPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="About cyberhawk UG | Leadership & Mission" 
-        description="Learn about our mission, our CEO Samuel Mucunguzi, and the team behind cyberhawk UG — the leaders in cybersecurity threat intelligence and literature."
+        title="About CyberHawk UG | Leadership & Mission" 
+        description="Learn about our mission, our CEO Samuel Mucunguzi, and the team behind CyberHawk UG — the leaders in cybersecurity threat intelligence and literature."
         path="/about"
+        keywords="CyberHawk UG mission, Samuel Mucunguzi, cybersecurity team, threat intelligence experts"
       />
 
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "cyberhawk UG",
-            "url": "https://www.cyberhawk-ug.store",
-            "logo": "https://www.cyberhawk-ug.store/placeholder.svg",
-            "founder": {
-              "@type": "Person",
-              "name": "Samuel Mucunguzi",
-              "jobTitle": "CEO & Software Architect"
-            },
-            "description": "A global threat intelligence platform and publisher of foundational cybersecurity literature."
-          })}
-        </script>
-      </Helmet>
-
-      <SectionHeader eyebrow="Mission" title="About cyberhawk UG" subtitle="We are builders, breakers, and defenders dedicated to making the global digital ecosystem safer through clear-eyed reporting and rigorous analysis." />
+      <SectionHeader eyebrow="Mission" title="About CyberHawk UG" subtitle="We are builders, breakers, and defenders dedicated to making the global digital ecosystem safer through clear-eyed reporting and rigorous analysis." />
 
       {/* CEO SPOTLIGHT */}
       <div className="card-cyber p-8 lg:p-12 mb-10 relative overflow-hidden">

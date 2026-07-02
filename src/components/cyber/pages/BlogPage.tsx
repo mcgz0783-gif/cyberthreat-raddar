@@ -45,19 +45,23 @@ export function BlogPage() {
     <section className="container mx-auto px-6 py-14">
       {open ? (
         <SEO 
-          title={`${open.title} | by ${open.author} — cyberhawk UG`} 
+          title={open.title} 
           description={open.summary}
           path={`/blog/${open.id}`}
+          type="article"
+          author={open.author}
+          keywords={`${open.cat}, cybersecurity blog, ${open.title}, CyberHawk UG insights`}
         />
       ) : (
         <SEO 
-          title="Security Blog by cyberhawk UG | Technical Guides & Insights" 
-          description="Long-form technical writing, war stories, and tactical guides from the cyberhawk UG security community."
+          title="Security Blog | Technical Guides & Insights" 
+          description="Long-form technical writing, war stories, and tactical guides from the CyberHawk UG security community."
           path="/blog"
+          keywords="cybersecurity blog, ethical hacking articles, security research Africa, tech guides"
         />
       )}
       
-      <SectionHeader eyebrow="Editorial" title="The Blog" subtitle="Long-form technical writing, war stories, and tactical guides from the cyberhawk UG security community." />
+      <SectionHeader eyebrow="Editorial" title="The Blog" subtitle="Long-form technical writing, war stories, and tactical guides from the CyberHawk UG security community." />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="lg:w-96"><SearchBar placeholder="Search articles..." value={search} onChange={setSearch} /></div>

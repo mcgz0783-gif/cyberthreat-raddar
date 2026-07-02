@@ -6,17 +6,36 @@ import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
 import { CyberBackdrop } from "../CyberBackdrop";
+import { FAQ } from "../FAQ";
+import { Testimonials } from "../Testimonials";
+import { Search } from "lucide-react";
 
 export function HomePage() {
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const t = setInterval(() => setCount(c => { if (c < 2365) return c + 47; clearInterval(t); return 2365; }), 20);
     return () => clearInterval(t);
   }, []);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // For now, redirect to news or blog with query
+      navigate(`/news?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <>
+      <SEO 
+        title="CyberHawk UG | Global Cybersecurity & AI Education" 
+        description="Transforming cybersecurity and AI education in Africa. Explore high-quality books, real-time threat intelligence, and expert insights from CyberHawk UG."
+        keywords="cybersecurity education, ethical hacking Africa, AI tools for students, CyberHawk UG books, security intelligence"
+      />
+
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
         <CyberBackdrop />
@@ -32,12 +51,24 @@ export function HomePage() {
               </div>
               <h1 className="font-display font-black text-white leading-[0.95] tracking-tight mb-6"
                   style={{ fontSize: "clamp(40px, 7vw, 84px)" }}>
-                cyberhawk UG<br/>
+                CyberHawk UG<br/>
                 <span className="glow-text">SECURITY UPDATES</span>
               </h1>
               <p className="text-foreground/85 text-lg leading-relaxed max-w-xl mb-8">
-                Global insights, breaking threats, expert analysis, and foundational cybersecurity books by cyberhawk UG — your command center for all things security.
+                Global insights, breaking threats, expert analysis, and foundational cybersecurity books by CyberHawk UG — your command center for all things security.
               </p>
+              
+              <form onSubmit={handleSearch} className="relative max-w-md mb-8 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-primary transition-colors" />
+                <input 
+                  type="text" 
+                  placeholder="Search threats, books, or tools..." 
+                  className="input-cyber pl-12 pr-4 py-4"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </form>
+
               <div className="flex flex-wrap gap-3 mb-10">
                 <button className="btn-cyber" onClick={() => navigate("/news")}>EXPLORE THREATS</button>
                 <button className="btn-ghost-cyber" onClick={() => navigate("/blog")}>READ INSIGHTS</button>
@@ -121,11 +152,13 @@ export function HomePage() {
         </div>
       </section>
 
+      <Testimonials />
+
       {/* FEATURED BOOKS */}
       <section className="bg-surface/30 border-y border-border">
         <div className="container mx-auto px-6 py-20">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
-            <SectionHeader eyebrow="Library" title="Foundational Books" subtitle="Essential cybersecurity literature by cyberhawk UG for professionals and students." />
+            <SectionHeader eyebrow="Library" title="Foundational Books" subtitle="Essential cybersecurity literature by CyberHawk UG for professionals and students." />
             <button onClick={() => navigate("/books")} className="btn-ghost-cyber text-xs">VIEW LIBRARY →</button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -142,12 +175,14 @@ export function HomePage() {
         </div>
       </section>
 
+      <FAQ />
+
       {/* ABOUT & CONTACT QUICK LINK */}
       <section className="container mx-auto px-6 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="card-cyber p-8 flex flex-col gap-4">
             <div className="font-mono text-xs text-primary tracking-[3px] uppercase">▸ Our Story</div>
-            <h3 className="font-display font-black text-white text-3xl">ABOUT CYBERHAWK UG</h3>
+            <h3 className="font-display font-black text-white text-3xl">ABOUT CyberHawk UG</h3>
             <p className="text-foreground/80 leading-relaxed">
               We are a global threat intelligence platform and publisher of foundational cybersecurity literature, led by Samuel Mucunguzi.
             </p>
