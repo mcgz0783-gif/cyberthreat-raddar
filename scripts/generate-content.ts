@@ -13,7 +13,7 @@ const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
 async function generateWithGemini(topic: string, description: string) {
   const vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
-  const model = vertexAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+  const model = vertexAI.getGenerativeModel({ model: 'gemini-3-flash' });
 
   const blogCreatorPrompt = fs.readFileSync(PROMPT_PATH, 'utf8');
 
