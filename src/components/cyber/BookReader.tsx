@@ -88,23 +88,21 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {book.id === 9 && (
-              <button
-                onClick={() => {
-                  const contentToDownload = JSON.stringify(content, null, 2);
-                  const blob = new Blob([contentToDownload], { type: 'application/json' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${book.title.replace(/\s+/g, '-').toLowerCase()}.json`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                }}
-                className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors"
-              >
-                Download
-              </button>
-            )}
+            <button
+              onClick={() => {
+                const contentToDownload = JSON.stringify(content, null, 2);
+                const blob = new Blob([contentToDownload], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${book.title.replace(/\s+/g, '-').toLowerCase()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors"
+            >
+              Download
+            </button>
             <button
               onClick={onClose}
               className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors group"
