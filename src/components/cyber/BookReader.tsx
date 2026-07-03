@@ -87,13 +87,32 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
               </div>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors group"
-            aria-label="Close reader"
-          >
-            <span className="text-2xl text-muted-foreground group-hover:text-white transition-colors">×</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {book.id === 9 && (
+              <button
+                onClick={() => {
+                  const contentToDownload = JSON.stringify(content, null, 2);
+                  const blob = new Blob([contentToDownload], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `${book.title.replace(/\s+/g, '-').toLowerCase()}.json`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors"
+              >
+                Download
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors group"
+              aria-label="Close reader"
+            >
+              <span className="text-2xl text-muted-foreground group-hover:text-white transition-colors">×</span>
+            </button>
+          </div>
         </div>
 
         {/* Reader Body with A4 Sheet simulation */}
