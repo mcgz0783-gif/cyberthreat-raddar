@@ -13,7 +13,7 @@ const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
 async function generateWithGemini(topic: string, description: string) {
   const vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
-  const model = vertexAI.getGenerativeModel({ model: 'gemini-3-flash' });
+  const model = vertexAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const blogCreatorPrompt = fs.readFileSync(PROMPT_PATH, 'utf8');
 
@@ -101,8 +101,12 @@ async function automateContent() {
     fs.writeFileSync(SITEMAP_PATH, sitemap);
 
     console.log(`✅ Successfully generated and integrated article ID: ${newId}`);
-  } catch (error: any) {
-    console.error('❌ Automation failed:', error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('❌ Automation failed:', error.message);
+    } else {
+      console.error('❌ Automation failed:', error);
+    }
     process.exit(1);
   }
 }
