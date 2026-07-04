@@ -20,13 +20,11 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => vo
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[2px] z-10" style={{ background: c, boxShadow: `0 0 12px ${c}` }} />
-      {cover && (
-        <div className="relative h-40 overflow-hidden border-b border-border">
-          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
-          <div className="absolute top-2 right-2 text-3xl drop-shadow-lg">{item.icon}</div>
-        </div>
-      )}
+      <div className="relative h-40 overflow-hidden border-b border-border bg-muted/20">
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={item.title} loading="lazy" className={`w-full h-full transition-transform duration-500 hover:scale-105 ${cover ? "object-cover" : "object-contain p-6 opacity-60"}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+        <div className="absolute top-2 right-2 text-3xl drop-shadow-lg">{item.icon}</div>
+      </div>
       <div className="p-6 flex flex-col gap-3 flex-1">
         <div className="flex items-center justify-between">
           <Tag text={item.cat} color={c} />
