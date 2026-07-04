@@ -50,7 +50,7 @@ export function SEO({
   return (
     <Helmet>
       {/* Standard Metadata */}
-      <title>{`${title} | ${siteName}`}</title>
+      <title>{title.toLowerCase().includes(siteName.toLowerCase()) ? title : `${title} | ${siteName}`}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
