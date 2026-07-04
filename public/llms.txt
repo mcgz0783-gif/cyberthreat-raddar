@@ -1,0 +1,22 @@
+# CyberHawk UG
+
+> Global cybersecurity and AI education platform — live threat intelligence, expert blogs, insights, and original security books by CyberHawk UG.
+
+CyberHawk UG publishes real-time threat news, technical blog posts, deep-dive insights, and a full library of cybersecurity and AI-agent books. The site also hosts free security tools and curated training courses.
+
+## Pages
+
+- [Home](/): Overview of the CyberHawk UG platform.
+- [News](/news): Live cybersecurity threat intelligence feed.
+- [Insights](/insights): Expert analysis and research on the threat landscape.
+- [Blog](/blog): Technical guides on ethical hacking, defense, and AI.
+- [Books](/books): Original CyberHawk UG cybersecurity and AI-agent library.
+- [Tools](/tools): Free threat maps, CVE search, and reputation utilities.
+- [Courses](/courses): Curated cybersecurity training and certification paths.
+- [About](/about): Mission, leadership, and vision of CyberHawk UG.
+- [Contact](/contact): Secure channels to reach CyberHawk UG.
+
+## Optional
+
+- [Privacy Policy](/privacy)
+- [Terms of Service](/terms)
