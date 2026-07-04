@@ -1,5 +1,11 @@
 import { type NewsItem, type BlogItem, type InsightItem, type BookItem, colorVar } from "@/data/cybersec";
 
+const PLACEHOLDER_COVER = "/icon-512.png";
+const onImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const el = e.currentTarget;
+  if (!el.src.endsWith(PLACEHOLDER_COVER)) el.src = PLACEHOLDER_COVER;
+};
+
 export function Tag({ text, color = "hsl(var(--primary))" }: { text: string; color?: string }) {
   return (
     <span className="tag-chip" style={{ background: `${color}22`, border: `1px solid ${color}55`, color }}>
