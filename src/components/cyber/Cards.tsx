@@ -1,5 +1,11 @@
 import { type NewsItem, type BlogItem, type InsightItem, type BookItem, colorVar } from "@/data/cybersec";
 
+const PLACEHOLDER_COVER = "/icon-512.png";
+const onImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const el = e.currentTarget;
+  if (!el.src.endsWith(PLACEHOLDER_COVER)) el.src = PLACEHOLDER_COVER;
+};
+
 export function Tag({ text, color = "hsl(var(--primary))" }: { text: string; color?: string }) {
   return (
     <span className="tag-chip" style={{ background: `${color}22`, border: `1px solid ${color}55`, color }}>
@@ -14,13 +20,11 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick?: () => vo
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-[2px] z-10" style={{ background: c, boxShadow: `0 0 12px ${c}` }} />
-      {cover && (
-        <div className="relative h-40 overflow-hidden border-b border-border">
-          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
-          <div className="absolute top-2 right-2 text-3xl drop-shadow-lg">{item.icon}</div>
-        </div>
-      )}
+      <div className="relative h-40 overflow-hidden border-b border-border bg-muted/20">
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={item.title} loading="lazy" className={`w-full h-full transition-transform duration-500 hover:scale-105 ${cover ? "object-cover" : "object-contain p-6 opacity-60"}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+        <div className="absolute top-2 right-2 text-3xl drop-shadow-lg">{item.icon}</div>
+      </div>
       <div className="p-6 flex flex-col gap-3 flex-1">
         <div className="flex items-center justify-between">
           <Tag text={item.cat} color={c} />
@@ -44,9 +48,7 @@ export function BlogCard({ item, onClick }: { item: BlogItem; onClick?: () => vo
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in overflow-hidden flex flex-col">
       <div className="relative h-48 bg-gradient-primary border-b border-border overflow-hidden">
-        {cover ? (
-          <img src={cover} alt={item.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-        ) : null}
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={item.title} loading="lazy" className={`absolute inset-0 w-full h-full transition-transform duration-500 hover:scale-105 ${cover ? "object-cover" : "object-contain p-8 opacity-50"}`} />
         <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-card/30 to-transparent flex items-center justify-center text-7xl">
           <span className="drop-shadow-lg">{item.img}</span>
         </div>
@@ -84,15 +86,15 @@ export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void
         onClick={onRead}
         className="h-64 bg-gradient-primary border border-border flex flex-col items-center justify-center text-center relative cursor-pointer group overflow-hidden"
       >
-        {cover ? (
-          <img src={cover} alt={`${item.title} cover`} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105" />
-        ) : (
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={`${item.title} cover`} loading="lazy" className={`absolute inset-0 w-full h-full transition-transform group-hover:scale-105 ${cover ? "object-cover" : "object-contain p-8 opacity-60"}`} />
+        {!cover && (
           <>
             <div className="absolute inset-0 opacity-10 bg-[linear-gradient(135deg,transparent_45%,hsl(var(--primary))_50%,transparent_55%)]" />
-            <div className="text-5xl mb-2 transition-transform group-hover:scale-110">{item.icon}</div>
-            <p className="font-mono text-[9px] tracking-[0.25em] text-primary uppercase mb-1 px-3">{item.cat}</p>
-            <p className="font-display font-bold text-white text-[13px] leading-tight line-clamp-3 px-3">{item.title}</p>
-            <p className="font-mono text-[10px] text-foreground/70 mt-1 px-3">{item.author}</p>
+            <div className="absolute bottom-3 left-0 right-0 text-center px-3">
+              <p className="font-mono text-[9px] tracking-[0.25em] text-primary uppercase mb-1">{item.cat}</p>
+              <p className="font-display font-bold text-white text-[13px] leading-tight line-clamp-2">{item.title}</p>
+              <p className="font-mono text-[10px] text-foreground/70 mt-1">{item.author}</p>
+            </div>
           </>
         )}
         <div className="absolute bottom-2 right-2 font-mono text-[10px] text-primary bg-background/80 px-2 py-0.5 border border-primary/40 z-10">
@@ -115,13 +117,11 @@ export function InsightCard({ item, onClick }: { item: InsightItem; onClick?: ()
   const cover = item.cover;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col overflow-hidden">
-      {cover && (
-        <div className="relative h-40 overflow-hidden border-b border-border">
-          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
-          <div className="absolute top-2 right-2 text-4xl drop-shadow-lg">{item.img}</div>
-        </div>
-      )}
+      <div className="relative h-40 overflow-hidden border-b border-border bg-muted/20">
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={item.title} loading="lazy" className={`w-full h-full transition-transform duration-500 hover:scale-105 ${cover ? "object-cover" : "object-contain p-6 opacity-60"}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+        <div className="absolute top-2 right-2 text-4xl drop-shadow-lg">{item.img}</div>
+      </div>
       <div className="p-6 flex flex-col gap-4 flex-1">
         <Tag text={item.cat} color="hsl(var(--primary))" />
         <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
