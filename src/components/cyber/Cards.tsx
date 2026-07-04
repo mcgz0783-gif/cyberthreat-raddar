@@ -117,13 +117,11 @@ export function InsightCard({ item, onClick }: { item: InsightItem; onClick?: ()
   const cover = item.cover;
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in flex flex-col overflow-hidden">
-      {cover && (
-        <div className="relative h-40 overflow-hidden border-b border-border">
-          <img src={cover} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
-          <div className="absolute top-2 right-2 text-4xl drop-shadow-lg">{item.img}</div>
-        </div>
-      )}
+      <div className="relative h-40 overflow-hidden border-b border-border bg-muted/20">
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={item.title} loading="lazy" className={`w-full h-full transition-transform duration-500 hover:scale-105 ${cover ? "object-cover" : "object-contain p-6 opacity-60"}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+        <div className="absolute top-2 right-2 text-4xl drop-shadow-lg">{item.img}</div>
+      </div>
       <div className="p-6 flex flex-col gap-4 flex-1">
         <Tag text={item.cat} color="hsl(var(--primary))" />
         <h3 className="font-display font-bold text-white text-lg leading-tight">{item.title}</h3>
