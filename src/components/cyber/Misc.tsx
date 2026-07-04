@@ -27,7 +27,7 @@ export function SectionHeader({ eyebrow, title, subtitle }: { eyebrow?: string; 
           ▸ {eyebrow}
         </div>
       )}
-      <h2 className="section-title mb-3">{title}</h2>
+      <h1 className="section-title mb-3">{title}</h1>
       {subtitle && <p className="text-foreground/85 text-base leading-relaxed">{subtitle}</p>}
     </div>
   );
