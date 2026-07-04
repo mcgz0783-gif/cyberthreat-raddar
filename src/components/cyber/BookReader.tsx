@@ -90,18 +90,11 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                const contentToDownload = JSON.stringify(content, null, 2);
-                const blob = new Blob([contentToDownload], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${book.title.replace(/\s+/g, '-').toLowerCase()}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
+                window.print();
               }}
-              className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors"
+              className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print"
             >
-              Download
+              Download PDF
             </button>
             <button
               onClick={onClose}
@@ -113,12 +106,16 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
           </div>
         </div>
 
-        {/* Reader Body with A4 Sheet simulation */}
         <div className="flex-1 overflow-y-auto bg-neutral-900/40 custom-scrollbar flex justify-center py-4 sm:py-10 px-4">
-          <div className="w-full max-w-[800px] aspect-[1/1.414] min-h-[1100px] bg-white text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col relative transition-all duration-300 transform origin-top mb-12 sm:rounded-sm overflow-hidden">
+          <div className="w-full max-w-[800px] aspect-[1/1.414] min-h-[1100px] bg-white text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col relative transition-all duration-300 transform origin-top mb-12 sm:rounded-sm overflow-hidden BookReader_A4">
             
             {/* Page Grain Overlay */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
+            
+            {/* Watermark */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none z-0">
+              <div className="text-[300px] transform -rotate-12">🛡️</div>
+            </div>
             
             {/* Content Container */}
             <div className="flex-1 flex flex-col px-8 sm:px-16 py-12 sm:py-20 z-[1]">
@@ -246,11 +243,27 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
                   )}
                   
                   <div className="flex-1 space-y-6">
-                    {content.chapters[page.chapterIndex].pages[page.pageIndex].split('\n\n').map((para, pi) => (
-                      <p key={pi} className="text-lg leading-[1.8] text-neutral-800 first-letter:text-4xl first-letter:font-bold first-letter:mr-1 first-letter:float-left first-letter:text-neutral-900">
-                        {para}
-                      </p>
-                    ))}
+                    {content.chapters[page.chapterIndex].pages[page.pageIndex].split('\n\n').map((para, pi) => {
+                      if (para.trim().startsWith('```')) {
+                        const code = para.replace(/```(python|bash|json|sql)?/g, '').trim();
+                        return (
+                          <div key={pi} className="my-6 relative group">
+                            <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary/40 group-hover:bg-primary transition-colors"></div>
+                            <pre className="bg-neutral-900 text-neutral-100 p-6 font-mono text-sm overflow-x-auto shadow-lg sm:rounded-r-lg border border-neutral-800">
+                              <code className="block leading-relaxed">{code}</code>
+                            </pre>
+                            <div className="mt-2 text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-right">
+                              Source: Cyberhawk Intel // Snippet_{pi}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
+                        <p key={pi} className="text-lg leading-[1.8] text-neutral-800 first-letter:text-4xl first-letter:font-bold first-letter:mr-1 first-letter:float-left first-letter:text-neutral-900">
+                          {para}
+                        </p>
+                      );
+                    })}
                   </div>
                 </article>
               )}

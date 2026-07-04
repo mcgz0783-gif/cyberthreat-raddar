@@ -47,6 +47,7 @@ export const BOOKS = [
   { id:7, title:"Practical Malware Analysis — CyberHawk UG", author:"CyberHawk UG", year:2022, cat:"Malware", desc:"The hands-on guide to dissecting malicious software. Learn the tools, techniques, and processes used by professional malware analysts.", pages:800, icon:"🦠", cover: U("photo-1526374965328-7f61d4dc18c5") },
   { id:8, title:"Social Engineering: The Science of Human Hacking — CyberHawk UG", author:"CyberHawk UG", year:2023, cat:"Social Engineering", desc:"Understanding the psychological principles behind manipulation and how to build human-centered security awareness programs.", pages:320, icon:"🎭", cover: U("photo-1521737604893-d14cc237f11d") },
   { id:9, title:"Building & Using AI Agents to Make Money — CyberHawk UG", author:"CyberHawk UG", year:2026, cat:"AI & Automation", desc:"A practical playbook for designing, deploying, and monetizing AI agents using Lovable, Cursor, GitHub, Vercel, Supabase, and Stripe — with real workflows for TikTok payouts, e-commerce, and crypto rails.", pages:228, icon:"🤖" },
+  { id:11, title:"Python Programming for Security Professionals — CyberHawk UG", author:"CyberHawk UG", year:2026, cat:"Programming", desc:"A comprehensive guide to mastering Python for cybersecurity, covering automation, networking, OSINT, and AI-driven defense mechanisms.", pages:105, icon:"🐍" },
 ];
 
 export const TICKER_ITEMS = [

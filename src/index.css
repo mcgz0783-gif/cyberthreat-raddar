@@ -258,3 +258,34 @@
 .float-anim { animation: float 4s ease-in-out infinite; }
 .blink-anim { animation: blink 1.2s infinite; }
 .rotate-slow { animation: rotate-border 20s linear infinite; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; color: black !important; }
+  .fixed, .absolute { position: relative !important; }
+  .overflow-hidden, .overflow-y-auto { overflow: visible !important; height: auto !important; }
+  .backdrop-blur-md, .bg-background\/98, .bg-neutral-900\/40 { background: transparent !important; backdrop-filter: none !important; }
+  .shadow-2xl, .shadow-lg, .shadow-md, .shadow-inner { box-shadow: none !important; }
+  .container { width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; }
+  
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  .BookReader_A4 {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 auto !important;
+    border: none !important;
+    page-break-after: always !important;
+    transform: none !important;
+    min-height: 297mm !important;
+    background: white !important;
+    color: black !important;
+  }
+  .BookReader_A4 pre {
+    background: #f4f4f4 !important;
+    color: #333 !important;
+    border: 1px solid #ddd !important;
+  }
+}
