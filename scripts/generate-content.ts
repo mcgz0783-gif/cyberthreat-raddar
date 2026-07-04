@@ -1,13 +1,20 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { VertexAI } from '@google-cloud/vertexai';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const CYBERSEC_PATH = path.resolve(__dirname, '../src/data/cybersec.ts');
 const CONTENT_PATH = path.resolve(__dirname, '../src/data/articleContent.ts');
 const SITEMAP_PATH = path.resolve(__dirname, '../public/sitemap.xml');
 const PROMPT_PATH = path.resolve(__dirname, '../prompts/Blog-Creator.md');
 
-const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT || 'gen-lang-client-0785751854';
+let PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT || 'gen-lang-client-0785751854';
+if (PROJECT_ID === 'cloudshell-gca') {
+  PROJECT_ID = 'gen-lang-client-0785751854';
+}
 const LOCATION = 'us-central1';
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
 

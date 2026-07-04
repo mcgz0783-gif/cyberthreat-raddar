@@ -14,14 +14,19 @@ export function useNews() {
           const data = await response.json();
           throw new Error(data.error || "Failed to fetch live news");
         }
-        const liveNews: NewsItem[] = await response.json();
+        const liveNews = await response.json();
         
         // Merge live news with static news, prioritizing live
-        setNews([...liveNews, ...NEWS]);
+        if (Array.isArray(liveNews)) {
+          setNews([...liveNews, ...NEWS]);
+        } else {
+          console.error("Live news data is not an array:", liveNews);
+          setError("Received malformed news data");
+        }
       } catch (err: unknown) {
         const error = err as Error;
         console.error("Live news fetch failed:", error.message);
-        setError(error.message);
+        setError("Failed to load live threat intelligence. Using offline data.");
         // Fallback is already set to static NEWS
       } finally {
         setLoading(false);

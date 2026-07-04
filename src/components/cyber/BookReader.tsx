@@ -36,6 +36,39 @@ type Page =
 
 export function BookReader({ book, onClose }: { book: BookItem; onClose: () => void }) {
   const content = BOOK_CONTENT[book.id];
+  const [isPurchased, setIsPurchased] = useState(() => {
+    if (!book.isPaid) return true;
+    return localStorage.getItem(`purchased_${book.id}`) === "true";
+  });
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [payCurrency, setPayCurrency] = useState<"USD" | "UGX">("USD");
+
+  const handlePurchase = async () => {
+    setIsPurchasing(true);
+    try {
+      const response = await fetch("/api/pay/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: book.id,
+          currency: payCurrency,
+          amount: payCurrency === "USD" ? book.priceUSD : book.priceUGX,
+          email: "customer@example.com", // In a real app, collect from user
+        }),
+      });
+      const data = await response.json();
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        throw new Error(data.error || "Failed to initiate payment");
+      }
+    } catch (err: any) {
+      console.error("Purchase error:", err);
+      alert("Payment failed: " + err.message);
+    } finally {
+      setIsPurchasing(false);
+    }
+  };
 
   const pages = useMemo<Page[]>(() => {
     if (!content) return [{ kind: "cover" }];
@@ -49,6 +82,29 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
   }, [content]);
 
   const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("status");
+    const orderId = params.get("OrderTrackingId");
+
+    if (status === "check" && orderId) {
+      const verifyPayment = async () => {
+        try {
+          const res = await fetch(`/api/pay/verify?orderTrackingId=${orderId}&bookId=${book.id}`);
+          const data = await res.json();
+          if (data.unlocked) {
+            localStorage.setItem(`purchased_${book.id}`, "true");
+            setIsPurchased(true);
+            alert("Payment successful! Download unlocked.");
+          }
+        } catch (err) {
+          console.error("Verification failed", err);
+        }
+      };
+      verifyPayment();
+    }
+  }, [book.id]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -88,14 +144,37 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                window.print();
-              }}
-              className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print"
-            >
-              Download PDF
-            </button>
+            {book.isPaid && !isPurchased && (
+              <select 
+                value={payCurrency} 
+                onChange={(e) => setPayCurrency(e.target.value as any)}
+                className="bg-neutral-800 text-white text-[10px] px-2 py-1 rounded border border-border no-print"
+              >
+                <option value="USD">USD (${book.priceUSD})</option>
+                <option value="UGX">UGX ({book.priceUGX?.toLocaleString()})</option>
+              </select>
+            )}
+            
+            {!isPurchased ? (
+              <button
+                onClick={handlePurchase}
+                disabled={isPurchasing}
+                className="text-white bg-warning hover:bg-warning/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print flex items-center gap-2"
+              >
+                {isPurchasing ? "Connecting..." : "Unlock Download"}
+                <span className="text-[10px] opacity-70">via PesaPal</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  window.print();
+                }}
+                className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print"
+              >
+                Download PDF
+              </button>
+            )}
+            
             <button
               onClick={onClose}
               className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors group"
