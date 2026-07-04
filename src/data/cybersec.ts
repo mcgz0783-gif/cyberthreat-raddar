@@ -78,7 +78,7 @@ export const TOOLS = [
 export type NewsItem = typeof NEWS[number] & { cover?: string };
 export type BlogItem = typeof BLOGS[number] & { cover?: string };
 export type InsightItem = typeof INSIGHTS[number] & { cover?: string };
-export type BookItem = typeof BOOKS[number] & { cover?: string };
+export type BookItem = Omit<typeof BOOKS[number], "cover"> & { cover?: string };
 
 export const colorVar = (c: string) => {
   if (c === "danger" || c === "success" || c === "warning" || c === "primary") return `hsl(var(--${c}))`;
