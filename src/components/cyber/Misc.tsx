@@ -10,6 +10,7 @@ export function SearchBar({ placeholder, value, onChange }: { placeholder: strin
         type="text"
         className="input-cyber"
         placeholder={placeholder}
+        aria-label={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
         style={{ paddingLeft: 44 }}
