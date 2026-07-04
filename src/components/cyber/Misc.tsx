@@ -10,6 +10,7 @@ export function SearchBar({ placeholder, value, onChange }: { placeholder: strin
         type="text"
         className="input-cyber"
         placeholder={placeholder}
+        aria-label={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
         style={{ paddingLeft: 44 }}
@@ -26,7 +27,7 @@ export function SectionHeader({ eyebrow, title, subtitle }: { eyebrow?: string; 
           ▸ {eyebrow}
         </div>
       )}
-      <h2 className="section-title mb-3">{title}</h2>
+      <h1 className="section-title mb-3">{title}</h1>
       {subtitle && <p className="text-foreground/85 text-base leading-relaxed">{subtitle}</p>}
     </div>
   );
@@ -104,8 +105,13 @@ export function Footer() {
               The definitive platform for cybersecurity professionals. Global intelligence, expert analysis, and continuous education.
             </p>
             <div className="flex gap-2 mt-5">
-              {["𝕏","in","gh","▶"].map(s => (
-                <a key={s} href="#" className="w-9 h-9 border border-border text-muted-foreground flex items-center justify-center hover:border-primary hover:text-primary transition-colors text-sm font-bold">
+              {[
+                { s: "𝕏", label: "X (Twitter)" },
+                { s: "in", label: "LinkedIn" },
+                { s: "gh", label: "GitHub" },
+                { s: "▶", label: "YouTube" },
+              ].map(({ s, label }) => (
+                <a key={s} href="#" aria-label={`CyberHawk UG on ${label}`} className="w-9 h-9 border border-border text-muted-foreground flex items-center justify-center hover:border-primary hover:text-primary transition-colors text-sm font-bold">
                   {s}
                 </a>
               ))}
