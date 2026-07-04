@@ -48,9 +48,7 @@ export function BlogCard({ item, onClick }: { item: BlogItem; onClick?: () => vo
   return (
     <article onClick={onClick} className="card-cyber cursor-pointer fade-in overflow-hidden flex flex-col">
       <div className="relative h-48 bg-gradient-primary border-b border-border overflow-hidden">
-        {cover ? (
-          <img src={cover} alt={item.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-        ) : null}
+        <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={item.title} loading="lazy" className={`absolute inset-0 w-full h-full transition-transform duration-500 hover:scale-105 ${cover ? "object-cover" : "object-contain p-8 opacity-50"}`} />
         <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-card/30 to-transparent flex items-center justify-center text-7xl">
           <span className="drop-shadow-lg">{item.img}</span>
         </div>
