@@ -1,62 +1,62 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getPesapalAuthToken, PESAPAL_CONFIG } from "./config";
-import fs from 'fs';
-import path from 'path';
+import { getPesapalToken } from "./config";
+import { supabase } from "../../src/lib/supabase";
+import { sendPurchaseConfirmation } from "../../src/lib/email-delivery";
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
-  // PesaPal IPN is usually a GET or POST depending on registration
-  const { OrderTrackingId, OrderMerchantReference } = req.query;
+const PESAPAL_API_URL = process.env.PESAPAL_ENVIRONMENT === 'sandbox' 
+  ? 'https://cybqa.pesapal.com/pesapalv3/api' 
+  : 'https://pay.pesapal.com/v3/api';
 
-  if (!OrderTrackingId) {
-    return res.status(400).json({ error: "Missing OrderTrackingId" });
-  }
+// This is the IPN endpoint that Pesapal will call
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'GET') return res.status(405).end();
+  
+  const { OrderTrackingId, OrderNotificationType } = req.query;
 
-  try {
-    const token = await getPesapalAuthToken();
-
-    // Verify transaction status
-    const response = await fetch(`${PESAPAL_CONFIG.base_url}/api/Transactions/GetTransactionStatus?orderTrackingId=${OrderTrackingId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json'
-      }
-    });
-
-    const data = await response.json();
-
-    if (data.status === "200" && data.payment_status_description === "Completed") {
-      // Record successful transaction
-      // For this prototype, we'll use a file in /tmp to simulate persistence
-      const logPath = path.join('/tmp', 'transactions.json');
-      let transactions: any[] = [];
+  if (OrderNotificationType === 'IPNCHANGE') {
+    try {
+      const token = await getPesapalToken();
       
-      if (fs.existsSync(logPath)) {
-        transactions = JSON.parse(fs.readFileSync(logPath, 'utf8'));
-      }
-
-      transactions.push({
-        id: OrderTrackingId,
-        ref: OrderMerchantReference,
-        status: "Completed",
-        date: new Date().toISOString()
+      // Verify transaction status
+      const response = await fetch(`${PESAPAL_API_URL}/Transactions/GetTransactionStatus?orderTrackingId=${OrderTrackingId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      const statusData = await response.json();
+      
+      // If status is 'COMPLETED', fulfill the order
+      if (statusData.status === 'COMPLETED') {
+        const { data: purchase } = await supabase
+          .from('payments')
+          .select('*, users(email), books(title, download_url)')
+          .eq('tracking_id', OrderTrackingId)
+          .single();
 
-      fs.writeFileSync(logPath, JSON.stringify(transactions));
-      console.log(`✅ Transaction ${OrderTrackingId} completed and recorded.`);
+        if (purchase) {
+          await supabase
+            .from('payments')
+            .update({ status: 'SUCCESS' })
+            .eq('tracking_id', OrderTrackingId);
+          
+          await supabase
+            .from('purchases')
+            .insert({ user_id: purchase.user_id, book_id: purchase.book_id });
+
+          // Send confirmation email
+          await sendPurchaseConfirmation(
+            purchase.users.email,
+            purchase.books.title,
+            purchase.books.download_url
+          );
+        }
+      }
+      
+      return res.status(200).send('IPN Received');
+    } catch (error) {
+      console.error('IPN Processing Error:', error);
+      return res.status(500).end();
     }
-
-    // Always respond with a 200 to PesaPal to acknowledge receipt
-    return res.status(200).json({ 
-      order_tracking_id: OrderTrackingId,
-      status: data.payment_status_description 
-    });
-
-  } catch (error: any) {
-    console.error("Webhook Error:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
   }
+  
+  return res.status(200).end();
 }

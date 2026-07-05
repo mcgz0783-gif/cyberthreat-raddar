@@ -1,30 +1,27 @@
-export const PESAPAL_CONFIG = {
-  consumer_key: process.env.PESAPAL_CONSUMER_KEY || '',
-  consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || '',
-  is_sandbox: process.env.PESAPAL_MODE !== 'live',
-  get base_url() {
-    return this.is_sandbox 
-      ? 'https://cybqa.pesapal.com/pesapalv3' 
-      : 'https://pay.pesapal.com/v3';
-  }
-};
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export async function getPesapalAuthToken() {
-  const response = await fetch(`${PESAPAL_CONFIG.base_url}/api/Auth/RequestToken`, {
+const PESAPAL_API_URL = process.env.PESAPAL_ENVIRONMENT === 'sandbox' 
+  ? 'https://cybqa.pesapal.com/pesapalv3/api' 
+  : 'https://pay.pesapal.com/v3/api';
+
+export async function getPesapalToken() {
+  const response = await fetch(`${PESAPAL_API_URL}/Auth/RequestToken`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      consumer_key: PESAPAL_CONFIG.consumer_key,
-      consumer_secret: PESAPAL_CONFIG.consumer_secret
-    })
+      consumer_key: process.env.PESAPAL_CONSUMER_KEY,
+      consumer_secret: process.env.PESAPAL_CONSUMER_SECRET,
+    }),
   });
 
+  if (!response.ok) throw new Error('Failed to authenticate with Pesapal');
+  
   const data = await response.json();
-  if (data.status !== "200") {
-    throw new Error(data.error?.message || 'Failed to authenticate with PesaPal');
-  }
   return data.token;
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // This endpoint is primarily for internal server-to-server calls.
+  // Not intended to be exposed to frontend directly.
+  return res.status(405).json({ error: 'Use via internal functions' });
 }
