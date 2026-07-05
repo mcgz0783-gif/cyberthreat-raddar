@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "cyberhawk-ug-mcp",
+      "version": "0.1.0",
+      "title": "CyberHawk UG"
+    },
+    "tools": [
+      {
+        "name": "echo",
+        "title": "Echo",
+        "description": "Echo the input text back. Useful for verifying MCP connectivity to CyberHawk UG.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Text to echo back."
+            }
+          },
+          "required": [
+            "text"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_cve",
+        "title": "Search CVE database",
+        "description": "Search the NIST National Vulnerability Database for CVEs by ID (e.g. CVE-2024-3094) or keyword (e.g. openssh). Returns up to 10 matches with CVSS score and description.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "CVE ID or free-text keyword."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "lookup_ip",
+        "title": "IP reputation and geolocation",
+        "description": "Resolve an IPv4/IPv6 address to geolocation and ASN/org info via ipapi.co. Read-only.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "ip": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The IP address to look up."
+            }
+          },
+          "required": [
+            "ip"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "check_password_breach",
+        "title": "Check password against breach database",
+        "description": "Check whether a password appears in known breaches using the HaveIBeenPwned k-anonymity API. Only the first 5 chars of the SHA-1 hash leave the server.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Password to check. Never logged; only its hash prefix is sent."
+            }
+          },
+          "required": [
+            "password"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
