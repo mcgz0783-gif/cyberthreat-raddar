@@ -254,19 +254,17 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
                 </article>
               )}
               
-              {isPreviewEnd && (
+              {isPreviewEnd && db && (
                 <div className="flex-1 flex flex-col items-center justify-center p-12 bg-neutral-100 border-t border-neutral-200">
                   <h3 className="text-2xl font-bold mb-4">Preview Ended</h3>
                   <p className="text-neutral-600 mb-8 text-center">
-                    Purchase the full book to continue reading.
+                    Purchase the full book to continue reading and download a copy.
                   </p>
-                  <button
-                    onClick={handlePurchase}
-                    disabled={isPurchasing}
-                    className="text-white bg-warning hover:bg-warning/80 px-8 py-4 rounded-full text-lg font-bold uppercase transition-colors"
-                  >
-                    {isPurchasing ? "Connecting..." : `Purchase Full Book - ${payCurrency === 'USD' ? '$' + book.priceUSD : book.priceUGX + ' UGX'}`}
-                  </button>
+                  <BuyBookButton
+                    bookId={db.id}
+                    label={`Purchase Full Book — ${formatPrice(db.price_cents, db.currency)}`}
+                    className="text-background bg-warning hover:bg-warning/80 px-8 py-4 rounded-full text-lg font-bold uppercase transition-colors"
+                  />
                 </div>
               )}
             </div>
