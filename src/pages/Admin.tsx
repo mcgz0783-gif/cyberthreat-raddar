@@ -12,6 +12,7 @@ type BookRow = {
   price_cents: number;
   currency: string;
   published: boolean;
+  preview_only: boolean;
   cover_path: string | null;
   created_at: string;
 };
@@ -35,7 +36,7 @@ export default function Admin() {
   const load = async () => {
     const { data } = await supabase
       .from("books")
-      .select("id, title, slug, price_cents, currency, published, cover_path, created_at")
+      .select("id, title, slug, price_cents, currency, published, preview_only, cover_path, created_at")
       .order("created_at", { ascending: false });
     if (data) setBooks(data as BookRow[]);
   };
@@ -90,6 +91,13 @@ export default function Admin() {
   const togglePublish = async (b: BookRow) => {
     const { error } = await supabase.from("books").update({ published: !b.published }).eq("id", b.id);
     if (error) return toast.error(error.message);
+    load();
+  };
+
+  const togglePreview = async (b: BookRow) => {
+    const { error } = await supabase.from("books").update({ preview_only: !b.preview_only }).eq("id", b.id);
+    if (error) return toast.error(error.message);
+    toast.success(!b.preview_only ? "Preview-only enabled" : "Full read unlocked for purchasers");
     load();
   };
 
@@ -164,11 +172,14 @@ export default function Admin() {
                 <tr key={b.id} className="border-b border-border/50">
                   <td className="py-2 pr-4 text-white">{b.title}</td>
                   <td className="py-2 pr-4">{(b.price_cents/100).toFixed(2)} {b.currency}</td>
-                  <td className="py-2 pr-4">{b.published ? "Published" : "Draft"}</td>
+                  <td className="py-2 pr-4">{b.published ? "Published" : "Draft"}{b.preview_only ? " · Preview" : " · Full"}</td>
                   <td className="py-2 pr-4 text-muted-foreground">{new Date(b.created_at).toLocaleDateString()}</td>
-                  <td className="py-2 flex gap-2 justify-end">
+                  <td className="py-2 flex gap-2 justify-end flex-wrap">
                     <button className="btn-ghost-cyber text-[11px] px-3 py-1" onClick={() => togglePublish(b)}>
                       {b.published ? "Unpublish" : "Publish"}
+                    </button>
+                    <button className="btn-ghost-cyber text-[11px] px-3 py-1" onClick={() => togglePreview(b)}>
+                      {b.preview_only ? "Unlock full" : "Preview only"}
                     </button>
                     <button className="btn-ghost-cyber text-[11px] px-3 py-1 text-red-400" onClick={() => remove(b)}>Delete</button>
                   </td>
