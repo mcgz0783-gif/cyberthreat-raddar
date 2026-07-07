@@ -58,6 +58,8 @@ export type Database = {
           description: string | null
           file_path: string | null
           id: string
+          legacy_id: number | null
+          preview_only: boolean
           price_cents: number
           published: boolean
           slug: string
@@ -74,6 +76,8 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           id?: string
+          legacy_id?: number | null
+          preview_only?: boolean
           price_cents?: number
           published?: boolean
           slug: string
@@ -90,6 +94,8 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           id?: string
+          legacy_id?: number | null
+          preview_only?: boolean
           price_cents?: number
           published?: boolean
           slug?: string
@@ -308,6 +314,7 @@ export type Database = {
           created_at: string
           id: string
           order_id: string
+          status: Database["public"]["Enums"]["purchase_status"]
           user_id: string
         }
         Insert: {
@@ -315,6 +322,7 @@ export type Database = {
           created_at?: string
           id?: string
           order_id: string
+          status?: Database["public"]["Enums"]["purchase_status"]
           user_id: string
         }
         Update: {
@@ -322,6 +330,7 @@ export type Database = {
           created_at?: string
           id?: string
           order_id?: string
+          status?: Database["public"]["Enums"]["purchase_status"]
           user_id?: string
         }
         Relationships: [
@@ -384,6 +393,7 @@ export type Database = {
         | "refunded"
         | "cancelled"
       payment_status: "pending" | "success" | "failed" | "refunded"
+      purchase_status: "active" | "refunded" | "revoked"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -514,6 +524,7 @@ export const Constants = {
       app_role: ["admin", "user"],
       order_status: ["pending", "completed", "failed", "refunded", "cancelled"],
       payment_status: ["pending", "success", "failed", "refunded"],
+      purchase_status: ["active", "refunded", "revoked"],
     },
   },
 } as const
