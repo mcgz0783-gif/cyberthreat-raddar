@@ -24,7 +24,8 @@ Deno.serve(async (req) => {
     const { data: book } = await admin.from("books").select("file_path, title").eq("id", book_id).maybeSingle();
     if (!book?.file_path) return json({ error: "File unavailable" }, 404);
 
-    const { data: signed, error: sErr } = await admin.storage.from("book-files").createSignedUrl(book.file_path, 300, { download: true });
+    // 1 hour window — matches the emailed receipt link so both share the same lifetime.
+    const { data: signed, error: sErr } = await admin.storage.from("book-files").createSignedUrl(book.file_path, 3600, { download: true });
     if (sErr || !signed) return json({ error: "Could not sign URL" }, 500);
 
     await admin.from("downloads").insert({

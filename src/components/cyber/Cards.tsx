@@ -78,8 +78,15 @@ const CUSTOM_COVERS: Record<number, string> = {
   9: aiAgentsCover,
 };
 
+import { BuyBookButton } from "@/components/BuyBookButton";
+import { useBooksCatalog, usePurchases, formatPrice } from "@/hooks/useCatalog";
+
 export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void }) {
   const cover = CUSTOM_COVERS[item.id] || item.cover;
+  const { byLegacyId } = useBooksCatalog();
+  const { bookIds } = usePurchases();
+  const db = byLegacyId[item.id];
+  const purchased = db ? bookIds.has(db.id) : false;
   return (
     <article className="card-cyber p-5 fade-in flex flex-col gap-3">
       <div
@@ -100,13 +107,22 @@ export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void
         <div className="absolute bottom-2 right-2 font-mono text-[10px] text-primary bg-background/80 px-2 py-0.5 border border-primary/40 z-10">
           {item.pages}p
         </div>
+        {/* Buy overlay */}
+        <div className="absolute inset-x-0 top-0 z-20 flex justify-end p-2" onClick={e => e.stopPropagation()}>
+          {db && !purchased && (
+            <BuyBookButton bookId={db.id} label={`BUY ${formatPrice(db.price_cents, db.currency)}`} className="btn-cyber text-[11px] py-1.5 px-3 bg-warning/95 hover:bg-warning text-background font-bold shadow-lg" />
+          )}
+          {db && purchased && (
+            <span className="font-mono text-[10px] px-2 py-1 bg-success/90 text-background font-bold uppercase">✓ OWNED</span>
+          )}
+        </div>
       </div>
       <Tag text={item.cat} color="hsl(var(--primary))" />
       <h3 className="font-display font-bold text-white text-base leading-tight">{item.title}</h3>
       <p className="font-mono text-xs text-muted-foreground">by {item.author} · {item.year}</p>
       <p className="text-sm text-foreground/70 leading-relaxed flex-1">{item.desc}</p>
       <div className="flex gap-2 mt-2">
-        <button onClick={onRead} className="btn-cyber flex-1 text-[11px] py-2">📖 READ</button>
+        <button onClick={onRead} className="btn-cyber flex-1 text-[11px] py-2">📖 {purchased ? "READ" : "PREVIEW"}</button>
         <button onClick={onRead} className="btn-ghost-cyber flex-1 text-[11px] py-2">📑 CONTENTS</button>
       </div>
     </article>
