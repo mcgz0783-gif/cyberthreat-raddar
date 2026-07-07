@@ -20,6 +20,7 @@ import { TermsPage } from "@/components/cyber/pages/TermsPage";
 import AuthPage from "@/pages/Auth";
 import AuthCallback from "@/pages/AuthCallback";
 import Dashboard from "@/pages/Dashboard";
+import Admin from "@/pages/Admin";
 import PaymentCallback from "@/pages/PaymentCallback";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/payment/callback" element={<PaymentCallback />} />
             </Route>
             <Route path="*" element={<NotFound />} />
