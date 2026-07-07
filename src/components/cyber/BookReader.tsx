@@ -116,34 +116,20 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {book.isPaid && !isPurchased && (
-              <select 
-                value={payCurrency} 
-                onChange={(e) => setPayCurrency(e.target.value as any)}
-                className="bg-neutral-800 text-white text-[10px] px-2 py-1 rounded border border-border no-print"
-              >
-                <option value="USD">USD (${book.priceUSD})</option>
-                <option value="UGX">UGX ({book.priceUGX?.toLocaleString()})</option>
-              </select>
+            {db && !isPurchased && (
+              <BuyBookButton
+                bookId={db.id}
+                label={`BUY ${formatPrice(db.price_cents, db.currency)}`}
+                className="text-background bg-warning hover:bg-warning/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase no-print"
+              />
             )}
-            
-            {!isPurchased ? (
+            {isPurchased && (
               <button
-                onClick={handlePurchase}
-                disabled={isPurchasing}
-                className="text-white bg-warning hover:bg-warning/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print flex items-center gap-2"
-              >
-                {isPurchasing ? "Connecting..." : "Unlock Download"}
-                <span className="text-[10px] opacity-70">via PesaPal</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  window.print();
-                }}
+                onClick={handleDownload}
+                disabled={downloading}
                 className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print"
               >
-                Download PDF
+                {downloading ? "Preparing…" : "⬇ Download"}
               </button>
             )}
             
