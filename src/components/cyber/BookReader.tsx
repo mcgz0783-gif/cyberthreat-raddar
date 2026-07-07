@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { type BookItem } from "@/data/cybersec";
 import { BOOK_CONTENT, CUSTOM_COVERS } from "@/data/bookContent";
+import { useBooksCatalog, usePurchases, formatPrice } from "@/hooks/useCatalog";
+import { BuyBookButton } from "@/components/BuyBookButton";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // Pick relevant Unsplash imagery from chapter title keywords.
 const KEYWORD_MAP: { match: RegExp; q: string }[] = [
@@ -36,38 +40,24 @@ type Page =
 
 export function BookReader({ book, onClose }: { book: BookItem; onClose: () => void }) {
   const content = BOOK_CONTENT[book.id];
-  const [isPurchased, setIsPurchased] = useState(() => {
-    if (!book.isPaid) return true;
-    return localStorage.getItem(`purchased_${book.id}`) === "true";
-  });
-  const [isPurchasing, setIsPurchasing] = useState(false);
-  const [payCurrency, setPayCurrency] = useState<"USD" | "UGX">("USD");
+  const { byLegacyId } = useBooksCatalog();
+  const { bookIds } = usePurchases();
+  const db = byLegacyId[book.id];
+  const isPurchased = db ? bookIds.has(db.id) : false;
+  // A book is fully readable when the admin unlocked it (preview_only=false) OR the user purchased it.
+  const canReadFull = db ? (!db.preview_only || isPurchased) : true;
+  const [downloading, setDownloading] = useState(false);
 
-  const handlePurchase = async () => {
-    setIsPurchasing(true);
+  const handleDownload = async () => {
+    if (!db) return;
+    setDownloading(true);
     try {
-      const response = await fetch("/api/pay/initiate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookId: book.id,
-          currency: payCurrency,
-          amount: payCurrency === "USD" ? book.priceUSD : book.priceUGX,
-          email: "customer@example.com", // In a real app, collect from user
-        }),
-      });
-      const data = await response.json();
-      if (data.redirect_url) {
-        window.location.href = data.redirect_url;
-      } else {
-        throw new Error(data.error || "Failed to initiate payment");
-      }
-    } catch (err: any) {
-      console.error("Purchase error:", err);
-      alert("Payment failed: " + err.message);
-    } finally {
-      setIsPurchasing(false);
-    }
+      const { data, error } = await supabase.functions.invoke("download-book", { body: { book_id: db.id } });
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
+      else throw new Error("No download URL returned");
+    } catch (e: any) { toast.error(e.message || "Download failed"); }
+    finally { setDownloading(false); }
   };
 
   const pages = useMemo<Page[]>(() => {
@@ -78,46 +68,13 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
         list.push({ kind: "body", chapterIndex: ci, pageIndex: pi, chapterTitle: ch.title })
       );
     });
-    
-    // Preview restriction for specific books
-    const isRestrictedBook = (book.id === 1 || book.id === 2);
-    if (isRestrictedBook && !isPurchased) {
-      return list.slice(0, 5);
-    }
-    
+    // Preview cap: first 5 pages until purchased (and admin hasn't unlocked)
+    if (!canReadFull) return list.slice(0, 5);
     return list;
-  }, [content, isPurchased, book.id]);
+  }, [content, canReadFull]);
 
   const [idx, setIdx] = useState(0);
-
-  // Computed property to check if we are at the end of preview
-  const isPreviewEnd = useMemo(() => {
-    const isRestrictedBook = (book.id === 1 || book.id === 2);
-    return isRestrictedBook && !isPurchased && idx >= 4;
-  }, [idx, isPurchased, book.id]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
-    const orderId = params.get("OrderTrackingId");
-
-    if (status === "check" && orderId) {
-      const verifyPayment = async () => {
-        try {
-          const res = await fetch(`/api/pay/verify?orderTrackingId=${orderId}&bookId=${book.id}`);
-          const data = await res.json();
-          if (data.unlocked) {
-            localStorage.setItem(`purchased_${book.id}`, "true");
-            setIsPurchased(true);
-            alert("Payment successful! Download unlocked.");
-          }
-        } catch (err) {
-          console.error("Verification failed", err);
-        }
-      };
-      verifyPayment();
-    }
-  }, [book.id]);
+  const isPreviewEnd = useMemo(() => !canReadFull && idx >= pages.length - 1, [canReadFull, idx, pages.length]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
