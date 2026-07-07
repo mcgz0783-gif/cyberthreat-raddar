@@ -14,15 +14,16 @@ export type DbBook = {
 };
 
 let cachePromise: Promise<DbBook[]> | null = null;
-function fetchBooks() {
-  if (!cachePromise) {
-    cachePromise = supabase
-      .from("books")
-      .select("id, legacy_id, slug, title, price_cents, currency, preview_only, cover_path")
-      .eq("published", true)
-      .is("deleted_at", null)
-      .then(({ data }) => (data as DbBook[]) ?? []);
-  }
+async function fetchBooks(): Promise<DbBook[]> {
+  const { data } = await supabase
+    .from("books")
+    .select("id, legacy_id, slug, title, price_cents, currency, preview_only, cover_path")
+    .eq("published", true)
+    .is("deleted_at", null);
+  return (data as DbBook[]) ?? [];
+}
+function getBooks() {
+  if (!cachePromise) cachePromise = fetchBooks();
   return cachePromise;
 }
 export function invalidateBookCache() { cachePromise = null; }
@@ -31,7 +32,7 @@ export function useBooksCatalog() {
   const [byLegacyId, setBy] = useState<Record<number, DbBook>>({});
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    fetchBooks().then(books => {
+    getBooks().then(books => {
       const m: Record<number, DbBook> = {};
       books.forEach(b => { if (b.legacy_id != null) m[b.legacy_id] = b; });
       setBy(m); setReady(true);
