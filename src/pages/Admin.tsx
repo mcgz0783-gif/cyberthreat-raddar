@@ -17,12 +17,29 @@ type BookRow = {
   created_at: string;
 };
 
+type OrderRow = {
+  id: string;
+  user_id: string;
+  book_id: string;
+  amount_cents: number;
+  currency: string;
+  status: string;
+  pesapal_tracking_id: string | null;
+  pesapal_merchant_reference: string | null;
+  created_at: string;
+  books?: { title: string } | null;
+  profiles?: { email: string | null } | null;
+};
+
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 export default function Admin() {
   const { user, loading, isAdmin } = useAuth();
   const [books, setBooks] = useState<BookRow[]>([]);
+  const [orders, setOrders] = useState<OrderRow[]>([]);
+  const [orderFilter, setOrderFilter] = useState<"all" | "pending" | "completed" | "failed">("all");
+  const [orderSearch, setOrderSearch] = useState("");
   const [busy, setBusy] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -34,11 +51,19 @@ export default function Admin() {
   const [file, setFile] = useState<File | null>(null);
 
   const load = async () => {
-    const { data } = await supabase
-      .from("books")
-      .select("id, title, slug, price_cents, currency, published, preview_only, cover_path, created_at")
-      .order("created_at", { ascending: false });
-    if (data) setBooks(data as BookRow[]);
+    const [b, o] = await Promise.all([
+      supabase
+        .from("books")
+        .select("id, title, slug, price_cents, currency, published, preview_only, cover_path, created_at")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("orders")
+        .select("id, user_id, book_id, amount_cents, currency, status, pesapal_tracking_id, pesapal_merchant_reference, created_at, books(title)")
+        .order("created_at", { ascending: false })
+        .limit(200),
+    ]);
+    if (b.data) setBooks(b.data as BookRow[]);
+    if (o.data) setOrders(o.data as unknown as OrderRow[]);
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
@@ -192,6 +217,106 @@ export default function Admin() {
           </table>
         </div>
       </div>
+
+      {/* Orders */}
+      <div className="card-cyber p-6 mt-10">
+        <div className="flex flex-wrap gap-3 items-center justify-between mb-4">
+          <h2 className="font-display font-bold text-white text-lg">Orders ({orders.length})</h2>
+          <div className="flex gap-2 items-center flex-wrap">
+            <input
+              className="input-cyber text-xs"
+              placeholder="Search title, ref, user…"
+              value={orderSearch}
+              onChange={e => setOrderSearch(e.target.value)}
+            />
+            <select
+              className="input-cyber text-xs"
+              value={orderFilter}
+              onChange={e => setOrderFilter(e.target.value as typeof orderFilter)}
+            >
+              <option value="all">All statuses</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
+        </div>
+
+        {(() => {
+          const totalCompletedCents = orders
+            .filter(o => o.status === "completed")
+            .reduce((s, o) => s + (o.amount_cents || 0), 0);
+          return (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 text-xs">
+              <div className="p-3 rounded border border-border">
+                <div className="text-muted-foreground uppercase">Completed</div>
+                <div className="text-white text-base">{orders.filter(o => o.status === "completed").length}</div>
+              </div>
+              <div className="p-3 rounded border border-border">
+                <div className="text-muted-foreground uppercase">Pending</div>
+                <div className="text-white text-base">{orders.filter(o => o.status === "pending").length}</div>
+              </div>
+              <div className="p-3 rounded border border-border">
+                <div className="text-muted-foreground uppercase">Failed</div>
+                <div className="text-white text-base">{orders.filter(o => o.status === "failed").length}</div>
+              </div>
+              <div className="p-3 rounded border border-border">
+                <div className="text-muted-foreground uppercase">Revenue</div>
+                <div className="text-white text-base">${(totalCompletedCents / 100).toFixed(2)}</div>
+              </div>
+            </div>
+          );
+        })()}
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="text-left text-muted-foreground uppercase border-b border-border">
+                <th className="py-2 pr-4">Date</th>
+                <th className="py-2 pr-4">Book</th>
+                <th className="py-2 pr-4">Amount</th>
+                <th className="py-2 pr-4">Status</th>
+                <th className="py-2 pr-4">User</th>
+                <th className="py-2 pr-4">Reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders
+                .filter(o => orderFilter === "all" || o.status === orderFilter)
+                .filter(o => {
+                  if (!orderSearch) return true;
+                  const q = orderSearch.toLowerCase();
+                  return (
+                    o.books?.title?.toLowerCase().includes(q) ||
+                    o.pesapal_merchant_reference?.toLowerCase().includes(q) ||
+                    o.pesapal_tracking_id?.toLowerCase().includes(q) ||
+                    o.user_id.toLowerCase().includes(q)
+                  );
+                })
+                .map(o => (
+                  <tr key={o.id} className="border-b border-border/50">
+                    <td className="py-2 pr-4 text-muted-foreground">{new Date(o.created_at).toLocaleString()}</td>
+                    <td className="py-2 pr-4 text-white">{o.books?.title || "—"}</td>
+                    <td className="py-2 pr-4">{(o.amount_cents / 100).toFixed(2)} {o.currency}</td>
+                    <td className="py-2 pr-4">
+                      <span className={
+                        o.status === "completed" ? "text-emerald-400"
+                          : o.status === "failed" ? "text-red-400"
+                          : "text-amber-300"
+                      }>{o.status}</span>
+                    </td>
+                    <td className="py-2 pr-4 text-muted-foreground font-mono">{o.user_id.slice(0, 8)}…</td>
+                    <td className="py-2 pr-4 text-muted-foreground font-mono">{(o.pesapal_merchant_reference || "").slice(0, 12)}</td>
+                  </tr>
+                ))}
+              {orders.length === 0 && (
+                <tr><td colSpan={6} className="py-6 text-center text-muted-foreground">No orders yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   );
 }
+
