@@ -25,7 +25,7 @@ export function PrivacyPage() {
         </div>
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">4. Your Rights</h2>
-          <p>You may request a copy of your data, ask for corrections, or request deletion by emailing <span className="text-primary">kevlarmackenzie@gmail.com</span>. We respond within 30 days as required by GDPR and Uganda's Data Protection and Privacy Act, 2019.</p>
+          <p>You may request a copy of your data, ask for corrections, or request deletion by emailing <span className="text-primary">mcgz0783@gmail.com</span>. We respond within 30 days as required by GDPR and Uganda's Data Protection and Privacy Act, 2019.</p>
         </div>
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">5. Security</h2>
@@ -33,7 +33,7 @@ export function PrivacyPage() {
         </div>
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">6. Contact</h2>
-          <p>Questions? Reach us at <span className="text-primary">kevlarmackenzie@gmail.com</span> or WhatsApp <span className="text-primary">0788213106</span>.</p>
+          <p>Questions? Reach us at <span className="text-primary">mcgz0783@gmail.com</span> or WhatsApp <span className="text-primary">0788213106</span>.</p>
         </div>
       </div>
     </section>

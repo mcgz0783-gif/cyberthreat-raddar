@@ -139,7 +139,7 @@ export function Footer() {
               Contact
             </div>
             {[
-              { icon:"✉", val:"kevlarmackenzie@gmail.com" },
+              { icon:"✉", val:"mcgz0783@gmail.com" },
               { icon:"📞", val:"0783699626" },
               { icon:"💬", val:"WhatsApp: 0788213106" },
             ].map(c => (

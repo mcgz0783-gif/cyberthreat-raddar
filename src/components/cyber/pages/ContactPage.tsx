@@ -15,7 +15,7 @@ export function ContactPage() {
   };
 
   const channels = [
-    { icon:"✉", label:"Email", val:"kevlarmackenzie@gmail.com" },
+    { icon:"✉", label:"Email", val:"mcgz0783@gmail.com" },
     { icon:"📞", label:"Phone", val:"0783699626" },
     { icon:"💬", label:"WhatsApp", val:"0788213106" },
     { icon:"🔐", label:"PGP", val:"0xA1B2 C3D4 E5F6 7890" },
@@ -39,7 +39,7 @@ export function ContactPage() {
             "url": "https://www.cyberhawk-ug.store/contact",
             "contactPoint": {
               "@type": "ContactPoint",
-              "email": "kevlarmackenzie@gmail.com",
+              "email": "mcgz0783@gmail.com",
               "telephone": "+256-783699626",
               "contactType": "customer service"
             }
