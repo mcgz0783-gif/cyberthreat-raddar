@@ -15,40 +15,8 @@ async function getToken() {
   return (await r.json()).token as string;
 }
 
-async function sendReceipt(admin: any, order: any) {
-  try {
-    const { data: book } = await admin.from("books").select("title, file_path").eq("id", order.book_id).maybeSingle();
-    const { data: profile } = await admin.from("profiles").select("email, full_name").eq("id", order.user_id).maybeSingle();
-    if (!profile?.email) return;
-
-    let downloadUrl: string | null = null;
-    if (book?.file_path) {
-      const { data: signed } = await admin.storage.from("book-files").createSignedUrl(book.file_path, SIGNED_URL_TTL_SECONDS, { download: true });
-      downloadUrl = signed?.signedUrl ?? null;
-    }
-
-    const priceLabel = new Intl.NumberFormat("en-US", { style: "currency", currency: order.currency }).format(order.amount_cents / 100);
-    // Best-effort — succeeds once email infra is configured. Does not fail the payment flow.
-    await admin.functions.invoke("send-transactional-email", {
-      body: {
-        templateName: "purchase-receipt",
-        recipientEmail: profile.email,
-        idempotencyKey: `receipt-${order.id}`,
-        templateData: {
-          name: profile.full_name || "Reader",
-          bookTitle: book?.title || "Your book",
-          price: priceLabel,
-          orderId: order.id,
-          downloadUrl,
-          downloadExpiresMinutes: Math.round(SIGNED_URL_TTL_SECONDS / 60),
-          libraryUrl: `${Deno.env.get("SUPABASE_URL") ? "https://www.cyberhawk-ug.store" : ""}/dashboard`,
-        },
-      },
-    });
-  } catch (e) {
-    console.warn("Receipt email skipped:", (e as Error).message);
-  }
-}
+// Email notifications intentionally deferred. Delivery is handled purely via in-app
+// library unlock + signed download URLs from the /download-book function.
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
