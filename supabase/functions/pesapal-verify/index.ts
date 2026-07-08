@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
         { user_id: order.user_id, book_id: order.book_id, order_id: order.id, status: "active" },
         { onConflict: "user_id,book_id" }
       );
-      await sendReceipt(admin, order);
+      // Email receipt intentionally omitted — user gets in-app library access.
     }
     const mapped = desc === "COMPLETED" ? "completed" : desc === "FAILED" || desc === "INVALID" ? "failed" : "pending";
     return json({ status: mapped, raw: status });
