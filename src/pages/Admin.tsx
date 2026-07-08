@@ -37,6 +37,9 @@ const slugify = (s: string) =>
 export default function Admin() {
   const { user, loading, isAdmin } = useAuth();
   const [books, setBooks] = useState<BookRow[]>([]);
+  const [orders, setOrders] = useState<OrderRow[]>([]);
+  const [orderFilter, setOrderFilter] = useState<"all" | "pending" | "completed" | "failed">("all");
+  const [orderSearch, setOrderSearch] = useState("");
   const [busy, setBusy] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -48,11 +51,19 @@ export default function Admin() {
   const [file, setFile] = useState<File | null>(null);
 
   const load = async () => {
-    const { data } = await supabase
-      .from("books")
-      .select("id, title, slug, price_cents, currency, published, preview_only, cover_path, created_at")
-      .order("created_at", { ascending: false });
-    if (data) setBooks(data as BookRow[]);
+    const [b, o] = await Promise.all([
+      supabase
+        .from("books")
+        .select("id, title, slug, price_cents, currency, published, preview_only, cover_path, created_at")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("orders")
+        .select("id, user_id, book_id, amount_cents, currency, status, pesapal_tracking_id, pesapal_merchant_reference, created_at, books(title), profiles(email)")
+        .order("created_at", { ascending: false })
+        .limit(200),
+    ]);
+    if (b.data) setBooks(b.data as BookRow[]);
+    if (o.data) setOrders(o.data as unknown as OrderRow[]);
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
