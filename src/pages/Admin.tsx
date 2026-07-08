@@ -17,6 +17,20 @@ type BookRow = {
   created_at: string;
 };
 
+type OrderRow = {
+  id: string;
+  user_id: string;
+  book_id: string;
+  amount_cents: number;
+  currency: string;
+  status: string;
+  pesapal_tracking_id: string | null;
+  pesapal_merchant_reference: string | null;
+  created_at: string;
+  books?: { title: string } | null;
+  profiles?: { email: string | null } | null;
+};
+
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
