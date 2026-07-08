@@ -58,7 +58,7 @@ export default function Admin() {
         .order("created_at", { ascending: false }),
       supabase
         .from("orders")
-        .select("id, user_id, book_id, amount_cents, currency, status, pesapal_tracking_id, pesapal_merchant_reference, created_at, books(title), profiles(email)")
+        .select("id, user_id, book_id, amount_cents, currency, status, pesapal_tracking_id, pesapal_merchant_reference, created_at, books(title)")
         .order("created_at", { ascending: false })
         .limit(200),
     ]);
