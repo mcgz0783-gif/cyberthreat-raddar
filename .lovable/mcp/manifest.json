@@ -111,6 +111,103 @@
           ]
         },
         "outputSchema": null
+      },
+      {
+        "name": "send_email",
+        "title": "Send Email (Gmail)",
+        "description": "Send an email via the Gmail API using a service account. Note: Requires domain-wide delegation or a configured admin user.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "to": {
+              "type": "string",
+              "format": "email",
+              "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+              "description": "Recipient email address."
+            },
+            "subject": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Email subject."
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Email body (text)."
+            },
+            "from": {
+              "description": "Sender email (if using domain-wide delegation).",
+              "type": "string",
+              "format": "email",
+              "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+            }
+          },
+          "required": [
+            "to",
+            "subject",
+            "body"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_calendar_event",
+        "title": "Create Calendar Event",
+        "description": "Create a new event in Google Calendar. Note: Requires calendar access.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Event title/summary."
+            },
+            "description": {
+              "description": "Event description.",
+              "type": "string"
+            },
+            "startDateTime": {
+              "type": "string",
+              "description": "Start time in ISO 8601 format (e.g., 2024-07-15T10:00:00Z)."
+            },
+            "endDateTime": {
+              "type": "string",
+              "description": "End time in ISO 8601 format."
+            },
+            "calendarId": {
+              "default": "primary",
+              "description": "Calendar ID (default is 'primary').",
+              "type": "string"
+            }
+          },
+          "required": [
+            "summary",
+            "startDateTime",
+            "endDateTime"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_contacts",
+        "title": "List Contacts (People API)",
+        "description": "Retrieve a list of contacts from Google People API.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "pageSize": {
+              "default": 10,
+              "description": "Number of contacts to retrieve.",
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
       }
     ]
   }
