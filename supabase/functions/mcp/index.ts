@@ -137,13 +137,267 @@ var check_password_breach_default = defineTool4({
   }
 });
 
+// src/lib/mcp/tools/send-email.ts
+import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z5 } from "npm:zod@^4.4.3";
+async function getAccessToken(serviceAccountKey, scopes) {
+  const header = { alg: "RS256", typ: "JWT" };
+  const now = Math.floor(Date.now() / 1e3);
+  const claim = {
+    iss: serviceAccountKey.client_email,
+    scope: scopes.join(" "),
+    aud: "https://oauth2.googleapis.com/token",
+    exp: now + 3600,
+    iat: now
+  };
+  const encodedHeader = btoa(JSON.stringify(header));
+  const encodedClaim = btoa(JSON.stringify(claim));
+  const stringToSign = `${encodedHeader}.${encodedClaim}`;
+  const privateKey = await crypto.subtle.importKey(
+    "pkcs8",
+    new Uint8Array(
+      atob(serviceAccountKey.private_key.replace(/-----(BEGIN|END) PRIVATE KEY-----|\n/g, "")).split("").map((c) => c.charCodeAt(0))
+    ),
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",
+    privateKey,
+    new TextEncoder().encode(stringToSign)
+  );
+  const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const jwt = `${stringToSign}.${encodedSignature}`;
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(`OAuth failed: ${data.error_description || data.error}`);
+  return data.access_token;
+}
+var send_email_default = defineTool5({
+  name: "send_email",
+  title: "Send Email (Gmail)",
+  description: "Send an email via the Gmail API using a service account. Note: Requires domain-wide delegation or a configured admin user.",
+  inputSchema: {
+    to: z5.string().email().describe("Recipient email address."),
+    subject: z5.string().min(1).describe("Email subject."),
+    body: z5.string().min(1).describe("Email body (text)."),
+    from: z5.string().email().optional().describe("Sender email (if using domain-wide delegation).")
+  },
+  handler: async ({ to, subject, body, from }) => {
+    try {
+      const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
+      if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured in environment.");
+      const key = JSON.parse(keyJson);
+      const token = await getAccessToken(key, ["https://www.googleapis.com/auth/gmail.send"]);
+      const utf8Subject = `=?utf-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`;
+      const email = [
+        `To: ${to}`,
+        from ? `From: ${from}` : "",
+        `Subject: ${utf8Subject}`,
+        "Content-Type: text/plain; charset=utf-8",
+        "",
+        body
+      ].join("\n").trim();
+      const encodedEmail = btoa(unescape(encodeURIComponent(email))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      const response = await fetch(`https://gmail.googleapis.com/gmail/v1/users/${encodeURIComponent(from || "me")}/messages/send`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ raw: encodedEmail })
+      });
+      if (!response.ok) {
+        const err = await response.json();
+        return { content: [{ type: "text", text: `Gmail API Error: ${JSON.stringify(err)}` }], isError: true };
+      }
+      return { content: [{ type: "text", text: `\u2705 Email sent successfully to ${to}` }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `Failed to send email: ${e.message}` }], isError: true };
+    }
+  }
+});
+
+// src/lib/mcp/tools/calendar.ts
+import { defineTool as defineTool6 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z6 } from "npm:zod@^4.4.3";
+async function getAccessToken2(serviceAccountKey, scopes) {
+  const header = { alg: "RS256", typ: "JWT" };
+  const now = Math.floor(Date.now() / 1e3);
+  const claim = {
+    iss: serviceAccountKey.client_email,
+    scope: scopes.join(" "),
+    aud: "https://oauth2.googleapis.com/token",
+    exp: now + 3600,
+    iat: now
+  };
+  const encodedHeader = btoa(JSON.stringify(header));
+  const encodedClaim = btoa(JSON.stringify(claim));
+  const stringToSign = `${encodedHeader}.${encodedClaim}`;
+  const privateKey = await crypto.subtle.importKey(
+    "pkcs8",
+    new Uint8Array(
+      atob(serviceAccountKey.private_key.replace(/-----(BEGIN|END) PRIVATE KEY-----|\n/g, "")).split("").map((c) => c.charCodeAt(0))
+    ),
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",
+    privateKey,
+    new TextEncoder().encode(stringToSign)
+  );
+  const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const jwt = `${stringToSign}.${encodedSignature}`;
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(`OAuth failed: ${data.error_description || data.error}`);
+  return data.access_token;
+}
+var calendar_default = defineTool6({
+  name: "create_calendar_event",
+  title: "Create Calendar Event",
+  description: "Create a new event in Google Calendar. Note: Requires calendar access.",
+  inputSchema: {
+    summary: z6.string().min(1).describe("Event title/summary."),
+    description: z6.string().optional().describe("Event description."),
+    startDateTime: z6.string().describe("Start time in ISO 8601 format (e.g., 2024-07-15T10:00:00Z)."),
+    endDateTime: z6.string().describe("End time in ISO 8601 format."),
+    calendarId: z6.string().default("primary").describe("Calendar ID (default is 'primary').")
+  },
+  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }) => {
+    try {
+      const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
+      if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");
+      const key = JSON.parse(keyJson);
+      const token = await getAccessToken2(key, ["https://www.googleapis.com/auth/calendar.events"]);
+      const event = {
+        summary,
+        description,
+        start: { dateTime: startDateTime },
+        end: { dateTime: endDateTime }
+      };
+      const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(event)
+      });
+      if (!response.ok) {
+        const err = await response.json();
+        return { content: [{ type: "text", text: `Calendar API Error: ${JSON.stringify(err)}` }], isError: true };
+      }
+      const result = await response.json();
+      return { content: [{ type: "text", text: `\u2705 Event created: ${result.htmlLink}` }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `Failed to create event: ${e.message}` }], isError: true };
+    }
+  }
+});
+
+// src/lib/mcp/tools/people.ts
+import { defineTool as defineTool7 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z7 } from "npm:zod@^4.4.3";
+async function getAccessToken3(serviceAccountKey, scopes) {
+  const header = { alg: "RS256", typ: "JWT" };
+  const now = Math.floor(Date.now() / 1e3);
+  const claim = {
+    iss: serviceAccountKey.client_email,
+    scope: scopes.join(" "),
+    aud: "https://oauth2.googleapis.com/token",
+    exp: now + 3600,
+    iat: now
+  };
+  const encodedHeader = btoa(JSON.stringify(header));
+  const encodedClaim = btoa(JSON.stringify(claim));
+  const stringToSign = `${encodedHeader}.${encodedClaim}`;
+  const privateKey = await crypto.subtle.importKey(
+    "pkcs8",
+    new Uint8Array(
+      atob(serviceAccountKey.private_key.replace(/-----(BEGIN|END) PRIVATE KEY-----|\n/g, "")).split("").map((c) => c.charCodeAt(0))
+    ),
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",
+    privateKey,
+    new TextEncoder().encode(stringToSign)
+  );
+  const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const jwt = `${stringToSign}.${encodedSignature}`;
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(`OAuth failed: ${data.error_description || data.error}`);
+  return data.access_token;
+}
+var people_default = defineTool7({
+  name: "list_contacts",
+  title: "List Contacts (People API)",
+  description: "Retrieve a list of contacts from Google People API.",
+  inputSchema: {
+    pageSize: z7.number().min(1).max(100).default(10).describe("Number of contacts to retrieve.")
+  },
+  handler: async ({ pageSize }) => {
+    try {
+      const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
+      if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");
+      const key = JSON.parse(keyJson);
+      const token = await getAccessToken3(key, ["https://www.googleapis.com/auth/contacts.readonly"]);
+      const response = await fetch(`https://people.googleapis.com/v1/people/me/connections?pageSize=${pageSize}&personFields=names,emailAddresses`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      if (!response.ok) {
+        const err = await response.json();
+        return { content: [{ type: "text", text: `People API Error: ${JSON.stringify(err)}` }], isError: true };
+      }
+      const result = await response.json();
+      return {
+        content: [{ type: "text", text: JSON.stringify(result.connections || [], null, 2) }],
+        structuredContent: result
+      };
+    } catch (e) {
+      return { content: [{ type: "text", text: `Failed to list contacts: ${e.message}` }], isError: true };
+    }
+  }
+});
+
 // src/lib/mcp/index.ts
 var mcp_default = defineMcp({
   name: "cyberhawk-ug-mcp",
   title: "CyberHawk UG",
   version: "0.1.0",
-  instructions: "Cybersecurity tools from CyberHawk UG. Use `search_cve` to look up vulnerabilities in the NIST NVD, `lookup_ip` for IP geolocation and ASN info, `check_password_breach` for HaveIBeenPwned password checks, and `echo` to verify connectivity.",
-  tools: [echo_default, search_cve_default, lookup_ip_default, check_password_breach_default]
+  instructions: "Cybersecurity tools from CyberHawk UG. Use `search_cve` to look up vulnerabilities in the NIST NVD, `lookup_ip` for IP geolocation and ASN info, `check_password_breach` for HaveIBeenPwned password checks, `send_email` for Gmail automation, `create_calendar_event` for scheduling, `list_contacts` for contact management, and `echo` to verify connectivity.",
+  tools: [
+    echo_default,
+    search_cve_default,
+    lookup_ip_default,
+    check_password_breach_default,
+    send_email_default,
+    calendar_default,
+    people_default
+  ]
 });
 
 // lovable-mcp-supabase-entry.ts
