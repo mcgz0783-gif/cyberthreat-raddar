@@ -1,5 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { sendSmtpEmail } from "../_shared/send-smtp-email.ts";
+
 
 const PESAPAL_URL = Deno.env.get("PESAPAL_ENVIRONMENT") === "live"
   ? "https://pay.pesapal.com/v3/api"
@@ -39,7 +41,33 @@ Deno.serve(async (req) => {
         { user_id: order.user_id, book_id: order.book_id, order_id: order.id, status: "active" },
         { onConflict: "user_id,book_id" }
       );
-      // Email receipt intentionally omitted — user gets in-app library access.
+      // Fire-and-forget email notifications; never crash the flow if SMTP fails.
+      try {
+        const { data: book } = await admin.from("books").select("title,price_cents,currency").eq("id", order.book_id).maybeSingle();
+        const { data: userRes } = await admin.auth.admin.getUserById(order.user_id);
+        const buyerEmail = userRes?.user?.email;
+        const site = Deno.env.get("SITE_URL") || "https://www.cyberhawk-ug.store";
+        const amount = book ? `${(book.price_cents / 100).toFixed(2)} ${book.currency}` : "";
+        if (buyerEmail && book) {
+          await sendSmtpEmail({
+            to: buyerEmail,
+            subject: `Your CyberHawk UG receipt — ${book.title}`,
+            html: `<h2>Thanks for your purchase</h2><p>Your payment of <b>${amount}</b> for <b>${book.title}</b> was received.</p><p>Access your ebook anytime from your <a href="${site}/dashboard">library</a>.</p><hr/><p style="font-size:12px;color:#666">Order ref: ${order.pesapal_merchant_reference}</p>`,
+            from: Deno.env.get("PAYMENTS_EMAIL") || Deno.env.get("SMTP_FROM_EMAIL"),
+            replyTo: Deno.env.get("SUPPORT_EMAIL"),
+          });
+        }
+        const admin_to = Deno.env.get("ADMIN_EMAIL");
+        if (admin_to && book) {
+          await sendSmtpEmail({
+            to: admin_to,
+            subject: `[CyberHawk] New sale: ${book.title} (${amount})`,
+            html: `<p>New completed order.</p><ul><li>Book: ${book.title}</li><li>Amount: ${amount}</li><li>Buyer: ${buyerEmail || order.user_id}</li><li>Tracking: ${tracking_id}</li></ul>`,
+          });
+        }
+      } catch (e) {
+        console.error("email notify failed (non-fatal)", e);
+      }
     }
     const mapped = desc === "COMPLETED" ? "completed" : desc === "FAILED" || desc === "INVALID" ? "failed" : "pending";
     return json({ status: mapped, raw: status });
