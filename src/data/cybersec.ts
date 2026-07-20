@@ -84,6 +84,7 @@ export type BookItem = Omit<typeof BOOKS[number], "cover"> & {
   priceUSD?: number;
   priceUGX?: number;
   isPaid?: boolean;
+  isFree?: boolean;
 };
 
 export const colorVar = (c: string) => {
