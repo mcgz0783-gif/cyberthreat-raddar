@@ -37,7 +37,7 @@ export const INSIGHTS = [
 ];
 
 export const BOOKS = [
-  { id:10, title:"Best AI Tools for Students (Free Lead Magnet) — CyberHawk UG", author:"CyberHawk UG", year:2026, cat:"AI & Education", desc:"The ultimate starter guide for students looking to leverage AI for research, coding, and productivity. Includes workflows for Gemini, ChatGPT, and specialized academic AI tools.", pages:35, icon:"🎓", cover: U("photo-1677442136019-21780ecad995") },
+  { id:10, title:"Best AI Tools for Students (Free Lead Magnet) — CyberHawk UG", author:"CyberHawk UG", year:2026, cat:"AI & Education", desc:"The ultimate starter guide for students looking to leverage AI for research, coding, and productivity. Includes workflows for Gemini, ChatGPT, and specialized academic AI tools. Free — 8 chapters, 48 pages.", pages:48, icon:"🎓", cover: U("photo-1677442136019-21780ecad995"), isFree: true },
   { id:1, title:"The Art of Intrusion — CyberHawk UG", author:"CyberHawk UG", year:2023, cat:"Offensive Security", desc:"True stories of real hackers who broke into banks, government computers, and the phone system. An essential read for understanding attacker psychology.", pages:288, icon:"🔓", cover: U("photo-1550751827-4bd374c3f58b") },
   { id:2, title:"Hacking: The Art of Exploitation — CyberHawk UG", author:"CyberHawk UG", year:2022, cat:"Technical", desc:"A deep dive into the technical aspects of exploits, shellcode, network attacks, and cryptographic weaknesses with hands-on examples.", pages:488, icon:"💻", cover: U("photo-1555949963-aa79dcee981c") },
   { id:3, title:"The Web Application Hacker's Handbook — CyberHawk UG", author:"CyberHawk UG", year:2024, cat:"Web Security", desc:"The definitive guide to finding and exploiting web application security flaws, covering OWASP Top 10 and beyond.", pages:912, icon:"🌐", cover: U("photo-1451187580459-43490279c0fa") },
@@ -84,6 +84,7 @@ export type BookItem = Omit<typeof BOOKS[number], "cover"> & {
   priceUSD?: number;
   priceUGX?: number;
   isPaid?: boolean;
+  isFree?: boolean;
 };
 
 export const colorVar = (c: string) => {

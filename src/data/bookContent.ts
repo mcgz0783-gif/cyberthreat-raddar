@@ -8,11 +8,15 @@ import { BOOK5_CONTENT } from "./books/book5";
 import { BOOK6_CONTENT } from "./books/book6";
 import { BOOK7_CONTENT } from "./books/book7";
 import { BOOK8_CONTENT } from "./books/book8";
+import { BOOK10_CONTENT } from "./books/book10";
 import { PYTHON_PROGRAMMING_CONTENT } from "./books/pythonProgramming";
 
 export const CUSTOM_COVERS: Record<number, string> = { 
   9: aiAgentsCover
 };
+
+// Books that are always free to read in full (never gated by paywall).
+export const FREE_BOOK_IDS = new Set<number>([10]);
 
 export interface BookContent {
   cover: { tagline: string; blurb: string };
@@ -30,5 +34,6 @@ export const BOOK_CONTENT: Record<number, BookContent> = {
   7: BOOK7_CONTENT,
   8: BOOK8_CONTENT,
   9: AI_AGENTS_BOOK,
+  10: BOOK10_CONTENT,
   11: PYTHON_PROGRAMMING_CONTENT,
 };

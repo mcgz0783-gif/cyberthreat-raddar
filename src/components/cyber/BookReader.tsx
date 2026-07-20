@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { type BookItem } from "@/data/cybersec";
-import { BOOK_CONTENT, CUSTOM_COVERS } from "@/data/bookContent";
+import { BOOK_CONTENT, CUSTOM_COVERS, FREE_BOOK_IDS } from "@/data/bookContent";
 import { useBooksCatalog, usePurchases, formatPrice } from "@/hooks/useCatalog";
 import { BuyBookButton } from "@/components/BuyBookButton";
 import { supabase } from "@/integrations/supabase/client";
@@ -44,8 +44,9 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
   const { bookIds } = usePurchases();
   const db = byLegacyId[book.id];
   const isPurchased = db ? bookIds.has(db.id) : false;
-  // A book is fully readable when the admin unlocked it (preview_only=false) OR the user purchased it.
-  const canReadFull = db ? (!db.preview_only || isPurchased) : true;
+  // Free-content books are always fully readable; otherwise gate by admin unlock or purchase.
+  const isFreeBook = FREE_BOOK_IDS.has(book.id) || (book as any).isFree === true;
+  const canReadFull = isFreeBook ? true : (db ? (!db.preview_only || isPurchased) : true);
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = async () => {
@@ -246,13 +247,50 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
                 </div>
               )}
 
-              {page.kind === "body" && (
-                <article className="h-full flex flex-col font-serif">
-                  {/* ... Existing article content ... */}
-                  {/* ... */}
-                  {/* ... */}
-                </article>
-              )}
+              {page.kind === "body" && (() => {
+                const chapter = content.chapters[page.chapterIndex];
+                const text = chapter.pages[page.pageIndex] ?? "";
+                const providedImages = chapter.images ?? [];
+                const img = providedImages[page.pageIndex] ?? (page.pageIndex === 0 ? chapterImage(chapter.title, book.id, page.chapterIndex) : null);
+                const paragraphs = text.split(/\n\n+/).filter(Boolean);
+                return (
+                  <article className="h-full flex flex-col font-serif">
+                    <header className="mb-8">
+                      <div className="font-mono text-[10px] text-neutral-400 uppercase tracking-[0.3em] mb-2">
+                        Chapter {page.chapterIndex + 1} · Page {page.pageIndex + 1} of {chapter.pages.length}
+                      </div>
+                      <h2 className="font-serif font-bold text-neutral-900 text-2xl sm:text-3xl leading-tight">
+                        {chapter.title}
+                      </h2>
+                      <div className="h-0.5 w-12 bg-neutral-900 mt-4"></div>
+                    </header>
+                    {img && (
+                      <figure className="mb-6">
+                        <img
+                          src={img}
+                          alt={`${chapter.title} illustration`}
+                          className="w-full h-48 object-cover rounded-sm border border-neutral-200 shadow-sm"
+                          onError={(e) => {
+                            const el = e.currentTarget as HTMLImageElement;
+                            el.src = `https://picsum.photos/seed/${book.id}-${page.chapterIndex}-${page.pageIndex}/640/260`;
+                          }}
+                          loading="lazy"
+                        />
+                        <figcaption className="text-[10px] text-neutral-400 mt-1 italic text-center">
+                          {chapter.title}
+                        </figcaption>
+                      </figure>
+                    )}
+                    <div className="flex-1 space-y-4 text-neutral-800 text-[15px] leading-[1.85] first-letter:font-serif">
+                      {paragraphs.map((p, i) => (
+                        <p key={i} className={i === 0 ? "first-line:tracking-wide first-letter:text-5xl first-letter:font-bold first-letter:mr-2 first-letter:float-left first-letter:leading-none" : ""}>
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })()}
               
               {isPreviewEnd && db && (
                 <div className="flex-1 flex flex-col items-center justify-center p-12 bg-neutral-100 border-t border-neutral-200">
