@@ -371,6 +371,236 @@ export type Database = {
         }
         Relationships: []
       }
+      news: {
+        Row: {
+          cat: string
+          color: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          published_at: string
+          read_time: string | null
+          summary: string | null
+          tags: string[] | null
+          title: string
+          cover_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          cat: string
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          published_at?: string
+          read_time?: string | null
+          summary?: string | null
+          tags?: string[] | null
+          title: string
+          cover_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cat?: string
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          published_at?: string
+          read_time?: string | null
+          summary?: string | null
+          tags?: string[] | null
+          title?: string
+          cover_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      posts: {
+        Row: {
+          author_id: string | null
+          category: string | null
+          content: string | null
+          created_at: string
+          featured: boolean
+          id: string
+          image_url: string | null
+          cover_url: string | null
+          published_at: string
+          read_time: string | null
+          slug: string
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          cover_url?: string | null
+          published_at?: string
+          read_time?: string | null
+          slug: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          cover_url?: string | null
+          published_at?: string
+          read_time?: string | null
+          slug?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "authors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      insights: {
+        Row: {
+          author: string | null
+          category: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          key_insight: string | null
+          published_at: string
+          read_time: string | null
+          title: string
+          cover_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          key_insight?: string | null
+          published_at?: string
+          read_time?: string | null
+          title: string
+          cover_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          key_insight?: string | null
+          published_at?: string
+          read_time?: string | null
+          title?: string
+          cover_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ticker_items: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          priority: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          priority?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          priority?: number | null
+        }
+        Relationships: []
+      }
+      stats: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          label: string
+          sort_order: number | null
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          label: string
+          sort_order?: number | null
+          value: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          label?: string
+          sort_order?: number | null
+          value?: string
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          path: string | null
+          sort_order: number | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          path?: string | null
+          sort_order?: number | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          path?: string | null
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

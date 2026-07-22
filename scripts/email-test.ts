@@ -28,7 +28,7 @@ async function main() {
     secure: true,
     auth: {
       type: 'OAuth2',
-      user: 'admin@cyberthreat-raddar.com', // Replace with your admin email
+      user: 'mcgz0783@gmail.com', 
       serviceClient: key.client_id,
       privateKey: key.private_key,
     },
@@ -40,14 +40,14 @@ async function main() {
     console.log('Service Email:', key.client_email);
     console.log('Client ID:', key.client_id);
     
-    /*
-    await transporter.sendMail({
-      from: 'admin@cyberthreat-raddar.com',
-      to: 'recipient@example.com',
+    console.log('📤 Sending test email...');
+    const info = await transporter.sendMail({
+      from: 'mcgz0783@gmail.com',
+      to: 'kevlarmackenzie@gmail.com',
       subject: 'CyberThreat Raddar - Test Email',
       text: 'This is a test of the email automation system.',
     });
-    */
+    console.log('🚀 Email sent successfully:', info.messageId);
   } catch (error) {
     console.error('❌ Email test failed:', error);
   }

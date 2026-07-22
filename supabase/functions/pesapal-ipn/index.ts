@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     if (paymentStatus === "COMPLETED") {
       await admin.from("orders").update({ status: "completed" }).eq("id", order.id);
       await admin.from("payments").update({ status: "success", raw_response: status }).eq("order_id", order.id);
-      await admin.from("purchases").upsert({ user_id: order.user_id, book_id: order.book_id, order_id: order.id }, { onConflict: "user_id,book_id" });
+      await admin.from("purchases").upsert({ user_id: order.user_id, book_id: order.book_id, order_id: order.id, status: 'active' }, { onConflict: "user_id,book_id" });
     } else if (paymentStatus === "FAILED" || paymentStatus === "INVALID") {
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       await admin.from("payments").update({ status: "failed", raw_response: status }).eq("order_id", order.id);
