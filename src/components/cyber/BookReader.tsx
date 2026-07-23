@@ -45,7 +45,7 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
   const db = byLegacyId[book.id];
   const isPurchased = db ? bookIds.has(db.id) : false;
   // Free-content books are always fully readable; otherwise gate by admin unlock or purchase.
-  const isFreeBook = FREE_BOOK_IDS.has(book.id) || (book as any).isFree === true;
+  const isFreeBook = FREE_BOOK_IDS.has(book.id) || book.isFree === true;
   const canReadFull = isFreeBook ? true : (db ? (!db.preview_only || isPurchased) : true);
   const [downloading, setDownloading] = useState(false);
 
@@ -57,8 +57,9 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
       if (error) throw error;
       if (data?.url) window.location.href = data.url;
       else throw new Error("No download URL returned");
-    } catch (e: any) { toast.error(e.message || "Download failed"); }
-    finally { setDownloading(false); }
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Download failed");
+    } finally { setDownloading(false); }
   };
 
   const pages = useMemo<Page[]>(() => {

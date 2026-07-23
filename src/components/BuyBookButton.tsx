@@ -20,8 +20,8 @@ export function BuyBookButton({ bookId, className, label = "BUY NOW" }: { bookId
       if (error) throw error;
       if (data?.redirect_url) window.location.href = data.redirect_url;
       else throw new Error(data?.error || "Checkout failed");
-    } catch (e: any) {
-      toast.error(e.message || "Checkout failed");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Checkout failed");
     } finally { setBusy(false); }
   };
 

@@ -49,7 +49,8 @@ export function usePurchases() {
     if (!user) { setBookIds(new Set()); setLoading(false); return; }
     supabase.from("purchases").select("book_id").eq("status", "active")
       .then(({ data }) => {
-        setBookIds(new Set((data ?? []).map((r: any) => r.book_id)));
+        const rows = (data as { book_id: string }[] | null) ?? [];
+        setBookIds(new Set(rows.map(r => r.book_id)));
         setLoading(false);
       });
   }, [user?.id]);

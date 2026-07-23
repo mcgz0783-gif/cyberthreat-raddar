@@ -27,7 +27,7 @@ export default function Dashboard() {
     supabase.from("purchases")
       .select("id, book_id, created_at, status, books(title, slug, cover_path)")
       .order("created_at", { ascending: false })
-      .then(({ data, error }) => { if (!error && data) setItems(data as any); });
+      .then(({ data, error }) => { if (!error && data) setItems(data as Row[]); });
   }, [user]);
 
   const filtered = useMemo(() => {
@@ -47,8 +47,8 @@ export default function Dashboard() {
       if (error) throw error;
       if (data?.url) window.location.href = data.url;
       else throw new Error("No download URL returned");
-    } catch (e: any) {
-      toast.error(e.message || "Download failed");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Download failed");
     } finally { setBusy(null); }
   };
 

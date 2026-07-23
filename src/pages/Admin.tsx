@@ -108,8 +108,8 @@ export default function Admin() {
       toast.success("Book uploaded");
       setTitle(""); setDescription(""); setCover(null); setFile(null);
       load();
-    } catch (e: any) {
-      toast.error(e.message || "Upload failed");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
     } finally { setBusy(false); }
   };
 

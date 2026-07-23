@@ -1,11 +1,16 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 
+interface ServiceAccountKey {
+  client_email: string;
+  private_key: string;
+}
+
 /**
  * Helper to get a Google OAuth2 access token for a service account in Deno/Edge Functions.
  * Reused from send-email.ts logic.
  */
-async function getAccessToken(serviceAccountKey: any, scopes: string[]) {
+async function getAccessToken(serviceAccountKey: ServiceAccountKey, scopes: string[]) {
   const header = { alg: "RS256", typ: "JWT" };
   const now = Math.floor(Date.now() / 1000);
   const claim = {
@@ -98,8 +103,11 @@ export default defineTool({
 
       const result = await response.json();
       return { content: [{ type: "text", text: `✅ Event created: ${result.htmlLink}` }] };
-    } catch (e: any) {
-      return { content: [{ type: "text", text: `Failed to create event: ${e.message}` }], isError: true };
+    } catch (e: unknown) {
+      return { 
+        content: [{ type: "text", text: `Failed to create event: ${e instanceof Error ? e.message : String(e)}` }], 
+        isError: true 
+      };
     }
   },
 });

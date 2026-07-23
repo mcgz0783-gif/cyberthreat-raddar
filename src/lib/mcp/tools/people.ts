@@ -1,10 +1,15 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 
+interface ServiceAccountKey {
+  client_email: string;
+  private_key: string;
+}
+
 /**
  * Helper to get a Google OAuth2 access token for a service account in Deno/Edge Functions.
  */
-async function getAccessToken(serviceAccountKey: any, scopes: string[]) {
+async function getAccessToken(serviceAccountKey: ServiceAccountKey, scopes: string[]) {
   const header = { alg: "RS256", typ: "JWT" };
   const now = Math.floor(Date.now() / 1000);
   const claim = {
@@ -88,8 +93,11 @@ export default defineTool({
         content: [{ type: "text", text: JSON.stringify(result.connections || [], null, 2) }],
         structuredContent: result,
       };
-    } catch (e: any) {
-      return { content: [{ type: "text", text: `Failed to list contacts: ${e.message}` }], isError: true };
+    } catch (e: unknown) {
+      return { 
+        content: [{ type: "text", text: `Failed to list contacts: ${e instanceof Error ? e.message : String(e)}` }], 
+        isError: true 
+      };
     }
   },
 });

@@ -41,8 +41,8 @@ export default function PaymentCallback() {
       if (error) throw error;
       if (data?.redirect_url) window.location.href = data.redirect_url;
       else throw new Error(data?.error || "Could not start checkout");
-    } catch (e: any) {
-      toast.error(e.message || "Retry failed");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Retry failed");
       setRetrying(false);
     }
   };
