@@ -15,9 +15,6 @@ export const CUSTOM_COVERS: Record<number, string> = {
   9: aiAgentsCover
 };
 
-// Books that are always free to read in full (never gated by paywall).
-export const FREE_BOOK_IDS = new Set<number>([10]);
-
 export interface BookContent {
   cover: { tagline: string; blurb: string };
   toc: string[];

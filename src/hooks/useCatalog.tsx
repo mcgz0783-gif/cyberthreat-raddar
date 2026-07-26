@@ -1,60 +1,13 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
-
-export type DbBook = {
-  id: string;
-  legacy_id: number | null;
-  slug: string;
-  title: string;
-  price_cents: number;
-  currency: string;
-  preview_only: boolean;
-  cover_path: string | null;
-};
-
-let cachePromise: Promise<DbBook[]> | null = null;
-async function fetchBooks(): Promise<DbBook[]> {
-  const { data } = await supabase
-    .from("books")
-    .select("id, legacy_id, slug, title, price_cents, currency, preview_only, cover_path")
-    .eq("published", true)
-    .is("deleted_at", null);
-  return (data as DbBook[]) ?? [];
-}
-function getBooks() {
-  if (!cachePromise) cachePromise = fetchBooks();
-  return cachePromise;
-}
-export function invalidateBookCache() { cachePromise = null; }
+import { BOOKS, type BookItem } from "@/data/cybersec";
 
 export function useBooksCatalog() {
-  const [byLegacyId, setBy] = useState<Record<number, DbBook>>({});
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    getBooks().then(books => {
-      const m: Record<number, DbBook> = {};
-      books.forEach(b => { if (b.legacy_id != null) m[b.legacy_id] = b; });
-      setBy(m); setReady(true);
-    });
-  }, []);
-  return { byLegacyId, ready };
+  const byLegacyId: Record<number, BookItem> = {};
+  BOOKS.forEach(b => { byLegacyId[b.id] = b; });
+  return { byLegacyId, ready: true };
 }
 
 export function usePurchases() {
-  const { user } = useAuth();
-  const [bookIds, setBookIds] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if (!user) { setBookIds(new Set()); setLoading(false); return; }
-    supabase.from("purchases").select("book_id").eq("status", "active")
-      .then(({ data }) => {
-        const rows = (data as { book_id: string }[] | null) ?? [];
-        setBookIds(new Set(rows.map(r => r.book_id)));
-        setLoading(false);
-      });
-  }, [user?.id]);
-  return { bookIds, loading };
+  return { bookIds: new Set<string>(), loading: false };
 }
 
 export function formatPrice(cents: number, currency: string) {

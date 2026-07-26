@@ -18,7 +18,6 @@ const PAGE_SIZE = 9;
 export default function Dashboard() {
   const { user, loading, signOut } = useAuth();
   const [items, setItems] = useState<Row[]>([]);
-  const [busy, setBusy] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
@@ -39,18 +38,6 @@ export default function Dashboard() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   useEffect(() => { setPage(1); }, [search]);
-
-  const download = async (bookId: string) => {
-    setBusy(bookId);
-    try {
-      const { data, error } = await supabase.functions.invoke("download-book", { body: { book_id: bookId } });
-      if (error) throw error;
-      if (data?.url) window.location.href = data.url;
-      else throw new Error("No download URL returned");
-    } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : "Download failed");
-    } finally { setBusy(null); }
-  };
 
   if (loading) return <div className="container mx-auto px-6 py-24">Loading…</div>;
   if (!user) return <Navigate to="/auth?next=/dashboard" replace />;
@@ -91,13 +78,6 @@ export default function Dashboard() {
                   </p>
                   <div className="flex gap-2">
                     <a href={`/books/${p.books?.slug || p.book_id}`} className="btn-ghost-cyber flex-1 text-[11px] py-2 text-center">📖 Read</a>
-                    <button
-                      className="btn-cyber flex-1 text-[11px] py-2 disabled:opacity-50"
-                      disabled={busy === p.book_id || revoked}
-                      onClick={() => download(p.book_id)}
-                    >
-                      {busy === p.book_id ? "…" : "⬇ Download"}
-                    </button>
                   </div>
                 </div>
               );

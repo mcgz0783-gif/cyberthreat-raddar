@@ -15,9 +15,9 @@ const FAQS = [
     answer: "Yes, all books published by CyberHawk UG are original, high-quality manuscripts authored by our team of experts, led by Samuel Mucunguzi."
   },
   {
-    question: "Can I get a physical copy of the books?",
-    answer: "Currently, our books are primarily available as digital downloads (PDF/EPUB) to ensure instant access and affordability. We are exploring physical distribution options for the future."
-  },
+    question: "How can I read the books?",
+    answer: "Our books are available to read directly on our platform. We've optimized the reading experience for both mobile and desktop, ensuring you have instant access to our entire library without the need for downloads."
+    },
   {
     question: "How can I contribute to the blog?",
     answer: "We welcome technical contributions! Please contact us through our 'Secure Channels' on the contact page to discuss potential guest posts or editorial collaborations."

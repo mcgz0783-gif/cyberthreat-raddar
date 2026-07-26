@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { type BookItem } from "@/data/cybersec";
-import { BOOK_CONTENT, CUSTOM_COVERS, FREE_BOOK_IDS } from "@/data/bookContent";
-import { useBooksCatalog, usePurchases, formatPrice } from "@/hooks/useCatalog";
-import { BuyBookButton } from "@/components/BuyBookButton";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { BOOK_CONTENT, CUSTOM_COVERS } from "@/data/bookContent";
 
 // Pick relevant Unsplash imagery from chapter title keywords.
 const KEYWORD_MAP: { match: RegExp; q: string }[] = [
@@ -28,7 +24,6 @@ const KEYWORD_MAP: { match: RegExp; q: string }[] = [
 
 function chapterImage(title: string, bookId: number, idx: number): string {
   const hit = KEYWORD_MAP.find(k => k.match.test(title));
-  // Ensure the query is explicitly tech-focused and not related to geography or flags
   const q = hit?.q ?? "technology,abstract,computing";
   return `https://source.unsplash.com/featured/640x260/?${encodeURIComponent(q)}&sig=${bookId}-${idx}`;
 }
@@ -40,27 +35,6 @@ type Page =
 
 export function BookReader({ book, onClose }: { book: BookItem; onClose: () => void }) {
   const content = BOOK_CONTENT[book.id];
-  const { byLegacyId } = useBooksCatalog();
-  const { bookIds } = usePurchases();
-  const db = byLegacyId[book.id];
-  const isPurchased = db ? bookIds.has(db.id) : false;
-  // Free-content books are always fully readable; otherwise gate by admin unlock or purchase.
-  const isFreeBook = FREE_BOOK_IDS.has(book.id) || book.isFree === true;
-  const canReadFull = isFreeBook ? true : (db ? (!db.preview_only || isPurchased) : true);
-  const [downloading, setDownloading] = useState(false);
-
-  const handleDownload = async () => {
-    if (!db) return;
-    setDownloading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("download-book", { body: { book_id: db.id } });
-      if (error) throw error;
-      if (data?.url) window.location.href = data.url;
-      else throw new Error("No download URL returned");
-    } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : "Download failed");
-    } finally { setDownloading(false); }
-  };
 
   const pages = useMemo<Page[]>(() => {
     if (!content) return [{ kind: "cover" }];
@@ -70,20 +44,15 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
         list.push({ kind: "body", chapterIndex: ci, pageIndex: pi, chapterTitle: ch.title })
       );
     });
-    // Preview cap: first 5 pages until purchased (and admin hasn't unlocked)
-    if (!canReadFull) return list.slice(0, 5);
     return list;
-  }, [content, canReadFull]);
+  }, [content]);
 
   const [idx, setIdx] = useState(0);
-  const isPreviewEnd = useMemo(() => !canReadFull && idx >= pages.length - 1, [canReadFull, idx, pages.length]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      // If restricted, don't allow navigating past preview
-      const maxIdx = isPreviewEnd ? idx : pages.length - 1;
-      if (e.key === "ArrowRight") setIdx(i => Math.min(i + 1, maxIdx));
+      if (e.key === "ArrowRight") setIdx(i => Math.min(i + 1, pages.length - 1));
       if (e.key === "ArrowLeft") setIdx(i => Math.max(i - 1, 0));
     };
     window.addEventListener("keydown", onKey);
@@ -118,23 +87,6 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {db && !isPurchased && (
-              <BuyBookButton
-                bookId={db.id}
-                label={`BUY ${formatPrice(db.price_cents, db.currency)}`}
-                className="text-background bg-warning hover:bg-warning/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase no-print"
-              />
-            )}
-            {isPurchased && (
-              <button
-                onClick={handleDownload}
-                disabled={downloading}
-                className="text-white bg-primary hover:bg-primary/80 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-colors no-print"
-              >
-                {downloading ? "Preparing…" : "⬇ Download"}
-              </button>
-            )}
-            
             <button
               onClick={onClose}
               className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors group"
@@ -292,20 +244,6 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
                   </article>
                 );
               })()}
-              
-              {isPreviewEnd && db && (
-                <div className="flex-1 flex flex-col items-center justify-center p-12 bg-neutral-100 border-t border-neutral-200">
-                  <h3 className="text-2xl font-bold mb-4">Preview Ended</h3>
-                  <p className="text-neutral-600 mb-8 text-center">
-                    Purchase the full book to continue reading and download a copy.
-                  </p>
-                  <BuyBookButton
-                    bookId={db.id}
-                    label={`Purchase Full Book — ${formatPrice(db.price_cents, db.currency)}`}
-                    className="text-background bg-warning hover:bg-warning/80 px-8 py-4 rounded-full text-lg font-bold uppercase transition-colors"
-                  />
-                </div>
-              )}
             </div>
 
             {/* Page Footer / numbering inside A4 */}
@@ -365,4 +303,3 @@ export function BookReader({ book, onClose }: { book: BookItem; onClose: () => v
     </div>
   );
 }
-
