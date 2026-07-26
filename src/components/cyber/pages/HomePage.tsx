@@ -1,23 +1,44 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-import { NEWS, BLOGS, STATS, TOOLS } from "@/data/cybersec";
+import { SEO } from "@/components/SEO";
+import { NEWS, BLOGS, STATS, TOOLS, BOOKS } from "@/data/cybersec";
 import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
+import { CyberBackdrop } from "../CyberBackdrop";
+import { FAQ } from "../FAQ";
+import { Testimonials } from "../Testimonials";
+import { Search } from "lucide-react";
 
 export function HomePage() {
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const t = setInterval(() => setCount(c => { if (c < 2365) return c + 47; clearInterval(t); return 2365; }), 20);
     return () => clearInterval(t);
   }, []);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // For now, redirect to news or blog with query
+      navigate(`/news?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <>
+      <SEO 
+        title="CyberHawk UG | Global Cybersecurity & AI Free Public Library" 
+        description="Access foundational cybersecurity books, real-time threat intelligence, and expert AI insights for free. CyberHawk UG is a public library dedicated to open-access security education."
+        keywords="free cybersecurity books, public library, ethical hacking Africa, AI tools for students, CyberHawk UG library, open access security"
+      />
+
       {/* HERO */}
       <section className="relative hero-grid-bg overflow-hidden">
+        <CyberBackdrop />
         <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary/5 blur-3xl" />
 
@@ -30,12 +51,24 @@ export function HomePage() {
               </div>
               <h1 className="font-display font-black text-white leading-[0.95] tracking-tight mb-6"
                   style={{ fontSize: "clamp(40px, 7vw, 84px)" }}>
-                CYBERSECURITY<br/>
-                <span className="glow-text">UPDATES</span>
+                CyberHawk UG<br/>
+                <span className="glow-text">SECURITY UPDATES</span>
               </h1>
-              <p className="text-foreground/70 text-lg leading-relaxed max-w-xl mb-8">
-                Global insights, breaking threats, expert analysis — your command center for all things cybersecurity.
+              <p className="text-foreground/85 text-lg leading-relaxed max-w-xl mb-8">
+                Global insights, breaking threats, expert analysis, and foundational cybersecurity books by CyberHawk UG — your command center for all things security.
               </p>
+              
+              <form onSubmit={handleSearch} className="relative max-w-md mb-8 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-primary transition-colors" />
+                <input 
+                  type="text" 
+                  placeholder="Search threats, books, or tools..." 
+                  className="input-cyber pl-12 pr-4 py-4"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </form>
+
               <div className="flex flex-wrap gap-3 mb-10">
                 <button className="btn-cyber" onClick={() => navigate("/news")}>EXPLORE THREATS</button>
                 <button className="btn-ghost-cyber" onClick={() => navigate("/blog")}>READ INSIGHTS</button>
@@ -100,7 +133,7 @@ export function HomePage() {
               <div key={tool.name} onClick={() => navigate("/tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
                 <div className="text-4xl mb-3">{tool.icon}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{tool.name}</h3>
-                <p className="text-sm text-foreground/70 mb-4">{tool.desc}</p>
+                <p className="text-sm text-foreground/85 mb-4">{tool.desc}</p>
                 <div className="font-mono text-xs tracking-widest" style={{ color: tool.color }}>▸ LAUNCH TOOL</div>
               </div>
             ))}
@@ -115,7 +148,54 @@ export function HomePage() {
           <button onClick={() => navigate("/blog")} className="btn-ghost-cyber text-xs">ALL POSTS →</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate("/blog")} />)}
+          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate(`/blog/${b.id}`)} />)}
+        </div>
+      </section>
+
+      <Testimonials />
+
+      {/* FEATURED BOOKS */}
+      <section className="bg-surface/30 border-y border-border">
+        <div className="container mx-auto px-6 py-20">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+            <SectionHeader eyebrow="Library" title="Foundational Books" subtitle="Essential cybersecurity literature by CyberHawk UG for professionals and students." />
+            <button onClick={() => navigate("/books")} className="btn-ghost-cyber text-xs">VIEW LIBRARY →</button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {BOOKS.slice(0, 4).map(b => (
+              <div key={b.id} onClick={() => navigate(`/books/${b.id}`)} className="card-cyber p-4 cursor-pointer group hover:border-primary/60 transition-all">
+                <div className="aspect-[3/4] bg-gradient-primary mb-4 flex items-center justify-center text-5xl group-hover:scale-105 transition-transform">
+                  {b.icon}
+                </div>
+                <h3 className="font-display font-bold text-white text-sm leading-tight mb-1">{b.title}</h3>
+                <p className="text-[10px] text-muted-foreground font-mono">by {b.author}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <FAQ />
+
+      {/* ABOUT & CONTACT QUICK LINK */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="card-cyber p-8 flex flex-col gap-4">
+            <div className="font-mono text-xs text-primary tracking-[3px] uppercase">▸ Our Story</div>
+            <h3 className="font-display font-black text-white text-3xl">ABOUT CyberHawk UG</h3>
+            <p className="text-foreground/80 leading-relaxed">
+              We are a global threat intelligence platform and publisher of foundational cybersecurity literature, led by Samuel Mucunguzi.
+            </p>
+            <button onClick={() => navigate("/about")} className="btn-ghost-cyber self-start text-xs mt-2">LEARN MORE →</button>
+          </div>
+          <div className="card-cyber p-8 flex flex-col gap-4 bg-gradient-to-br from-primary/5 to-transparent">
+            <div className="font-mono text-xs text-primary tracking-[3px] uppercase">▸ Connection</div>
+            <h3 className="font-display font-black text-white text-3xl">SECURE CHANNELS</h3>
+            <p className="text-foreground/80 leading-relaxed">
+              Need to transmit a tip-off or inquire about partnerships? Our secure lines are always open.
+            </p>
+            <button onClick={() => navigate("/contact")} className="btn-cyber self-start text-xs mt-2">ESTABLISH CONNECTION →</button>
+          </div>
         </div>
       </section>
 

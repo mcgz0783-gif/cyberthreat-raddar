@@ -1,4 +1,6 @@
+import { Helmet } from "react-helmet-async";
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 export function ContactPage() {
@@ -13,7 +15,7 @@ export function ContactPage() {
   };
 
   const channels = [
-    { icon:"✉", label:"Email", val:"kevlarmackenzie@gmail.com" },
+    { icon:"✉", label:"Email", val:"mcgz0783@gmail.com" },
     { icon:"📞", label:"Phone", val:"0783699626" },
     { icon:"💬", label:"WhatsApp", val:"0788213106" },
     { icon:"🔐", label:"PGP", val:"0xA1B2 C3D4 E5F6 7890" },
@@ -21,7 +23,31 @@ export function ContactPage() {
 
   return (
     <section className="container mx-auto px-6 py-14">
-      <SectionHeader eyebrow="Establish Connection" title="Get in Touch" subtitle="Tip-offs, partnerships, speaking requests, or general inquiries — drop us a line through any secure channel." />
+      <SEO 
+        title="Contact cyberhawk UG | Cybersecurity Intelligence Platform" 
+        description="Get in touch with cyberhawk UG for tip-offs, partnerships, speaking requests, or general inquiries."
+        path="/contact"
+      />
+
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact cyberhawk UG",
+            "description": "Secure communication channels for cybersecurity intelligence and inquiries.",
+            "url": "https://www.cyberhawk-ug.store/contact",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "mcgz0783@gmail.com",
+              "telephone": "+256-783699626",
+              "contactType": "customer service"
+            }
+          })}
+        </script>
+      </Helmet>
+
+      <SectionHeader eyebrow="Establish Connection" title="Contact cyberhawk UG" subtitle="Tip-offs, partnerships, speaking requests, or general inquiries — drop us a line through any secure channel." />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 card-cyber p-8">
@@ -29,7 +55,7 @@ export function ContactPage() {
             <div className="text-center py-16">
               <div className="text-6xl mb-4">✓</div>
               <h3 className="font-display font-black text-white text-2xl tracking-wider uppercase mb-3">Transmission Received</h3>
-              <p className="text-foreground/70">We will respond within 24-48 hours through the secure channel.</p>
+              <p className="text-foreground/85">We will respond within 24-48 hours through the secure channel.</p>
             </div>
           ) : (
             <form onSubmit={submit} className="flex flex-col gap-4">
@@ -69,7 +95,7 @@ export function ContactPage() {
           <div className="card-cyber p-5 bg-gradient-primary border-primary/40">
             <div className="font-mono text-[11px] text-primary tracking-widest mb-2">RESPONSE TIME</div>
             <div className="font-display font-black text-white text-2xl">24–48h</div>
-            <div className="text-xs text-foreground/70 mt-1">For tip-offs marked URGENT, we respond within 4 hours.</div>
+            <div className="text-xs text-foreground/85 mt-1">For tip-offs marked URGENT, we respond within 4 hours.</div>
           </div>
         </div>
       </div>

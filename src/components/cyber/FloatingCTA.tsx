@@ -1,7 +1,7 @@
 export function FloatingCTA() {
   const wa = "256788213106"; // WhatsApp international (UG +256)
   const tel = "+256783699626";
-  const waMsg = encodeURIComponent("Hello CyberHawk UG, I'd like to connect.");
+  const waMsg = encodeURIComponent("Hello cyberhawk UG, I'd like to connect.");
   return (
     <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-3">
       <a

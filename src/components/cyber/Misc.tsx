@@ -10,6 +10,7 @@ export function SearchBar({ placeholder, value, onChange }: { placeholder: strin
         type="text"
         className="input-cyber"
         placeholder={placeholder}
+        aria-label={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
         style={{ paddingLeft: 44 }}
@@ -26,8 +27,8 @@ export function SectionHeader({ eyebrow, title, subtitle }: { eyebrow?: string; 
           ▸ {eyebrow}
         </div>
       )}
-      <h2 className="section-title mb-3">{title}</h2>
-      {subtitle && <p className="text-foreground/70 text-base leading-relaxed">{subtitle}</p>}
+      <h1 className="section-title mb-3">{title}</h1>
+      {subtitle && <p className="text-foreground/85 text-base leading-relaxed">{subtitle}</p>}
     </div>
   );
 }
@@ -100,12 +101,17 @@ export function Footer() {
             <Link to="/" onClick={() => window.scrollTo(0, 0)}>
               <Logo />
             </Link>
-            <p className="text-sm text-foreground/60 mt-4 max-w-sm leading-relaxed">
+            <p className="text-sm text-foreground/80 mt-4 max-w-sm leading-relaxed">
               The definitive platform for cybersecurity professionals. Global intelligence, expert analysis, and continuous education.
             </p>
             <div className="flex gap-2 mt-5">
-              {["𝕏","in","gh","▶"].map(s => (
-                <a key={s} href="#" className="w-9 h-9 border border-border text-muted-foreground flex items-center justify-center hover:border-primary hover:text-primary transition-colors text-sm font-bold">
+              {[
+                { s: "𝕏", label: "X (Twitter)" },
+                { s: "in", label: "LinkedIn" },
+                { s: "gh", label: "GitHub" },
+                { s: "▶", label: "YouTube" },
+              ].map(({ s, label }) => (
+                <a key={s} href="#" aria-label={`CyberHawk UG on ${label}`} className="w-9 h-9 border border-border text-muted-foreground flex items-center justify-center hover:border-primary hover:text-primary transition-colors text-sm font-bold">
                   {s}
                 </a>
               ))}
@@ -133,7 +139,7 @@ export function Footer() {
               Contact
             </div>
             {[
-              { icon:"✉", val:"kevlarmackenzie@gmail.com" },
+              { icon:"✉", val:"mcgz0783@gmail.com" },
               { icon:"📞", val:"0783699626" },
               { icon:"💬", val:"WhatsApp: 0788213106" },
             ].map(c => (
@@ -144,8 +150,8 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-3 pt-6 border-t border-border text-xs font-mono text-muted-foreground">
-          <span>© 2025 CyberSec Updates. All rights reserved.</span>
-          <span className="text-primary tracking-widest">SECURE // ENCRYPTED // VERIFIED</span>
+          <span>© 2026 cyberhawk UG. All rights reserved.</span>
+          <span className="text-primary tracking-widest uppercase">cyberhawk UG — Secure // Encrypted // Verified</span>
         </div>
       </div>
     </footer>

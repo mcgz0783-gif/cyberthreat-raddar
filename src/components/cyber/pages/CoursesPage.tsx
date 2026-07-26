@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 const COURSES = [
@@ -14,7 +15,12 @@ const COURSES = [
 export function CoursesPage() {
   return (
     <section className="container mx-auto px-6 py-14">
-      <SectionHeader eyebrow="Education" title="Free Cybersecurity Courses" subtitle="Hand-picked, world-class training programmes that cost nothing to start." />
+      <SEO 
+        title="Free Cybersecurity Courses by cyberhawk UG | Hand-picked Training" 
+        description="Hand-picked, world-class cybersecurity training programs and certifications curated by cyberhawk UG."
+        path="/courses"
+      />
+      <SectionHeader eyebrow="Education" title="Free Cybersecurity Courses" subtitle="Hand-picked, world-class training programmes curated by cyberhawk UG that cost nothing to start." />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {COURSES.map(c => (
           <a key={c.title} href={c.url} target="_blank" rel="noopener noreferrer" className="card-cyber p-6 flex flex-col gap-3 group hover:border-primary/60 transition-colors">
@@ -24,7 +30,7 @@ export function CoursesPage() {
             </div>
             <h3 className="font-display font-bold text-white text-lg leading-tight">{c.title}</h3>
             <p className="text-xs font-mono text-muted-foreground">{c.provider} · ~{c.hours}h</p>
-            <p className="text-sm text-foreground/75 leading-relaxed flex-1">{c.desc}</p>
+            <p className="text-sm text-foreground/85 leading-relaxed flex-1">{c.desc}</p>
             <span className="font-mono text-xs text-primary tracking-widest mt-1">▸ START LEARNING →</span>
           </a>
         ))}

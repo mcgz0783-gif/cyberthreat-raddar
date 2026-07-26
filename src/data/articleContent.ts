@@ -224,6 +224,106 @@ export const BLOG_CONTENT: Record<number, ArticleBody> = {
       },
     ],
   ),
+  101: a(
+    "As cyber threats evolve in complexity and scale, the traditional reactive approach to security is no longer sufficient. For the burgeoning tech hubs across Africa and the globe, AI Agents represent a transformative shift—autonomous, intelligent entities capable of identifying, analyzing, and mitigating threats in real-time without human intervention. These agents are moving defense beyond simple 'if-then' automation into the realm of cognitive cybersecurity.",
+    [
+      {
+        heading: "The Shift from Automation to Autonomy",
+        paragraphs: [
+          "Traditional security automation relies on static playbooks that trigger specific actions based on known signatures. While effective for routine tasks, they fail against novel 'zero-day' attacks. AI agents, powered by Large Language Models (LLMs) and reinforcement learning, can reason through unstructured data and adapt their strategies dynamically to local and global threat patterns.",
+          "These agents don't just alert a human analyst; they investigate the root cause, correlate logs across multiple systems, and suggest—or execute—remediation steps. This autonomy reduces the 'Mean Time to Respond' (MTTR) from hours to seconds, a critical advantage for organizations with lean security teams."
+        ]
+      },
+      {
+        heading: "Real-time Incident Response at the Edge",
+        paragraphs: [
+          "In a modern enterprise environment, lateral movement by an attacker can happen in minutes. AI agents deployed at the network edge can detect anomalous traffic patterns and instantly isolate compromised endpoints. By the time a human analyst receives the notification, the threat has already been neutralized.",
+          "This capability is particularly vital for critical infrastructure and emerging digital financial services in Africa, where every millisecond of downtime translates to significant loss or risk to public trust."
+        ]
+      },
+      {
+        heading: "Ethical Considerations and Adversarial AI",
+        paragraphs: [
+          "The power of AI agents is a double-edged sword. Just as defenders use them to secure systems, adversaries are developing 'offensive agents' that can automate phishing and exploit delivery. We are entering an era of 'AI vs AI' warfare.",
+          "CyberHawk UG emphasizes the importance of ethical AI development. Security professionals must ensure that these agents operate within clear boundaries, providing transparency and auditability to prevent unintended consequences or biased decision-making in diverse cultural contexts."
+        ]
+      }
+    ],
+    [
+      "AI agents are transitioning from passive monitors to active, autonomous defenders.",
+      "Real-time response capabilities are essential for mitigating sophisticated lateral movement.",
+      "The rise of adversarial AI necessitates a proactive, AI-driven defensive strategy globally."
+    ]
+  ),
+  102: a(
+    "Linux is the backbone of the internet and the primary operating system for security professionals. For students across the continent and beyond, Linux skills are the gateway to the global tech economy. Whether you are performing a penetration test or managing a cloud server, the command line is your most powerful tool. Mastering these essential commands is a rite of passage for anyone serious about cybersecurity.",
+    [
+      {
+        heading: "Navigating and Searching the File System",
+        paragraphs: [
+          "Efficiency in Linux begins with fluid navigation. Beyond basic commands like 'ls' and 'cd', security students must master 'find' and 'grep'. The ability to search for sensitive files (like configuration files or SSH keys) across a massive filesystem is a core skill for both attackers and defenders.",
+          "Using pipes to chain commands—such as 'find /etc -type f | xargs grep \"password\"'—allows for rapid discovery of potential security misconfigurations that would take hours to find manually."
+        ]
+      },
+      {
+        heading: "Permissions and Privilege Management",
+        paragraphs: [
+          "The Linux security model is built on permissions. Commands like 'chmod', 'chown', and 'sudo' are the gatekeepers of system integrity. Understanding the difference between symbolic and numeric notation for permissions (e.g., 'chmod 755' vs 'chmod u+rwx') is critical.",
+          "Security professionals also need to be adept at identifying SUID/GUID bits, which can be leveraged for privilege escalation. Misconfigured permissions are among the most common vulnerabilities exploited in internal network assessments."
+        ]
+      },
+      {
+        heading: "Network Diagnostic and Analysis Tools",
+        paragraphs: [
+          "Linux offers an unparalleled suite of networking tools. Commands like 'ip addr', 'netstat' (or 'ss'), and 'curl' provide deep visibility into network connections. For security auditing, 'nmap' is indispensable for service discovery and vulnerability scanning.",
+          "Learning how to monitor live traffic with 'tcpdump' directly from the terminal allows analysts to catch malicious beacons or data exfiltration attempts in real-time, providing the ground truth that GUI tools sometimes obscure."
+        ]
+      }
+    ],
+    [
+      "Command line proficiency is the foundation of effective security operations.",
+      "Deep knowledge of the Linux permission model is crucial for preventing privilege escalation.",
+      "Terminal-based network tools provide the most granular and reliable data for traffic analysis."
+    ]
+  ),
+  103: a(
+    "The world of bug bounty hunting offers a unique opportunity to legally hack some of the world's largest companies and get paid for it. Bug bounty hunting is democratizing cybersecurity, allowing talented individuals from Nairobi to Lagos to London to compete on the global stage. Success is not about being a 'genius'; it is about persistence, methodical research, and a commitment to continuous learning.",
+    [
+      {
+        heading: "Phase 1: Building Your Hacking Laboratory",
+        paragraphs: [
+          "Before you send your first request, you need the right environment. Burp Suite is the industry-standard intercepting proxy and the most important tool in your arsenal. Familiarize yourself with its Repeater and Intruder modules, as they are essential for testing web logic.",
+          "Complement your setup with browser extensions like FoxyProxy and Wappalyzer to quickly identify the technologies running on a target. A clean, organized lab setup allows you to focus on the vulnerabilities rather than fighting your tools."
+        ]
+      },
+      {
+        heading: "Phase 2: The Art of Reconnaissance",
+        paragraphs: [
+          "Most beginners fail because they attack the same main domains as everyone else. Professional hunters spend 70% of their time on reconnaissance. Finding 'forgotten' subdomains or staging environments often leads to easier, high-impact vulnerabilities.",
+          "Master tools like 'subfinder' and 'amass' for subdomain discovery. The wider your attack surface, the more likely you are to find an unpatched or misconfigured asset that others missed."
+        ]
+      },
+      {
+        heading: "Phase 3: Finding Your First Vulnerability",
+        paragraphs: [
+          "Focus on the OWASP Top 10, but start with the 'low-hanging fruit'. Cross-Site Scripting (XSS), Insecure Direct Object References (IDOR), and Information Disclosure are great entry points for beginners. Look for places where user input is reflected or where IDs can be incremented in URLs.",
+          "Don't just look for bugs; understand the business logic. Sometimes the most critical vulnerabilities aren't technical glitches but logical flaws that allow one user to see another user's private data."
+        ]
+      },
+      {
+        heading: "Phase 4: Writing Winning Reports",
+        paragraphs: [
+          "A bug is only as good as the report you write. To get paid, your report must be clear, concise, and easy to reproduce. Always include a step-by-step proof of concept (PoC) and explain the potential business impact of the vulnerability.",
+          "Professionalism in communication builds trust with security teams, often leading to higher bounties and even private program invitations. Treat bug hunting like a professional service, and the rewards will follow."
+        ]
+      }
+    ],
+    [
+      "Success in bug hunting requires a methodical and persistent approach.",
+      "Effective reconnaissance is the key to finding vulnerabilities in less crowded targets.",
+      "High-quality reporting is just as important as the technical discovery itself."
+    ]
+  ),
   2: a(
     "We tracked a real spear-phishing operation from initial reconnaissance to credential harvest. Here is what each stage looked like — and where defenders had a chance to break the chain.",
     [
