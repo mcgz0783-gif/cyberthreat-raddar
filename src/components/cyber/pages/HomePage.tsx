@@ -31,9 +31,9 @@ export function HomePage() {
   return (
     <>
       <SEO 
-        title="CyberHawk UG | Global Cybersecurity & AI Education" 
-        description="Transforming cybersecurity and AI education in Africa. Explore high-quality books, real-time threat intelligence, and expert insights from CyberHawk UG."
-        keywords="cybersecurity education, ethical hacking Africa, AI tools for students, CyberHawk UG books, security intelligence"
+        title="CyberHawk UG | Global Cybersecurity & AI Free Public Library" 
+        description="Access foundational cybersecurity books, real-time threat intelligence, and expert AI insights for free. CyberHawk UG is a public library dedicated to open-access security education."
+        keywords="free cybersecurity books, public library, ethical hacking Africa, AI tools for students, CyberHawk UG library, open access security"
       />
 
       {/* HERO */}

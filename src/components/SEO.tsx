@@ -18,7 +18,7 @@ export function SEO({
   path = "", 
   ogImage, 
   type = "website",
-  keywords = "cybersecurity, AI education, ethical hacking, CyberHawk UG, Africa cybersecurity",
+  keywords = "free cybersecurity books, public library, AI education, ethical hacking, CyberHawk UG, open access security literature",
   author = "CyberHawk UG"
 }: SEOProps) {
   const url = `${BASE_URL}${path}`;
