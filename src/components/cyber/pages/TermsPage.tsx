@@ -1,8 +1,14 @@
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 export function TermsPage() {
   return (
     <section className="container mx-auto px-6 py-14 max-w-4xl">
+      <SEO 
+        title="Terms of Service by cyberhawk UG | Platform Usage Guidelines" 
+        description="Guidelines and terms for using the cyberhawk UG platform and tools."
+        path="/terms"
+      />
       <SectionHeader eyebrow="Legal" title="Terms of Service" subtitle="Last updated: June 2026" />
       <div className="card-cyber p-8 space-y-6 text-foreground/85 text-[15px] leading-relaxed">
         <div>
@@ -27,7 +33,7 @@ export function TermsPage() {
         </div>
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">6. Limitation of Liability</h2>
-          <p>To the maximum extent permitted by law, CyberHawk UG is not liable for indirect, incidental, or consequential damages arising from use of the platform.</p>
+          <p>To the maximum extent permitted by law, cyberhawk UG is not liable for indirect, incidental, or consequential damages arising from use of the platform.</p>
         </div>
         <div>
           <h2 className="font-display font-bold text-white text-xl mb-2">7. Changes</h2>

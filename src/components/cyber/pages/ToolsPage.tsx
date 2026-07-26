@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { SectionHeader } from "../Misc";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -14,10 +15,28 @@ async function sha1(text: string) {
 }
 
 // ── CVE Search ───────────────────────────────────────────────────────────────
+interface CVEMetric {
+  cvssData: {
+    baseScore: number;
+    baseSeverity: string;
+  };
+}
+
+interface CVEItem {
+  cve: {
+    id: string;
+    descriptions: { lang: string; value: string }[];
+    metrics?: {
+      cvssMetricV31?: CVEMetric[];
+      cvssMetricV30?: CVEMetric[];
+    };
+  };
+}
+
 function CVESearch() {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<CVEItem[]>([]);
   const [err, setErr] = useState("");
 
   const search = async () => {
@@ -32,8 +51,9 @@ function CVESearch() {
       if (!r.ok) throw new Error(`NVD ${r.status}`);
       const data = await r.json();
       setResults(data.vulnerabilities || []);
-    } catch (e: any) {
-      setErr(e.message || "Lookup failed");
+    } catch (e: unknown) {
+      const error = e as Error;
+      setErr(error.message || "Lookup failed");
     } finally {
       setLoading(false);
     }
@@ -57,9 +77,9 @@ function CVESearch() {
       </div>
       {err && <p className="text-danger text-sm font-mono">{err}</p>}
       <div className="space-y-3 max-h-96 overflow-y-auto">
-        {results.map((v: any) => {
+        {results.map((v) => {
           const c = v.cve;
-          const desc = c.descriptions?.find((d: any) => d.lang === "en")?.value || "";
+          const desc = c.descriptions?.find((d) => d.lang === "en")?.value || "";
           const metric = c.metrics?.cvssMetricV31?.[0]?.cvssData || c.metrics?.cvssMetricV30?.[0]?.cvssData;
           return (
             <div key={c.id} className="border border-border p-3 hover:border-primary/50 transition-colors">
@@ -121,9 +141,21 @@ function HashChecker() {
 }
 
 // ── IP Reputation ────────────────────────────────────────────────────────────
+interface IPData {
+  ip: string;
+  country_name: string;
+  country_code: string;
+  city: string;
+  region: string;
+  asn: string;
+  org: string;
+  error?: boolean;
+  reason?: string;
+}
+
 function IPReputation() {
   const [ip, setIp] = useState("");
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<IPData | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
@@ -133,11 +165,15 @@ function IPReputation() {
     try {
       const r = await fetch(`https://ipapi.co/${encodeURIComponent(ip.trim())}/json/`);
       if (!r.ok) throw new Error(`Lookup ${r.status}`);
-      const d = await r.json();
+      const d = (await r.json()) as IPData;
       if (d.error) throw new Error(d.reason || "Invalid IP");
       setData(d);
-    } catch (e: any) { setErr(e.message); }
-    finally { setLoading(false); }
+    } catch (e: unknown) {
+      const error = e as Error;
+      setErr(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -265,11 +301,52 @@ function ThreatMap() {
   );
 }
 
+// ── AI Tools for Students ───────────────────────────────────────────────────
+function AIToolsForStudents() {
+  const tools = [
+    { name: "Gemini", role: "Research & Summarization", desc: "Best for processing large documents and generating complex reports." },
+    { name: "GitHub Copilot", role: "Code Assistance", desc: "The essential tool for students learning to code in any language." },
+    { name: "Perplexity", role: "AI Search Engine", desc: "Source-backed answers for academic research and fact-checking." },
+    { name: "Claude", role: "Creative Writing", desc: "Excellent for refining essays and improving narrative flow." }
+  ];
+
+  return (
+    <div className="card-cyber p-6 bg-gradient-to-br from-primary/10 to-transparent border-primary/40">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="text-3xl">🎓</div>
+        <div>
+          <h3 className="font-display font-bold text-white text-lg leading-none">AI Tools for Students</h3>
+          <p className="font-mono text-[10px] text-primary mt-1 uppercase tracking-widest">Featured Resource // v1.0</p>
+        </div>
+      </div>
+      <p className="text-sm text-foreground/80 mb-6 leading-relaxed">
+        We've curated the most effective AI tools to help students maximize their learning efficiency and technical output.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        {tools.map(t => (
+          <div key={t.name} className="p-3 border border-border bg-surface/50">
+            <div className="font-display font-bold text-white text-sm mb-1">{t.name}</div>
+            <div className="font-mono text-[9px] text-primary uppercase mb-2 tracking-tighter">{t.role}</div>
+            <p className="text-[11px] text-muted-foreground leading-tight">{t.desc}</p>
+          </div>
+        ))}
+      </div>
+      <button className="btn-cyber w-full text-xs">DOWNLOAD COMPLETE GUIDE (FREE)</button>
+    </div>
+  );
+}
+
 export function ToolsPage() {
   return (
     <section className="container mx-auto px-6 py-14">
-      <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free, browser-based utilities for everyday defensive and investigative work." />
+      <SEO 
+        title="Security Tools | CVE, Hash, IP & AI for Students" 
+        description="Free browser-based security utilities and curated AI tools for students by CyberHawk UG. CVE search, hash checking, and AI productivity guides."
+        path="/tools"
+      />
+      <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free, browser-based utilities by CyberHawk UG for everyday defensive and investigative work." />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AIToolsForStudents />
         <CVESearch />
         <HashChecker />
         <IPReputation />

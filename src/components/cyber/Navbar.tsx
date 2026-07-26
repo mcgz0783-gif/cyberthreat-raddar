@@ -8,8 +8,9 @@ const NAV = [
   { label: "Insights", path: "/insights" },
   { label: "Blog", path: "/blog" },
   { label: "Books", path: "/books" },
+  { label: "Tools", path: "/tools" },
+  { label: "Courses", path: "/courses" },
   { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" },
 ];
 
 export function Navbar() {

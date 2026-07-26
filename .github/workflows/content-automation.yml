@@ -1,0 +1,38 @@
+name: Content Automation
+
+on:
+  schedule:
+    - cron: '0 0 */2 * *' # Every 2 days
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Generate Content
+        env:
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > google-creds.json
+          export GOOGLE_APPLICATION_CREDENTIALS=google-creds.json
+          npx ts-node scripts/generate-content.ts
+          rm google-creds.json
+        
+      - name: Commit and Push
+        run: |
+          git config --global user.name "CyberHawk-Agent"
+          git config --global user.email "agent@cyberhawk-ug.store"
+          git add .
+          git commit -m "chore: automated content update [skip ci]"
+          git push

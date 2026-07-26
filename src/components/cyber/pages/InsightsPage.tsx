@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 import { INSIGHTS, type InsightItem } from "@/data/cybersec";
 import { INSIGHT_CONTENT } from "@/data/articleContent";
 import { InsightCard } from "../Cards";
@@ -6,12 +8,49 @@ import { SectionHeader } from "../Misc";
 import { ArticleReader } from "../ArticleReader";
 
 export function InsightsPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const featured = INSIGHTS[0];
   const [open, setOpen] = useState<InsightItem | null>(null);
 
+  useEffect(() => {
+    if (id) {
+      const insight = INSIGHTS.find(i => i.id.toString() === id);
+      if (insight) {
+        setOpen(insight);
+      } else {
+        navigate("/insights", { replace: true });
+      }
+    } else {
+      setOpen(null);
+    }
+  }, [id, navigate]);
+
+  const handleOpen = (item: InsightItem) => {
+    navigate(`/insights/${item.id}`);
+  };
+
+  const handleClose = () => {
+    navigate("/insights");
+  };
+
   return (
     <section className="container mx-auto px-6 py-14">
-      <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports from top security analysts and institutions." />
+      {open ? (
+        <SEO 
+          title={`${open.title} | Research — cyberhawk UG`} 
+          description={open.key}
+          path={`/insights/${open.id}`}
+        />
+      ) : (
+        <SEO 
+          title="Expert Insights by cyberhawk UG | Cybersecurity Research & Analysis" 
+          description="Deep analysis of the cybersecurity landscape, research, and technical reports curated by cyberhawk UG."
+          path="/insights"
+        />
+      )}
+      
+      <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports curated by cyberhawk UG and leading security analysts." />
 
       {/* Featured */}
       <div className="card-cyber p-8 lg:p-10 mb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative overflow-hidden">
@@ -24,16 +63,16 @@ export function InsightsPage() {
             <span className="tag-chip bg-warning/15 border border-warning/50 text-warning">FEATURED</span>
           </div>
           <h2 className="font-display font-black text-white text-3xl lg:text-4xl leading-tight mb-4">{featured.title}</h2>
-          <p className="text-foreground/70 leading-relaxed mb-6">
+          <p className="text-foreground/85 leading-relaxed mb-6">
             A comprehensive examination of how ransomware operations have evolved from opportunistic attacks to sophisticated, enterprise-scale criminal enterprises with dedicated R&D teams, affiliate networks, and PR departments.
           </p>
-          <button onClick={() => setOpen(featured)} className="btn-cyber">READ FULL REPORT →</button>
+          <button onClick={() => handleOpen(featured)} className="btn-cyber">READ FULL REPORT →</button>
         </div>
         <div className="text-9xl text-center hidden lg:block float-anim">{featured.img}</div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-        {INSIGHTS.slice(1).map(item => <InsightCard key={item.id} item={item} onClick={() => setOpen(item)} />)}
+        {INSIGHTS.slice(1).map(item => <InsightCard key={item.id} item={item} onClick={() => handleOpen(item)} />)}
       </div>
 
       {/* Key Takeaways */}
@@ -56,7 +95,7 @@ export function InsightsPage() {
 
       {open && (
         <ArticleReader
-          onClose={() => setOpen(null)}
+          onClose={handleClose}
           meta={{
             eyebrow: open.cat,
             title: open.title,

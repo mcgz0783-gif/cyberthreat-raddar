@@ -71,7 +71,7 @@ export function ArticleReader({
                       {s.heading}
                     </h2>
                     {s.paragraphs.map((para, j) => (
-                      <p key={j} className="text-[15px] leading-[1.85] text-foreground/85 mb-4">
+                      <p key={j} className="text-base leading-[1.85] text-foreground/90 mb-4">
                         {para}
                       </p>
                     ))}
