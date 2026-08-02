@@ -10,6 +10,9 @@ import { BOOK7_CONTENT } from "./books/book7";
 import { BOOK8_CONTENT } from "./books/book8";
 import { BOOK10_CONTENT } from "./books/book10";
 import { PYTHON_PROGRAMMING_CONTENT } from "./books/pythonProgramming";
+import { ETHICAL_HACKING_2026_CONTENT } from "./books/ethicalHacking2026";
+import { CYBERSECURITY_2026_CONTENT } from "./books/cybersecurity2026";
+import { NETWORKING_2026_CONTENT } from "./books/networking2026";
 
 export const CUSTOM_COVERS: Record<number, string> = { 
   9: aiAgentsCover
@@ -33,4 +36,7 @@ export const BOOK_CONTENT: Record<number, BookContent> = {
   9: AI_AGENTS_BOOK,
   10: BOOK10_CONTENT,
   11: PYTHON_PROGRAMMING_CONTENT,
+  12: ETHICAL_HACKING_2026_CONTENT,
+  13: CYBERSECURITY_2026_CONTENT,
+  14: NETWORKING_2026_CONTENT,
 };
