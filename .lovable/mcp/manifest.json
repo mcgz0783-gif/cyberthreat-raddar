@@ -114,8 +114,8 @@
       },
       {
         "name": "send_email",
-        "title": "Send Email (Gmail)",
-        "description": "Send an email via the Gmail API using a service account. Note: Requires domain-wide delegation or a configured admin user.",
+        "title": "Send email",
+        "description": "Send an email via Gmail API using a service account. Useful for professional notifications.",
         "inputSchema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -134,13 +134,7 @@
             "body": {
               "type": "string",
               "minLength": 1,
-              "description": "Email body (text)."
-            },
-            "from": {
-              "description": "Sender email (if using domain-wide delegation).",
-              "type": "string",
-              "format": "email",
-              "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              "description": "Plain text email body."
             }
           },
           "required": [
