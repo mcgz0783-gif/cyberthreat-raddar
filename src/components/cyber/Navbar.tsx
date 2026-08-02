@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
   { label: "Home", path: "/" },
@@ -49,18 +50,22 @@ export function Navbar() {
               {n.label}
             </Link>
           ))}
+          <ThemeToggle />
           <Link to="/contact" className="btn-cyber text-xs" onClick={() => window.scrollTo(0, 0)}>
             SUBSCRIBE
           </Link>
         </div>
 
-        <button
-          className="md:hidden border border-border text-primary px-3 py-1.5 text-lg"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? "✕" : "☰"}
-        </button>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <button
+            className="md:hidden border border-border text-primary px-3 py-1.5 text-lg"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (

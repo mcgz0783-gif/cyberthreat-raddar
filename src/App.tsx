@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/hooks/useAuth";
 import { Layout } from "@/components/Layout";
 import { HomePage } from "@/components/cyber/pages/HomePage";
@@ -28,8 +29,9 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
+    <ThemeProvider defaultTheme="dark" storageKey="cyber-ui-theme">
+      <TooltipProvider>
+        <Toaster />
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
@@ -61,7 +63,8 @@ const App = () => (
         </AuthProvider>
       </BrowserRouter>
       {import.meta.env.PROD && <Analytics />}
-    </TooltipProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

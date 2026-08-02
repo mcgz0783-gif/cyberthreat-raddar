@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/cyber/Navbar";
+import { CookieConsent } from "@/components/cyber/CookieConsent";
 import { Footer } from "@/components/cyber/Misc";
 import { FloatingCTA } from "@/components/cyber/FloatingCTA";
 import { SEO } from "@/components/SEO";
@@ -35,6 +36,7 @@ export function Layout() {
       </main>
       <Footer />
       <FloatingCTA />
+      <CookieConsent />
     </div>
   );
 }
