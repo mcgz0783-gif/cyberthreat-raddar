@@ -60,7 +60,7 @@ const App = () => (
           </Routes>
         </AuthProvider>
       </BrowserRouter>
-      <Analytics />
+      {import.meta.env.PROD && <Analytics />}
     </TooltipProvider>
   </QueryClientProvider>
 );
