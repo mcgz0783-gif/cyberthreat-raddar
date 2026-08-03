@@ -39,7 +39,10 @@ export default defineTool({
     subject: z.string().min(1).describe("Email subject."),
     body: z.string().min(1).describe("Plain text email body."),
   },
-  handler: async ({ to, subject, body }) => {
+  handler: async ({ to, subject, body }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       // 1. Get Service Account from Env
       const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;

@@ -67,7 +67,10 @@ export default defineTool({
   inputSchema: {
     pageSize: z.number().min(1).max(100).default(10).describe("Number of contacts to retrieve."),
   },
-  handler: async ({ pageSize }) => {
+  handler: async ({ pageSize }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
       if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");

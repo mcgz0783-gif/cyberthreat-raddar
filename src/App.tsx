@@ -23,6 +23,8 @@ import AuthCallback from "@/pages/AuthCallback";
 import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
 import PaymentCallback from "@/pages/PaymentCallback";
+import OAuthConsent from "@/pages/OAuthConsent";
+
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -57,6 +59,8 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/payment/callback" element={<PaymentCallback />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

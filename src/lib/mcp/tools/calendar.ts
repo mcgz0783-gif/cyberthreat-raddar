@@ -72,7 +72,10 @@ export default defineTool({
     endDateTime: z.string().describe("End time in ISO 8601 format."),
     calendarId: z.string().default("primary").describe("Calendar ID (default is 'primary')."),
   },
-  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }) => {
+  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
       if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");

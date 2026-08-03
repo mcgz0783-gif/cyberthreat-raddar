@@ -3,7 +3,7 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
 
 // src/lib/mcp/tools/echo.ts
 import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.0";
@@ -164,7 +164,10 @@ var send_email_default = defineTool5({
     subject: z5.string().min(1).describe("Email subject."),
     body: z5.string().min(1).describe("Plain text email body.")
   },
-  handler: async ({ to, subject, body }) => {
+  handler: async ({ to, subject, body }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
       if (!saJson) {
@@ -258,7 +261,10 @@ var calendar_default = defineTool6({
     endDateTime: z6.string().describe("End time in ISO 8601 format."),
     calendarId: z6.string().default("primary").describe("Calendar ID (default is 'primary').")
   },
-  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }) => {
+  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
       if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");
@@ -341,7 +347,10 @@ var people_default = defineTool7({
   inputSchema: {
     pageSize: z7.number().min(1).max(100).default(10).describe("Number of contacts to retrieve.")
   },
-  handler: async ({ pageSize }) => {
+  handler: async ({ pageSize }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
       if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");
@@ -373,11 +382,16 @@ var people_default = defineTool7({
 });
 
 // src/lib/mcp/index.ts
+var projectRef = "vhjxjtqzwihvoabjnycz";
 var mcp_default = defineMcp({
   name: "cyberhawk-ug-mcp",
   title: "CyberHawk UG",
   version: "0.1.0",
-  instructions: "Cybersecurity tools from CyberHawk UG. Use `search_cve` to look up vulnerabilities in the NIST NVD, `lookup_ip` for IP geolocation and ASN info, `check_password_breach` for HaveIBeenPwned password checks, `send_email` for Gmail automation, `create_calendar_event` for scheduling, `list_contacts` for contact management, and `echo` to verify connectivity.",
+  instructions: "Cybersecurity tools from CyberHawk UG. Callers must sign in as a CyberHawk UG user. Use `search_cve` to look up vulnerabilities in the NIST NVD, `lookup_ip` for IP geolocation and ASN info, `check_password_breach` for HaveIBeenPwned password checks, `send_email` for Gmail automation, `create_calendar_event` for scheduling, `list_contacts` for contact management, and `echo` to verify connectivity.",
+  auth: auth.oauth.issuer({
+    issuer: `https://${projectRef}.supabase.co/auth/v1`,
+    acceptedAudiences: "authenticated"
+  }),
   tools: [
     echo_default,
     search_cve_default,
