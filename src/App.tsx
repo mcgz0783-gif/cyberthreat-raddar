@@ -23,6 +23,8 @@ import AuthCallback from "@/pages/AuthCallback";
 import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
 import PaymentCallback from "@/pages/PaymentCallback";
+import OAuthConsent from "@/pages/OAuthConsent";
+
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
