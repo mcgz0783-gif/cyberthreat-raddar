@@ -164,7 +164,10 @@ var send_email_default = defineTool5({
     subject: z5.string().min(1).describe("Email subject."),
     body: z5.string().min(1).describe("Plain text email body.")
   },
-  handler: async ({ to, subject, body }) => {
+  handler: async ({ to, subject, body }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const saJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
       if (!saJson) {
@@ -258,7 +261,10 @@ var calendar_default = defineTool6({
     endDateTime: z6.string().describe("End time in ISO 8601 format."),
     calendarId: z6.string().default("primary").describe("Calendar ID (default is 'primary').")
   },
-  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }) => {
+  handler: async ({ summary, description, startDateTime, endDateTime, calendarId }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
       if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");
@@ -341,7 +347,10 @@ var people_default = defineTool7({
   inputSchema: {
     pageSize: z7.number().min(1).max(100).default(10).describe("Number of contacts to retrieve.")
   },
-  handler: async ({ pageSize }) => {
+  handler: async ({ pageSize }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated: sign in via OAuth to use this tool." }], isError: true };
+    }
     try {
       const keyJson = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_KEY");
       if (!keyJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY not configured.");
