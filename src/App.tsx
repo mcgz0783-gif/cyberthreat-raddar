@@ -57,6 +57,8 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/payment/callback" element={<PaymentCallback />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
