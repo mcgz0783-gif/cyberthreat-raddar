@@ -41,8 +41,10 @@ function CVESearch() {
 
   const search = async () => {
     if (!q.trim()) return;
+    if (!navigator.onLine) { setErr("You're offline. Turn on your internet and try again."); return; }
     setLoading(true); setErr(""); setResults([]);
     try {
+
       const isCve = /^CVE-\d{4}-\d{4,}$/i.test(q.trim());
       const url = isCve
         ? `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${encodeURIComponent(q.trim().toUpperCase())}`
@@ -161,8 +163,10 @@ function IPReputation() {
 
   const lookup = async () => {
     if (!ip.trim()) return;
+    if (!navigator.onLine) { setErr("You're offline. Turn on your internet and try again."); return; }
     setLoading(true); setErr(""); setData(null);
     try {
+
       const r = await fetch(`https://ipapi.co/${encodeURIComponent(ip.trim())}/json/`);
       if (!r.ok) throw new Error(`Lookup ${r.status}`);
       const d = (await r.json()) as IPData;

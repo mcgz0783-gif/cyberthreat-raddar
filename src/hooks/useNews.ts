@@ -1,40 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { NEWS, type NewsItem } from "@/data/cybersec";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 export function useNews() {
   const [news, setNews] = useState<NewsItem[]>(NEWS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const online = useOnlineStatus();
 
-  useEffect(() => {
-    async function fetchLiveNews() {
-      try {
-        const response = await fetch("/api/news");
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || "Failed to fetch live news");
-        }
-        const liveNews = await response.json();
-        
-        // Merge live news with static news, prioritizing live
-        if (Array.isArray(liveNews)) {
-          setNews([...liveNews, ...NEWS]);
-        } else {
-          console.error("Live news data is not an array:", liveNews);
-          setError("Received malformed news data");
-        }
-      } catch (err: unknown) {
-        const error = err as Error;
-        console.error("Live news fetch failed:", error.message);
-        setError("Failed to load live threat intelligence. Using offline data.");
-        // Fallback is already set to static NEWS
-      } finally {
-        setLoading(false);
-      }
+  const fetchLiveNews = useCallback(async () => {
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setNews(NEWS);
+      setError("You're offline — showing saved threat intelligence.");
+      setLoading(false);
+      return;
     }
+    setLoading(true);
+    try {
+      const response = await fetch("/api/news");
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to fetch live news");
+      }
+      const liveNews = await response.json();
 
-    fetchLiveNews();
+      if (Array.isArray(liveNews)) {
+        setNews([...liveNews, ...NEWS]);
+        setError(null);
+      } else {
+        setError("Received malformed news data");
+      }
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error("Live news fetch failed:", error.message);
+      setError("Failed to load live threat intelligence. Using offline data.");
+      setNews(NEWS);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { news, loading, error };
+  // Runs on mount and again whenever the browser regains connectivity.
+  useEffect(() => {
+    fetchLiveNews();
+  }, [fetchLiveNews, online]);
+
+  return { news, loading, error, online, refresh: fetchLiveNews };
 }
