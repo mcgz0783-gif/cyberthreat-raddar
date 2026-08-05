@@ -9,7 +9,7 @@ import { ArticleReader } from "../ArticleReader";
 import { useNews } from "@/hooks/useNews";
 
 export function NewsPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { news: allNews, loading } = useNews();
   const [search, setSearch] = useState("");
@@ -17,17 +17,21 @@ export function NewsPage() {
   const [open, setOpen] = useState<NewsItem | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const news = allNews.find(n => n.id.toString() === id);
+    if (slug) {
+      const news = allNews.find(n => n.slug === slug || n.id.toString() === slug);
       if (news) {
         setOpen(news);
+        // If it was found by ID, redirect to the slug for SEO
+        if (news.id.toString() === slug && news.slug) {
+          navigate(`/news/${news.slug}`, { replace: true });
+        }
       } else {
         navigate("/news", { replace: true });
       }
     } else {
       setOpen(null);
     }
-  }, [id, navigate, allNews]);
+  }, [slug, navigate, allNews]);
 
   const cats = ["All","Threat Intel","Data Breach","AI Security","Tools","Ransomware","Nation State","Live Intel"];
   const filtered = allNews.filter(n =>
@@ -38,11 +42,10 @@ export function NewsPage() {
   const handleOpen = (news: NewsItem) => {
     if (news.id.toString().startsWith("live-")) {
       // For live news without full content, redirect to source
-      // We expect live news items to have a 'url' property from our API
       const liveItem = news as NewsItem & { url?: string };
       if (liveItem.url) window.open(liveItem.url, "_blank");
     } else {
-      navigate(`/news/${news.id}`);
+      navigate(`/news/${news.slug || news.id}`);
     }
   };
 
@@ -56,7 +59,7 @@ export function NewsPage() {
         <SEO 
           title={`${open.title} | Threat Feed — CyberHawk UG`} 
           description={open.summary}
-          path={`/news/${open.id}`}
+          path={`/news/${open.slug || open.id}`}
         />
       ) : (
         <SEO 
@@ -66,7 +69,12 @@ export function NewsPage() {
         />
       )}
       
-      <SectionHeader eyebrow="Live Feed" title="Threat News" subtitle="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity curated by CyberHawk UG." />
+      <SectionHeader 
+        eyebrow="Live Feed" 
+        title="Threat News" 
+        subtitle="Filter and search the latest breaches, exploits, vulnerabilities, and threat actor activity curated by CyberHawk UG." 
+        level={open ? "h2" : "h1"}
+      />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="lg:w-96"><SearchBar placeholder="Search threats, CVEs, actors..." value={search} onChange={setSearch} /></div>

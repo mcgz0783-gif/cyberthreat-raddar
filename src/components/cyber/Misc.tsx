@@ -19,7 +19,8 @@ export function SearchBar({ placeholder, value, onChange }: { placeholder: strin
   );
 }
 
-export function SectionHeader({ eyebrow, title, subtitle }: { eyebrow?: string; title: string; subtitle?: string }) {
+export function SectionHeader({ eyebrow, title, subtitle, level = "h1" }: { eyebrow?: string; title: string; subtitle?: string; level?: "h1" | "h2" }) {
+  const Heading = level;
   return (
     <div className="mb-10 max-w-3xl">
       {eyebrow && (
@@ -27,7 +28,7 @@ export function SectionHeader({ eyebrow, title, subtitle }: { eyebrow?: string; 
           ▸ {eyebrow}
         </div>
       )}
-      <h1 className="section-title mb-3">{title}</h1>
+      <Heading className="section-title mb-3">{title}</Heading>
       {subtitle && <p className="text-foreground/85 text-base leading-relaxed">{subtitle}</p>}
     </div>
   );

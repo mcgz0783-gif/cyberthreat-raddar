@@ -5,7 +5,7 @@ export function TermsPage() {
   return (
     <section className="container mx-auto px-6 py-14 max-w-4xl">
       <SEO 
-        title="Terms of Service by cyberhawk UG | Platform Usage Guidelines" 
+        title="Terms of Service | CyberHawk UG" 
         description="Guidelines and terms for using the cyberhawk UG platform and tools."
         path="/terms"
       />

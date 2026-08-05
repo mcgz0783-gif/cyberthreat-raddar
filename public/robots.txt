@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://www.cyberhawk-ug.store/sitemap.xml
+Sitemap: https://cyberhawk-ug.store/sitemap.xml

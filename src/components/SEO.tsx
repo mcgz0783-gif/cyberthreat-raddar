@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const BASE_URL = "https://www.cyberhawk-ug.store";
+const BASE_URL = "https://cyberhawk-ug.store";
 
 interface SEOProps {
   title: string;

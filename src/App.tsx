@@ -41,13 +41,13 @@ const App = () => (
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/news" element={<NewsPage />} />
-              <Route path="/news/:id" element={<NewsPage />} />
+              <Route path="/news/:slug" element={<NewsPage />} />
               <Route path="/insights" element={<InsightsPage />} />
-              <Route path="/insights/:id" element={<InsightsPage />} />
+              <Route path="/insights/:slug" element={<InsightsPage />} />
               <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:id" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPage />} />
               <Route path="/books" element={<BooksPage />} />
-              <Route path="/books/:id" element={<BooksPage />} />
+              <Route path="/books/:slug" element={<BooksPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/tools" element={<ToolsPage />} />

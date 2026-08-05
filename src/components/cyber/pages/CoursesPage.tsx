@@ -16,7 +16,7 @@ export function CoursesPage() {
   return (
     <section className="container mx-auto px-6 py-14">
       <SEO 
-        title="Free Cybersecurity Courses by cyberhawk UG | Hand-picked Training" 
+        title="Free Cybersecurity Courses | CyberHawk UG Library" 
         description="Hand-picked, world-class cybersecurity training programs and certifications curated by cyberhawk UG."
         path="/courses"
       />

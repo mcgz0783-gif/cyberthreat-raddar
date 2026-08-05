@@ -116,7 +116,7 @@ export function HomePage() {
       {/* LATEST NEWS */}
       <section className="container mx-auto px-6 py-20">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
-          <SectionHeader eyebrow="Real-time" title="Latest Threats" subtitle="Breaking cybersecurity news from across the globe, curated and analyzed by our research team." />
+          <SectionHeader level="h2" eyebrow="Real-time" title="Latest Threats" subtitle="Breaking cybersecurity news from across the globe, curated and analyzed by our research team." />
           <button onClick={() => navigate("/news")} className="btn-ghost-cyber text-xs">VIEW ALL →</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -127,7 +127,7 @@ export function HomePage() {
       {/* TOOLS */}
       <section className="bg-surface/50 border-y border-border">
         <div className="container mx-auto px-6 py-20">
-          <SectionHeader eyebrow="Toolkit" title="Security Tools" subtitle="Free utilities to assess, analyze, and harden your digital infrastructure." />
+          <SectionHeader level="h2" eyebrow="Toolkit" title="Security Tools" subtitle="Free utilities to assess, analyze, and harden your digital infrastructure." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {TOOLS.map(tool => (
               <div key={tool.name} onClick={() => navigate("/tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
@@ -144,11 +144,11 @@ export function HomePage() {
       {/* FEATURED BLOGS */}
       <section className="container mx-auto px-6 py-20">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
-          <SectionHeader eyebrow="Editorial" title="Featured Blog Posts" subtitle="In-depth technical guides and analyses from leading practitioners." />
+          <SectionHeader level="h2" eyebrow="Editorial" title="Featured Blog Posts" subtitle="In-depth technical guides and analyses from leading practitioners." />
           <button onClick={() => navigate("/blog")} className="btn-ghost-cyber text-xs">ALL POSTS →</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate(`/blog/${b.id}`)} />)}
+          {BLOGS.filter(b => b.featured).map(b => <BlogCard key={b.id} item={b} onClick={() => navigate(`/blog/${b.slug}`)} />)}
         </div>
       </section>
 
@@ -158,12 +158,12 @@ export function HomePage() {
       <section className="bg-surface/30 border-y border-border">
         <div className="container mx-auto px-6 py-20">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
-            <SectionHeader eyebrow="Library" title="Foundational Books" subtitle="Essential cybersecurity literature by CyberHawk UG for professionals and students." />
+            <SectionHeader level="h2" eyebrow="Library" title="Foundational Books" subtitle="Essential cybersecurity literature by CyberHawk UG for professionals and students." />
             <button onClick={() => navigate("/books")} className="btn-ghost-cyber text-xs">VIEW LIBRARY →</button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {BOOKS.slice(0, 4).map(b => (
-              <div key={b.id} onClick={() => navigate(`/books/${b.id}`)} className="card-cyber p-4 cursor-pointer group hover:border-primary/60 transition-all">
+              <div key={b.id} onClick={() => navigate(`/books/${b.slug}`)} className="card-cyber p-4 cursor-pointer group hover:border-primary/60 transition-all">
                 <div className="aspect-[3/4] bg-gradient-primary mb-4 flex items-center justify-center text-5xl group-hover:scale-105 transition-transform">
                   {b.icon}
                 </div>

@@ -8,24 +8,28 @@ import { SearchBar, SectionHeader } from "../Misc";
 import { BookReader } from "../BookReader";
 
 export function BooksPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [reading, setReading] = useState<BookItem | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const book = BOOKS.find(b => b.id.toString() === id);
+    if (slug) {
+      const book = BOOKS.find(b => b.slug === slug || b.id.toString() === slug);
       if (book) {
         setReading(book);
+        // If it was found by ID, redirect to the slug for SEO
+        if (book.id.toString() === slug) {
+          navigate(`/books/${book.slug}`, { replace: true });
+        }
       } else {
         navigate("/books", { replace: true });
       }
     } else {
       setReading(null);
     }
-  }, [id, navigate]);
+  }, [slug, navigate]);
 
   const cats = ["All", ...Array.from(new Set(BOOKS.map(b => b.cat)))];
   const filtered = BOOKS.filter(b =>
@@ -34,7 +38,7 @@ export function BooksPage() {
   );
 
   const handleRead = (book: BookItem) => {
-    navigate(`/books/${book.id}`);
+    navigate(`/books/${book.slug}`);
   };
 
   const handleClose = () => {
@@ -47,7 +51,7 @@ export function BooksPage() {
         <SEO 
           title={reading.title} 
           description={reading.desc}
-          path={`/books/${reading.id}`}
+          path={`/books/${reading.slug}`}
           type="book"
           author={reading.author}
           keywords={`${reading.cat}, cybersecurity books, ${reading.title}, CyberHawk UG library`}
@@ -61,7 +65,12 @@ export function BooksPage() {
         />
       )}
       
-      <SectionHeader eyebrow="Library" title="Cybersecurity Books by CyberHawk UG" subtitle="The essential cybersecurity bookshelf — from offensive techniques to defense architecture by CyberHawk UG." />
+      <SectionHeader 
+        eyebrow="Library" 
+        title="Cybersecurity Books by CyberHawk UG" 
+        subtitle="The essential cybersecurity bookshelf — from offensive techniques to defense architecture by CyberHawk UG." 
+        level={reading ? "h2" : "h1"}
+      />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="lg:w-96"><SearchBar placeholder="Search by title or author..." value={search} onChange={setSearch} /></div>

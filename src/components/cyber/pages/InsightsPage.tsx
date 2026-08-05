@@ -8,26 +8,30 @@ import { SectionHeader } from "../Misc";
 import { ArticleReader } from "../ArticleReader";
 
 export function InsightsPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const featured = INSIGHTS[0];
   const [open, setOpen] = useState<InsightItem | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const insight = INSIGHTS.find(i => i.id.toString() === id);
+    if (slug) {
+      const insight = INSIGHTS.find(i => i.slug === slug || i.id.toString() === slug);
       if (insight) {
         setOpen(insight);
+        // If it was found by ID, redirect to the slug for SEO
+        if (insight.id.toString() === slug) {
+          navigate(`/insights/${insight.slug}`, { replace: true });
+        }
       } else {
         navigate("/insights", { replace: true });
       }
     } else {
       setOpen(null);
     }
-  }, [id, navigate]);
+  }, [slug, navigate]);
 
   const handleOpen = (item: InsightItem) => {
-    navigate(`/insights/${item.id}`);
+    navigate(`/insights/${item.slug}`);
   };
 
   const handleClose = () => {
@@ -38,19 +42,24 @@ export function InsightsPage() {
     <section className="container mx-auto px-6 py-14">
       {open ? (
         <SEO 
-          title={`${open.title} | Research — cyberhawk UG`} 
+          title={`${open.title} | Research — CyberHawk UG`} 
           description={open.key}
-          path={`/insights/${open.id}`}
+          path={`/insights/${open.slug}`}
         />
       ) : (
         <SEO 
-          title="Expert Insights by cyberhawk UG | Cybersecurity Research & Analysis" 
-          description="Deep analysis of the cybersecurity landscape, research, and technical reports curated by cyberhawk UG."
+          title="Expert Insights | Cybersecurity Research & Analysis" 
+          description="Deep analysis of the cybersecurity landscape, research, and technical reports curated by CyberHawk UG."
           path="/insights"
         />
       )}
       
-      <SectionHeader eyebrow="Deep Analysis" title="Expert Insights" subtitle="Long-form research, policy briefs, and industry reports curated by cyberhawk UG and leading security analysts." />
+      <SectionHeader 
+        eyebrow="Deep Analysis" 
+        title="Expert Insights" 
+        subtitle="Long-form research, policy briefs, and industry reports curated by CyberHawk UG and leading security analysts." 
+        level={open ? "h2" : "h1"}
+      />
 
       {/* Featured */}
       <div className="card-cyber p-8 lg:p-10 mb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative overflow-hidden">

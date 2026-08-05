@@ -8,24 +8,28 @@ import { SearchBar, SectionHeader } from "../Misc";
 import { ArticleReader } from "../ArticleReader";
 
 export function BlogPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState("All");
   const [open, setOpen] = useState<BlogItem | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const blog = BLOGS.find(b => b.id.toString() === id);
+    if (slug) {
+      const blog = BLOGS.find(b => b.slug === slug || b.id.toString() === slug);
       if (blog) {
         setOpen(blog);
+        // If it was found by ID, redirect to the slug for SEO
+        if (blog.id.toString() === slug) {
+          navigate(`/blog/${blog.slug}`, { replace: true });
+        }
       } else {
         navigate("/blog", { replace: true });
       }
     } else {
       setOpen(null);
     }
-  }, [id, navigate]);
+  }, [slug, navigate]);
 
   const cats = ["All", ...Array.from(new Set(BLOGS.map(b => b.cat)))];
   const filtered = BLOGS.filter(b =>
@@ -34,7 +38,7 @@ export function BlogPage() {
   );
 
   const handleOpen = (blog: BlogItem) => {
-    navigate(`/blog/${blog.id}`);
+    navigate(`/blog/${blog.slug}`);
   };
 
   const handleClose = () => {
@@ -47,7 +51,7 @@ export function BlogPage() {
         <SEO 
           title={open.title} 
           description={open.summary}
-          path={`/blog/${open.id}`}
+          path={`/blog/${open.slug}`}
           type="article"
           author={open.author}
           keywords={`${open.cat}, cybersecurity blog, ${open.title}, CyberHawk UG insights`}
@@ -61,7 +65,12 @@ export function BlogPage() {
         />
       )}
       
-      <SectionHeader eyebrow="Editorial" title="The Blog" subtitle="Long-form technical writing, war stories, and tactical guides from the CyberHawk UG security community." />
+      <SectionHeader 
+        eyebrow="Editorial" 
+        title="The Blog" 
+        subtitle="Long-form technical writing, war stories, and tactical guides from the CyberHawk UG security community." 
+        level={open ? "h2" : "h1"}
+      />
 
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="lg:w-96"><SearchBar placeholder="Search articles..." value={search} onChange={setSearch} /></div>

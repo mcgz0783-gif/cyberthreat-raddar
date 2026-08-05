@@ -5,7 +5,7 @@ export function PrivacyPage() {
   return (
     <section className="container mx-auto px-6 py-14 max-w-4xl">
       <SEO 
-        title="Privacy Policy by cyberhawk UG | Data & Privacy" 
+        title="Privacy Policy | CyberHawk UG" 
         description="Information on how cyberhawk UG collects, uses, and protects your data."
         path="/privacy"
       />
