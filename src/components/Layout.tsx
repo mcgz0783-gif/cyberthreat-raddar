@@ -3,6 +3,8 @@ import { Navbar } from "@/components/cyber/Navbar";
 import { CookieConsent } from "@/components/cyber/CookieConsent";
 import { Footer } from "@/components/cyber/Misc";
 import { FloatingCTA } from "@/components/cyber/FloatingCTA";
+import { OfflineBanner } from "@/components/cyber/OfflineBanner";
+
 import { SEO } from "@/components/SEO";
 
 const PAGE_SEO: Record<string, { title: string; description: string }> = {
@@ -37,6 +39,8 @@ export function Layout() {
       <Footer />
       <FloatingCTA />
       <CookieConsent />
+      <OfflineBanner />
+
     </div>
   );
 }
