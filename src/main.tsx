@@ -18,3 +18,6 @@ if (rootElement) {
   );
 }
 
+registerAppServiceWorker();
+
+
