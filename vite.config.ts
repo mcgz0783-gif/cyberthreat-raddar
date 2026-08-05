@@ -20,10 +20,8 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
-      injectRegister: null,
-      filename: "sw.js",
-      devOptions: { enabled: false },
-      manifest: false,
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "placeholder.svg"],
+      manifest: false, // Using existing public/manifest.json
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff2}"],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
@@ -70,7 +68,6 @@ export default defineConfig(({ mode }) => ({
       },
     }),
   ].filter(Boolean),
-
   ssgOptions: {
     script: "async",
     formatting: "minify",
