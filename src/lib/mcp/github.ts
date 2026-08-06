@@ -1,4 +1,4 @@
-import { runtimeEnv } from "../supabase";
+import { runtimeEnv } from "./supabase";
 
 const API = "https://api.github.com";
 
