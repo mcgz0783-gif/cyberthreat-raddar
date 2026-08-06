@@ -12,7 +12,7 @@
   "mcp": {
     "server": {
       "name": "cyberhawk-ug-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "CyberHawk UG"
     },
     "tools": [
@@ -204,6 +204,179 @@
               "maximum": 100
             }
           }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "db_list_schema",
+        "title": "List database schema",
+        "description": "List all tables, columns, types and row-level-security policies in the app's public schema. Admin role required.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "table": {
+              "type": "string",
+              "description": "Optional: limit output to a single table name."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "db_query",
+        "title": "Run a read-only database query",
+        "description": "Run a single SELECT (or WITH ... SELECT) statement against the app database and return rows as JSON. Admin role required. Use db_execute for changes.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "sql": {
+              "type": "string",
+              "minLength": 1,
+              "description": "A single SELECT or WITH ... SELECT statement. No semicolon needed."
+            }
+          },
+          "required": [
+            "sql"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "db_execute",
+        "title": "Run a database change or migration",
+        "description": "Run INSERT/UPDATE/DELETE or DDL (CREATE/ALTER/DROP TABLE, policies, functions, triggers) against the app database. Admin role required. Destructive — statements are executed exactly as given.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "sql": {
+              "type": "string",
+              "minLength": 1,
+              "description": "SQL to execute. Multiple statements separated by semicolons run in one transaction."
+            },
+            "confirm": {
+              "type": "boolean",
+              "description": "Must be true. Guards against accidental execution of destructive SQL."
+            }
+          },
+          "required": [
+            "sql",
+            "confirm"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "git_read_file",
+        "title": "Read a file from the repository",
+        "description": "Read a file's text content from a branch of the connected GitHub repository. Admin role required.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Repository-relative file path, e.g. src/App.tsx"
+            },
+            "repo": {
+              "type": "string",
+              "description": "Repository as owner/name. Defaults to the configured repo."
+            },
+            "branch": {
+              "type": "string",
+              "description": "Branch name. Defaults to main."
+            }
+          },
+          "required": [
+            "path"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "git_commit_push",
+        "title": "Commit files and push",
+        "description": "Commit one or more files to the connected GitHub repository and push to a branch (default main). Creates a single commit containing every file given. Admin role required.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": false,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Commit message."
+            },
+            "files": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Repository-relative path."
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Full new file content (UTF-8). Replaces the file."
+                  }
+                },
+                "required": [
+                  "path",
+                  "content"
+                ]
+              },
+              "description": "Files to add or replace in this commit."
+            },
+            "repo": {
+              "type": "string",
+              "description": "Repository as owner/name. Defaults to the configured repo."
+            },
+            "branch": {
+              "type": "string",
+              "description": "Target branch. Defaults to main."
+            },
+            "confirm": {
+              "type": "boolean",
+              "description": "Must be true. Guards against accidental pushes."
+            }
+          },
+          "required": [
+            "message",
+            "files",
+            "confirm"
+          ]
         },
         "outputSchema": null
       }
