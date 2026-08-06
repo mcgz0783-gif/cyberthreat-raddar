@@ -31,6 +31,8 @@ async function main() {
       user: 'mcgz0783@gmail.com', 
       serviceClient: key.client_id,
       privateKey: key.private_key,
+      // Adding explicit scope for Gmail sending
+      scope: 'https://www.googleapis.com/auth/gmail.send',
     },
   });
 
