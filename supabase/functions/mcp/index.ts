@@ -381,13 +381,340 @@ var people_default = defineTool7({
   }
 });
 
+// src/lib/mcp/tools/db-list-schema.ts
+import { defineTool as defineTool8 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z8 } from "npm:zod@^4.4.3";
+
+// src/lib/mcp/supabase.ts
+import { createClient } from "npm:@supabase/supabase-js@^2.110.0";
+function runtimeEnv(name) {
+  const runtime = globalThis;
+  return runtime.Deno?.env?.get?.(name) ?? runtime.process?.env?.[name];
+}
+function configuredEnv(names) {
+  for (const name of names) {
+    const value = runtimeEnv(name)?.trim();
+    if (value) return value;
+  }
+  return void 0;
+}
+function supabaseProjectUrl() {
+  const url = configuredEnv(["SUPABASE_URL", "VITE_SUPABASE_URL"]);
+  if (!url) throw new Error("SUPABASE_URL (or VITE_SUPABASE_URL) is required");
+  return url;
+}
+function supabasePublishableKey() {
+  const direct = configuredEnv([
+    "SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ]);
+  if (direct) return direct;
+  const keyset = runtimeEnv("SUPABASE_PUBLISHABLE_KEYS");
+  if (keyset) {
+    try {
+      const parsed = JSON.parse(keyset);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        const keys = parsed;
+        const key = [keys.default, ...Object.values(keys)].find((v) => typeof v === "string" && v.trim().startsWith("sb_publishable_"))?.trim();
+        if (key) return key;
+      }
+    } catch {
+    }
+  }
+  const legacy = configuredEnv(["SUPABASE_ANON_KEY", "VITE_SUPABASE_ANON_KEY"]);
+  if (legacy) return legacy;
+  throw new Error("SUPABASE_PUBLISHABLE_KEY, SUPABASE_PUBLISHABLE_KEYS, or SUPABASE_ANON_KEY is required");
+}
+function supabaseForUser(ctx) {
+  const token = ctx.getToken();
+  if (!token) throw new Error("supabaseForUser requires a verified OAuth token");
+  return createClient(supabaseProjectUrl(), supabasePublishableKey(), {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+async function requireAdmin(ctx) {
+  if (!ctx.isAuthenticated()) {
+    return "Not authenticated: connect via OAuth as a CyberHawk UG user.";
+  }
+  const supabase = supabaseForUser(ctx);
+  const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", ctx.getUserId()).eq("role", "admin").maybeSingle();
+  if (error) return `Could not verify admin role: ${error.message}`;
+  if (!data) return "Forbidden: this tool requires the `admin` role on your account.";
+  return null;
+}
+function toolError(text) {
+  return { content: [{ type: "text", text }], isError: true };
+}
+
+// src/lib/mcp/tools/db-list-schema.ts
+var db_list_schema_default = defineTool8({
+  name: "db_list_schema",
+  title: "List database schema",
+  description: "List all tables, columns, types and row-level-security policies in the app's public schema. Admin role required.",
+  inputSchema: {
+    table: z8.string().describe("Optional: limit output to a single table name.").optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ table }, ctx) => {
+    const denied = await requireAdmin(ctx);
+    if (denied) return toolError(denied);
+    const filter = table ? `AND c.table_name = ${quote(table)}` : "";
+    const sql = `
+      SELECT c.table_name, c.column_name, c.data_type, c.is_nullable, c.column_default
+      FROM information_schema.columns c
+      JOIN information_schema.tables t
+        ON t.table_schema = c.table_schema AND t.table_name = c.table_name
+      WHERE c.table_schema = 'public' AND t.table_type = 'BASE TABLE' ${filter}
+      ORDER BY c.table_name, c.ordinal_position
+    `;
+    try {
+      const supabase = supabaseForUser(ctx);
+      const [cols, pols] = await Promise.all([
+        supabase.rpc("mcp_admin_query", { sql }),
+        supabase.rpc("mcp_admin_query", {
+          sql: `SELECT tablename, policyname, cmd, roles, qual, with_check
+                FROM pg_policies WHERE schemaname = 'public'
+                ${table ? `AND tablename = ${quote(table)}` : ""}
+                ORDER BY tablename, policyname`
+        })
+      ]);
+      if (cols.error) return toolError(cols.error.message);
+      if (pols.error) return toolError(pols.error.message);
+      const payload = { columns: cols.data, policies: pols.data };
+      return {
+        content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+        structuredContent: payload
+      };
+    } catch (e) {
+      return toolError(`Schema read failed: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+});
+function quote(v) {
+  return `'${v.replace(/'/g, "''")}'`;
+}
+
+// src/lib/mcp/tools/db-query.ts
+import { defineTool as defineTool9 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z9 } from "npm:zod@^4.4.3";
+var FORBIDDEN = /\b(drop\s+database|alter\s+database|pg_read_file|pg_ls_dir|copy\s+.*\bfrom\s+program)\b/i;
+var db_query_default = defineTool9({
+  name: "db_query",
+  title: "Run a read-only database query",
+  description: "Run a single SELECT (or WITH ... SELECT) statement against the app database and return rows as JSON. Admin role required. Use db_execute for changes.",
+  inputSchema: {
+    sql: z9.string().min(1).describe("A single SELECT or WITH ... SELECT statement. No semicolon needed.")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ sql }, ctx) => {
+    const denied = await requireAdmin(ctx);
+    if (denied) return toolError(denied);
+    const stmt = sql.trim().replace(/;\s*$/, "");
+    if (!/^(select|with)\b/i.test(stmt)) {
+      return toolError("db_query only accepts SELECT or WITH ... SELECT. Use db_execute for writes.");
+    }
+    if (stmt.includes(";")) return toolError("Only one statement allowed.");
+    if (FORBIDDEN.test(stmt)) return toolError("Statement rejected by safety filter.");
+    try {
+      const supabase = supabaseForUser(ctx);
+      const { data, error } = await supabase.rpc("mcp_admin_query", { sql: stmt });
+      if (error) return toolError(`Query failed: ${error.message}`);
+      return {
+        content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+        structuredContent: { rows: data }
+      };
+    } catch (e) {
+      return toolError(`Query failed: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+});
+
+// src/lib/mcp/tools/db-execute.ts
+import { defineTool as defineTool10 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z10 } from "npm:zod@^4.4.3";
+var FORBIDDEN2 = /\b(drop\s+database|alter\s+database|drop\s+schema\s+(auth|storage|realtime|vault|supabase_functions)|pg_read_file|pg_ls_dir|copy\s+.*\bfrom\s+program)\b/i;
+var PROTECTED_SCHEMA = /\b(auth|storage|realtime|vault|supabase_functions)\s*\./i;
+var db_execute_default = defineTool10({
+  name: "db_execute",
+  title: "Run a database change or migration",
+  description: "Run INSERT/UPDATE/DELETE or DDL (CREATE/ALTER/DROP TABLE, policies, functions, triggers) against the app database. Admin role required. Destructive \u2014 statements are executed exactly as given.",
+  inputSchema: {
+    sql: z10.string().min(1).describe("SQL to execute. Multiple statements separated by semicolons run in one transaction."),
+    confirm: z10.boolean().describe("Must be true. Guards against accidental execution of destructive SQL.")
+  },
+  annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false },
+  handler: async ({ sql, confirm }, ctx) => {
+    const denied = await requireAdmin(ctx);
+    if (denied) return toolError(denied);
+    if (!confirm) return toolError("Refused: set confirm=true to run a database-changing statement.");
+    const stmt = sql.trim();
+    if (FORBIDDEN2.test(stmt)) return toolError("Statement rejected by safety filter.");
+    if (PROTECTED_SCHEMA.test(stmt)) {
+      return toolError("Refused: managed schemas (auth, storage, realtime, vault, supabase_functions) cannot be modified.");
+    }
+    try {
+      const supabase = supabaseForUser(ctx);
+      const { data, error } = await supabase.rpc("mcp_admin_execute", { sql: stmt });
+      if (error) return toolError(`Execution failed: ${error.message}`);
+      return {
+        content: [{ type: "text", text: `Executed successfully (${data}).` }],
+        structuredContent: { status: data }
+      };
+    } catch (e) {
+      return toolError(`Execution failed: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+});
+
+// src/lib/mcp/tools/git-read-file.ts
+import { defineTool as defineTool11 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z11 } from "npm:zod@^4.4.3";
+
+// src/lib/mcp/github.ts
+var API = "https://api.github.com";
+function githubToken() {
+  const t = runtimeEnv("GITHUB_TOKEN")?.trim();
+  if (!t) throw new Error("GITHUB_TOKEN is not configured on the server.");
+  return t;
+}
+function defaultRepo() {
+  return runtimeEnv("GITHUB_REPO")?.trim();
+}
+function resolveRepo(repo) {
+  const r = (repo ?? defaultRepo() ?? "").trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(r)) {
+    throw new Error("Repository must be given as `owner/name` (or set the GITHUB_REPO secret).");
+  }
+  return r;
+}
+async function gh(path, init = {}) {
+  const res = await fetch(`${API}${path}`, {
+    ...init,
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${githubToken()}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+      "Content-Type": "application/json",
+      ...init.headers ?? {}
+    }
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${text.slice(0, 600)}`);
+  return text ? JSON.parse(text) : {};
+}
+function toBase64(input) {
+  const bytes = new TextEncoder().encode(input);
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
+}
+function fromBase64(input) {
+  const bin = atob(input.replace(/\n/g, ""));
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+// src/lib/mcp/tools/git-read-file.ts
+var git_read_file_default = defineTool11({
+  name: "git_read_file",
+  title: "Read a file from the repository",
+  description: "Read a file's text content from a branch of the connected GitHub repository. Admin role required.",
+  inputSchema: {
+    path: z11.string().min(1).describe("Repository-relative file path, e.g. src/App.tsx"),
+    repo: z11.string().describe("Repository as owner/name. Defaults to the configured repo.").optional(),
+    branch: z11.string().describe("Branch name. Defaults to main.").optional()
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
+  handler: async ({ path, repo, branch }, ctx) => {
+    const denied = await requireAdmin(ctx);
+    if (denied) return toolError(denied);
+    try {
+      const slug = resolveRepo(repo);
+      const ref = branch?.trim() || "main";
+      const data = await gh(
+        `/repos/${slug}/contents/${path.split("/").map(encodeURIComponent).join("/")}?ref=${encodeURIComponent(ref)}`
+      );
+      if (!data.content) return toolError(`Not a file: ${path}`);
+      const text = fromBase64(data.content);
+      return {
+        content: [{ type: "text", text }],
+        structuredContent: { path, sha: data.sha, branch: ref }
+      };
+    } catch (e) {
+      return toolError(`Read failed: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+});
+
+// src/lib/mcp/tools/git-commit-push.ts
+import { defineTool as defineTool12 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z12 } from "npm:zod@^4.4.3";
+var git_commit_push_default = defineTool12({
+  name: "git_commit_push",
+  title: "Commit files and push",
+  description: "Commit one or more files to the connected GitHub repository and push to a branch (default main). Creates a single commit containing every file given. Admin role required.",
+  inputSchema: {
+    message: z12.string().min(1).describe("Commit message."),
+    files: z12.array(
+      z12.object({
+        path: z12.string().min(1).describe("Repository-relative path."),
+        content: z12.string().describe("Full new file content (UTF-8). Replaces the file.")
+      })
+    ).min(1).describe("Files to add or replace in this commit."),
+    repo: z12.string().describe("Repository as owner/name. Defaults to the configured repo.").optional(),
+    branch: z12.string().describe("Target branch. Defaults to main.").optional(),
+    confirm: z12.boolean().describe("Must be true. Guards against accidental pushes.")
+  },
+  annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+  handler: async ({ message, files, repo, branch, confirm }, ctx) => {
+    const denied = await requireAdmin(ctx);
+    if (denied) return toolError(denied);
+    if (!confirm) return toolError("Refused: set confirm=true to push a commit.");
+    try {
+      const slug = resolveRepo(repo);
+      const ref = branch?.trim() || "main";
+      const head = await gh(`/repos/${slug}/git/ref/heads/${encodeURIComponent(ref)}`);
+      const baseCommit = await gh(`/repos/${slug}/git/commits/${head.object.sha}`);
+      const tree = await Promise.all(
+        files.map(async (f) => {
+          const blob = await gh(`/repos/${slug}/git/blobs`, {
+            method: "POST",
+            body: JSON.stringify({ content: toBase64(f.content), encoding: "base64" })
+          });
+          return { path: f.path.replace(/^\/+/, ""), mode: "100644", type: "blob", sha: blob.sha };
+        })
+      );
+      const newTree = await gh(`/repos/${slug}/git/trees`, {
+        method: "POST",
+        body: JSON.stringify({ base_tree: baseCommit.tree.sha, tree })
+      });
+      const commit = await gh(`/repos/${slug}/git/commits`, {
+        method: "POST",
+        body: JSON.stringify({ message, tree: newTree.sha, parents: [head.object.sha] })
+      });
+      await gh(`/repos/${slug}/git/refs/heads/${encodeURIComponent(ref)}`, {
+        method: "PATCH",
+        body: JSON.stringify({ sha: commit.sha, force: false })
+      });
+      const summary = `Pushed ${files.length} file(s) to ${slug}@${ref} as ${commit.sha.slice(0, 7)}`;
+      return {
+        content: [{ type: "text", text: summary }],
+        structuredContent: { repo: slug, branch: ref, sha: commit.sha, url: commit.html_url, files: files.map((f) => f.path) }
+      };
+    } catch (e) {
+      return toolError(`Push failed: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+});
+
 // src/lib/mcp/index.ts
 var projectRef = "vhjxjtqzwihvoabjnycz";
 var mcp_default = defineMcp({
   name: "cyberhawk-ug-mcp",
   title: "CyberHawk UG",
-  version: "0.1.0",
-  instructions: "Cybersecurity tools from CyberHawk UG. Callers must sign in as a CyberHawk UG user. Use `search_cve` to look up vulnerabilities in the NIST NVD, `lookup_ip` for IP geolocation and ASN info, `check_password_breach` for HaveIBeenPwned password checks, `send_email` for Gmail automation, `create_calendar_event` for scheduling, `list_contacts` for contact management, and `echo` to verify connectivity.",
+  version: "0.2.0",
+  instructions: "Cybersecurity and platform-management tools from CyberHawk UG. Callers must sign in as a CyberHawk UG user. Security research: `search_cve` (NIST NVD), `lookup_ip` (geolocation/ASN), `check_password_breach` (HaveIBeenPwned). Google automation: `send_email`, `create_calendar_event`, `list_contacts`. Database administration (requires the `admin` role): `db_list_schema` to inspect tables, columns and access policies, `db_query` for read-only SELECTs, `db_execute` for data changes and schema migrations. Source control (requires the `admin` role): `git_read_file` to read repository files and `git_commit_push` to commit files and push to main. Use `echo` to verify connectivity.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"
@@ -399,7 +726,12 @@ var mcp_default = defineMcp({
     check_password_breach_default,
     send_email_default,
     calendar_default,
-    people_default
+    people_default,
+    db_list_schema_default,
+    db_query_default,
+    db_execute_default,
+    git_read_file_default,
+    git_commit_push_default
   ]
 });
 

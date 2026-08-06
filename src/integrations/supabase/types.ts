@@ -383,6 +383,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      mcp_admin_execute: { Args: { sql: string }; Returns: string }
+      mcp_admin_query: { Args: { sql: string }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "user"
