@@ -13,22 +13,15 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 async function testConnection() {
   console.log('Testing Supabase connection...');
   
-  // Test 1: Fetch books (existing table)
-  const { data: books, error: booksError } = await supabase.from('books').select('id, title').limit(5);
-
-  if (booksError) {
-    console.error('Error fetching books:', booksError.message);
-  } else {
-    console.log('Successfully fetched books:', books.length);
-  }
-
-  // Test 2: Try to fetch agent_logs (new table - might fail if not applied)
-  const { data: logs, error: logsError } = await supabase.from('agent_logs').select('id').limit(1);
-
-  if (logsError) {
-    console.log('Note: agent_logs table not found or not accessible yet (expected if migration not applied).');
-  } else {
-    console.log('Successfully accessed agent_logs table!');
+  const tables = ['books', 'orders', 'payments', 'purchases', 'agent_logs'];
+  
+  for (const table of tables) {
+    const { data, error, count } = await supabase.from(table).select('*', { count: 'exact', head: false }).limit(3);
+    if (error) {
+      console.log(`Note: ${table} table not found or not accessible yet (Error: ${error.message}).`);
+    } else {
+      console.log(`Successfully accessed ${table} table! Count: ${count}, Sample:`, data);
+    }
   }
 
   console.log('Supabase connection test completed.');
