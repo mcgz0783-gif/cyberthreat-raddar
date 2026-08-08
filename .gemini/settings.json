@@ -1,5 +1,16 @@
 {
   "model": {
     "name": "gemini-2.0-flash"
+  },
+  "mcpServers": {
+    "cyberhawk-ug": {
+      "httpUrl": "https://vhjxjtqzwihvoabjnycz.supabase.co/functions/v1/mcp",
+      "timeout": 60000,
+      "trust": false,
+      "description": "CyberHawk UG MCP server: CVE/IP/breach research, Google automation, database admin and git commit/push. Requires OAuth sign-in as a CyberHawk UG user.",
+      "oauth": {
+        "enabled": true
+      }
+    }
   }
 }
