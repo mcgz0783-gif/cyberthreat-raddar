@@ -34,6 +34,16 @@ Deno.serve(async (req) => {
     const desc = (status.payment_status_description || "").toUpperCase();
 
     const { data: order } = await admin.from("orders").select("*").eq("pesapal_tracking_id", tracking_id).maybeSingle();
+
+    await admin.from("payment_events").insert({
+      order_id: order?.id ?? null,
+      tracking_id,
+      merchant_reference: order?.pesapal_merchant_reference ?? null,
+      source: "verify",
+      event_status: desc || "UNKNOWN",
+      raw: status,
+    });
+
     if (order && desc === "COMPLETED" && order.status !== "completed") {
       await admin.from("orders").update({ status: "completed" }).eq("id", order.id);
       await admin.from("payments").update({ status: "success", raw_response: status }).eq("order_id", order.id);

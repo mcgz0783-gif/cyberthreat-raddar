@@ -29,9 +29,21 @@ Deno.serve(async (req) => {
     const status = await sr.json();
 
     const { data: order } = await admin.from("orders").select("*").eq("pesapal_tracking_id", tracking).maybeSingle();
-    if (!order) return new Response("ok", { headers: corsHeaders });
 
     const paymentStatus = (status.payment_status_description || "").toUpperCase();
+
+    // Audit trail: log every IPN callback, even ones with no matching order.
+    await admin.from("payment_events").insert({
+      order_id: order?.id ?? null,
+      tracking_id: tracking,
+      merchant_reference: merchantRef,
+      source: "ipn",
+      event_status: paymentStatus || "UNKNOWN",
+      raw: status,
+    });
+
+    if (!order) return new Response("ok", { headers: corsHeaders });
+
     if (paymentStatus === "COMPLETED") {
       await admin.from("orders").update({ status: "completed" }).eq("id", order.id);
       await admin.from("payments").update({ status: "success", raw_response: status }).eq("order_id", order.id);
