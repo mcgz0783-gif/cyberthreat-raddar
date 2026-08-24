@@ -4,11 +4,9 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 import { VitePWA } from "vite-plugin-pwa";
-import { visualizer } from "rollup-plugin-visualizer";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  envDir: "./.env",
   server: {
     host: "::",
     port: 8080,
@@ -69,10 +67,6 @@ export default defineConfig(({ mode }) => ({
         ],
       },
     }),
-    visualizer({
-      open: false,
-      filename: "bundle-analysis.html",
-    }),
   ].filter(Boolean),
   ssgOptions: {
     script: "async",
@@ -86,26 +80,5 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            // Group heavy UI/Animation libraries
-            if (id.includes("@radix-ui") || id.includes("lucide-react") || id.includes("framer-motion")) {
-              return "vendor-ui";
-            }
-            // Group data/state libraries
-            if (id.includes("@tanstack") || id.includes("@supabase")) {
-              return "vendor-data";
-            }
-            // Group other heavy dependencies
-            return "vendor-core";
-          }
-        },
-      },
-    },
-    chunkSizeWarningLimit: 600,
   },
 }));

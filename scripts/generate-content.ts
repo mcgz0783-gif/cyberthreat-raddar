@@ -1,30 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import dotenv from 'dotenv';
+import { VertexAI } from '@google-cloud/vertexai';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Load env from .env/ folder
-dotenv.config({ path: path.resolve(__dirname, '../.env/.env') });
 
 const CYBERSEC_PATH = path.resolve(__dirname, '../src/data/cybersec.ts');
 const CONTENT_PATH = path.resolve(__dirname, '../src/data/articleContent.ts');
 const SITEMAP_PATH = path.resolve(__dirname, '../public/sitemap.xml');
 const PROMPT_PATH = path.resolve(__dirname, '../prompts/Blog-Creator.md');
 
-const API_KEY = process.env.GEMINI_API_KEY;
+let PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT || 'gen-lang-client-0785751854';
+if (PROJECT_ID === 'cloudshell-gca') {
+  PROJECT_ID = 'gen-lang-client-0785751854';
+}
+const LOCATION = 'us-central1';
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
 async function generateWithGemini(topic: string, description: string) {
-  if (!API_KEY) {
-    throw new Error('GEMINI_API_KEY is required for content generation.');
-  }
-
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
+  const model = vertexAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const blogCreatorPrompt = fs.readFileSync(PROMPT_PATH, 'utf8');
 
@@ -57,7 +53,7 @@ Return ONLY the raw JSON string.
 
   const result = await model.generateContent(fullPrompt);
   const response = await result.response;
-  const text = response.text();
+  const text = response.candidates?.[0].content.parts[0].text || '';
   return JSON.parse(text.replace(/```json|```/g, '').trim());
 }
 
