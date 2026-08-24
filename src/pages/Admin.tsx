@@ -317,6 +317,8 @@ export default function Admin() {
           </table>
         </div>
       </div>
+
+      <AdminPayments />
     </section>
   );
 }
