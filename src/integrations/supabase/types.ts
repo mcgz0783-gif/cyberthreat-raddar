@@ -231,6 +231,47 @@ export type Database = {
           },
         ]
       }
+      payment_events: {
+        Row: {
+          created_at: string
+          event_status: string | null
+          id: string
+          merchant_reference: string | null
+          order_id: string | null
+          raw: Json | null
+          source: string
+          tracking_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_status?: string | null
+          id?: string
+          merchant_reference?: string | null
+          order_id?: string | null
+          raw?: Json | null
+          source: string
+          tracking_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_status?: string | null
+          id?: string
+          merchant_reference?: string | null
+          order_id?: string | null
+          raw?: Json | null
+          source?: string
+          tracking_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount_cents: number
