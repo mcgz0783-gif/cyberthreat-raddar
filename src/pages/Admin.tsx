@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { SEO } from "@/components/SEO";
+import { AdminPayments } from "@/components/cyber/AdminPayments";
 import { toast } from "sonner";
 
 type BookRow = {
