@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 type EventRow = {
@@ -155,8 +155,8 @@ export function AdminPayments() {
               const evs = events[o.id] || [];
               const isOpen = open === o.id;
               return (
-                <>
-                  <tr key={o.id} className="border-b border-border/50">
+                <Fragment key={o.id}>
+                  <tr className="border-b border-border/50">
                     <td className="py-2 pr-4 text-muted-foreground whitespace-nowrap">
                       {new Date(o.created_at).toLocaleString()}
                     </td>
@@ -188,7 +188,7 @@ export function AdminPayments() {
                     </td>
                   </tr>
                   {isOpen && (
-                    <tr key={`${o.id}-detail`} className="border-b border-border/50 bg-muted/20">
+                    <tr className="border-b border-border/50 bg-muted/20">
                       <td colSpan={8} className="py-3 px-3">
                         <div className="grid md:grid-cols-2 gap-4">
                           <div className="text-[11px] font-mono space-y-1 text-muted-foreground">
@@ -227,7 +227,7 @@ export function AdminPayments() {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               );
             })}
             {!loading && orders.length === 0 && (
