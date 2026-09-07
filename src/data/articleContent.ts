@@ -324,6 +324,37 @@ export const BLOG_CONTENT: Record<number, ArticleBody> = {
       "High-quality reporting is just as important as the technical discovery itself."
     ]
   ),
+  104: a(
+    "Linux is more than just an operating system; for the cybersecurity professional, it is a superpower. Our new animation video, 'The Command Line Chronicles', takes you on a visual journey through the essentials of Linux mastery.",
+    [
+      {
+        heading: "Visualizing the Command Line",
+        paragraphs: [
+          "Our latest animation brings the terminal to life. We show you how to navigate the complex folder-city using `ls` and `cd`, and how to find exactly what you need with `grep`. In the world of security, speed is everything, and the command line is the fastest path to results.",
+          "The video uses dynamic visuals to represent command execution, making abstract concepts like piping and searching feel physical and intuitive."
+        ]
+      },
+      {
+        heading: "The Shield of Permissions",
+        paragraphs: [
+          "Permissions are the bedrock of Linux security. In the animation, we visualize `chmod` and `chown` as powerful gates and keys. Understanding the numeric notation (like 700 for private SSH keys) is the difference between a secure system and a compromised one.",
+          "We dive deep into why least-privilege is not just a policy, but a technical requirement that you must master from day one."
+        ]
+      },
+      {
+        heading: "Networking: The Pulse of the Wire",
+        paragraphs: [
+          "The terminal is also your radar. We show how tools like `ip addr`, `nmap`, and `tcpdump` allow you to see the hidden pulses of network traffic. Mastering these tools directly in Linux provides a level of detail that graphical tools simply cannot match.",
+          "Watch the full animation below to see these concepts in action and start your journey to Linux mastery today."
+        ]
+      }
+    ],
+    [
+      "Command line proficiency is a prerequisite for professional security work.",
+      "Visualize permissions as physical barriers to better understand access control.",
+      "Networking tools in Linux provide granular data essential for traffic analysis."
+    ]
+  ),
   2: a(
     "We tracked a real spear-phishing operation from initial reconnaissance to credential harvest. Here is what each stage looked like — and where defenders had a chance to break the chain.",
     [
