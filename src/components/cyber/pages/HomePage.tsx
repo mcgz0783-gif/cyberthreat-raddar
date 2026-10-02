@@ -6,6 +6,7 @@ import { NewsCard, BlogCard } from "../Cards";
 import { SectionHeader, Newsletter } from "../Misc";
 import { Ticker } from "../Ticker";
 import { CyberBackdrop } from "../CyberBackdrop";
+import { HeroVisual } from "../hero/HeroVisual";
 import { FAQ } from "../FAQ";
 import { Testimonials } from "../Testimonials";
 import { Search } from "lucide-react";
@@ -84,28 +85,9 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Hero visual */}
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-square max-w-md mx-auto">
-                <div className="absolute inset-0 rounded-full border border-primary/20 rotate-slow" />
-                <div className="absolute inset-8 rounded-full border border-primary/30" style={{ animation: "rotate-border 14s linear infinite reverse" }} />
-                <div className="absolute inset-16 rounded-full border-2 border-primary/40 rotate-slow" />
-                <div className="absolute inset-0 flex items-center justify-center flex-col">
-                  <div className="text-9xl float-anim">🛡️</div>
-                  <div className="font-mono text-xs text-primary mt-4 tracking-[4px]">SYSTEM // ACTIVE</div>
-                  <div className="font-mono text-[10px] text-muted-foreground mt-1">[NODE-7341] ENCRYPTED</div>
-                </div>
-              </div>
-              {[
-                { emoji:"⚡", label:"Real-time", pos:"top-[5%] left-[-5%]" },
-                { emoji:"🔒", label:"Encrypted", pos:"bottom-[5%] right-[-5%]" },
-                { emoji:"🌐", label:"Global", pos:"top-[45%] right-[-12%]" },
-              ].map((b) => (
-                <div key={b.label} className={`absolute ${b.pos} bg-card border border-primary/40 px-3 py-2 flex items-center gap-2 float-anim shadow-glow`}>
-                  <span className="text-lg">{b.emoji}</span>
-                  <span className="font-mono text-[10px] text-primary tracking-wider">{b.label}</span>
-                </div>
-              ))}
+            {/* Progressive 3D visual; semantic content remains in the DOM above it. */}
+            <div className="relative min-h-[320px] sm:min-h-[390px] lg:min-h-[520px]">
+              <HeroVisual />
             </div>
           </div>
         </div>
@@ -130,7 +112,7 @@ export function HomePage() {
           <SectionHeader level="h2" eyebrow="Toolkit" title="Security Tools" subtitle="Free utilities to assess, analyze, and harden your digital infrastructure." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {TOOLS.map(tool => (
-              <div key={tool.name} onClick={() => navigate("/tools")} className="card-cyber p-6 cursor-pointer group hover:border-primary/60 transition-colors">
+              <div key={tool.name} onClick={() => navigate("/tools")} className="card-cyber depth-card p-6 cursor-pointer group hover:border-primary/60 transition-colors">
                 <div className="text-4xl mb-3">{tool.icon}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{tool.name}</h3>
                 <p className="text-sm text-foreground/85 mb-4">{tool.desc}</p>
@@ -163,7 +145,7 @@ export function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {BOOKS.slice(0, 4).map(b => (
-              <div key={b.id} onClick={() => navigate(`/books/${b.slug}`)} className="card-cyber p-4 cursor-pointer group hover:border-primary/60 transition-all">
+              <div key={b.id} onClick={() => navigate(`/books/${b.slug}`)} className="card-cyber depth-card book-depth-card p-4 cursor-pointer group hover:border-primary/60 transition-all">
                 <div className="aspect-[3/4] bg-gradient-primary mb-4 flex items-center justify-center text-5xl group-hover:scale-105 transition-transform">
                   {b.icon}
                 </div>

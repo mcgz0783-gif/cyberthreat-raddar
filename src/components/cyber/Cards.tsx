@@ -81,10 +81,10 @@ const CUSTOM_COVERS: Record<number, string> = {
 export function BookCard({ item, onRead }: { item: BookItem; onRead?: () => void }) {
   const cover = CUSTOM_COVERS[item.id] || item.cover;
   return (
-    <article className="card-cyber p-5 fade-in flex flex-col gap-3">
+    <article className="card-cyber depth-card book-depth-card p-5 fade-in flex flex-col gap-3">
       <div
         onClick={onRead}
-        className="h-64 bg-gradient-primary border border-border flex flex-col items-center justify-center text-center relative cursor-pointer group overflow-hidden"
+        className="book-cover-depth h-64 bg-gradient-primary border border-border flex flex-col items-center justify-center text-center relative cursor-pointer group overflow-hidden"
       >
         <img src={cover || PLACEHOLDER_COVER} onError={onImgError} alt={`${item.title} cover`} loading="lazy" className={`absolute inset-0 w-full h-full transition-transform group-hover:scale-105 ${cover ? "object-cover" : "object-contain p-8 opacity-60"}`} />
         {!cover && (
