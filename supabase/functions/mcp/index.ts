@@ -8,7 +8,7 @@ import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
 // src/lib/mcp/tools/echo.ts
 import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z } from "npm:zod@^4.4.3";
-const echo_default = defineTool({
+var echo_default = defineTool({
   name: "echo",
   title: "Echo",
   description: "Echo the input text back. Useful for verifying MCP connectivity to CyberHawk UG.",
@@ -22,7 +22,7 @@ const echo_default = defineTool({
 // src/lib/mcp/tools/search-cve.ts
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z2 } from "npm:zod@^4.4.3";
-const search_cve_default = defineTool2({
+var search_cve_default = defineTool2({
   name: "search_cve",
   title: "Search CVE database",
   description: "Search the NIST National Vulnerability Database for CVEs by ID (e.g. CVE-2024-3094) or keyword (e.g. openssh). Returns up to 10 matches with CVSS score and description.",
@@ -62,7 +62,7 @@ const search_cve_default = defineTool2({
 // src/lib/mcp/tools/lookup-ip.ts
 import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z3 } from "npm:zod@^4.4.3";
-const lookup_ip_default = defineTool3({
+var lookup_ip_default = defineTool3({
   name: "lookup_ip",
   title: "IP reputation and geolocation",
   description: "Resolve an IPv4/IPv6 address to geolocation and ASN/org info via ipapi.co. Read-only.",
@@ -107,7 +107,7 @@ async function sha1Hex(text) {
   const hash = await crypto.subtle.digest("SHA-1", buf);
   return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
-const check_password_breach_default = defineTool4({
+var check_password_breach_default = defineTool4({
   name: "check_password_breach",
   title: "Check password against breach database",
   description: "Check whether a password appears in known breaches using the HaveIBeenPwned k-anonymity API. Only the first 5 chars of the SHA-1 hash leave the server.",
@@ -155,7 +155,7 @@ async function getAccessToken(serviceAccountKey, scopes) {
   const stringToSign = `${encodedHeader}.${encodedClaim}`;
   return "MOCK_TOKEN";
 }
-const send_email_default = defineTool5({
+var send_email_default = defineTool5({
   name: "send_email",
   title: "Send email",
   description: "Send an email via Gmail API using a service account. Useful for professional notifications.",
@@ -250,7 +250,7 @@ async function getAccessToken2(serviceAccountKey, scopes) {
   if (data.error) throw new Error(`OAuth failed: ${data.error_description || data.error}`);
   return data.access_token;
 }
-const calendar_default = defineTool6({
+var calendar_default = defineTool6({
   name: "create_calendar_event",
   title: "Create Calendar Event",
   description: "Create a new event in Google Calendar. Note: Requires calendar access.",
@@ -340,7 +340,7 @@ async function getAccessToken3(serviceAccountKey, scopes) {
   if (data.error) throw new Error(`OAuth failed: ${data.error_description || data.error}`);
   return data.access_token;
 }
-const people_default = defineTool7({
+var people_default = defineTool7({
   name: "list_contacts",
   title: "List Contacts (People API)",
   description: "Retrieve a list of contacts from Google People API.",
@@ -419,7 +419,6 @@ function supabasePublishableKey() {
         if (key) return key;
       }
     } catch {
-      // Fallback
     }
   }
   const legacy = configuredEnv(["SUPABASE_ANON_KEY", "VITE_SUPABASE_ANON_KEY"]);
@@ -449,7 +448,7 @@ function toolError(text) {
 }
 
 // src/lib/mcp/tools/db-list-schema.ts
-const db_list_schema_default = defineTool8({
+var db_list_schema_default = defineTool8({
   name: "db_list_schema",
   title: "List database schema",
   description: "List all tables, columns, types and row-level-security policies in the app's public schema. Admin role required.",
@@ -499,8 +498,8 @@ function quote(v) {
 // src/lib/mcp/tools/db-query.ts
 import { defineTool as defineTool9 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z9 } from "npm:zod@^4.4.3";
-const FORBIDDEN = /\b(drop\s+database|alter\s+database|pg_read_file|pg_ls_dir|copy\s+.*\bfrom\s+program)\b/i;
-const db_query_default = defineTool9({
+var FORBIDDEN = /\b(drop\s+database|alter\s+database|pg_read_file|pg_ls_dir|copy\s+.*\bfrom\s+program)\b/i;
+var db_query_default = defineTool9({
   name: "db_query",
   title: "Run a read-only database query",
   description: "Run a single SELECT (or WITH ... SELECT) statement against the app database and return rows as JSON. Admin role required. Use db_execute for changes.",
@@ -534,9 +533,9 @@ const db_query_default = defineTool9({
 // src/lib/mcp/tools/db-execute.ts
 import { defineTool as defineTool10 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z10 } from "npm:zod@^4.4.3";
-const FORBIDDEN2 = /\b(drop\s+database|alter\s+database|drop\s+schema\s+(auth|storage|realtime|vault|supabase_functions)|pg_read_file|pg_ls_dir|copy\s+.*\bfrom\s+program)\b/i;
-const PROTECTED_SCHEMA = /\b(auth|storage|realtime|vault|supabase_functions)\s*\./i;
-const db_execute_default = defineTool10({
+var FORBIDDEN2 = /\b(drop\s+database|alter\s+database|drop\s+schema\s+(auth|storage|realtime|vault|supabase_functions)|pg_read_file|pg_ls_dir|copy\s+.*\bfrom\s+program)\b/i;
+var PROTECTED_SCHEMA = /\b(auth|storage|realtime|vault|supabase_functions)\s*\./i;
+var db_execute_default = defineTool10({
   name: "db_execute",
   title: "Run a database change or migration",
   description: "Run INSERT/UPDATE/DELETE or DDL (CREATE/ALTER/DROP TABLE, policies, functions, triggers) against the app database. Admin role required. Destructive \u2014 statements are executed exactly as given.",
@@ -573,7 +572,7 @@ import { defineTool as defineTool11 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z11 } from "npm:zod@^4.4.3";
 
 // src/lib/mcp/github.ts
-const API = "https://api.github.com";
+var API = "https://api.github.com";
 function githubToken() {
   const t = runtimeEnv("GITHUB_TOKEN")?.trim();
   if (!t) throw new Error("GITHUB_TOKEN is not configured on the server.");
@@ -617,7 +616,7 @@ function fromBase64(input) {
 }
 
 // src/lib/mcp/tools/git-read-file.ts
-const git_read_file_default = defineTool11({
+var git_read_file_default = defineTool11({
   name: "git_read_file",
   title: "Read a file from the repository",
   description: "Read a file's text content from a branch of the connected GitHub repository. Admin role required.",
@@ -651,7 +650,7 @@ const git_read_file_default = defineTool11({
 // src/lib/mcp/tools/git-commit-push.ts
 import { defineTool as defineTool12 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z12 } from "npm:zod@^4.4.3";
-const git_commit_push_default = defineTool12({
+var git_commit_push_default = defineTool12({
   name: "git_commit_push",
   title: "Commit files and push",
   description: "Commit one or more files to the connected GitHub repository and push to a branch (default main). Creates a single commit containing every file given. Admin role required.",
@@ -710,8 +709,8 @@ const git_commit_push_default = defineTool12({
 });
 
 // src/lib/mcp/index.ts
-const projectRef = "vhjxjtqzwihvoabjnycz";
-const mcp_default = defineMcp({
+var projectRef = "vhjxjtqzwihvoabjnycz";
+var mcp_default = defineMcp({
   name: "cyberhawk-ug-mcp",
   title: "CyberHawk UG",
   version: "0.2.0",
