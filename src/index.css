@@ -378,7 +378,7 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .fade-in, .float-anim, .blink-anim, .rotate-slow, .glow-text,
-  .hero-globe-core, .hero-globe-orbit { animation: none !important; }
+  .hero-globe-core, .hero-globe-orbit, .cyber-backdrop-orbit { animation: none !important; }
   .card-cyber, .book-cover-depth { transition-duration: 0.01ms !important; transform: none !important; }
 }
 

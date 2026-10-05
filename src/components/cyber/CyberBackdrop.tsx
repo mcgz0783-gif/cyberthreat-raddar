@@ -18,7 +18,7 @@ export function CyberBackdrop() {
       {/* Concentric rings */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vmin] h-[90vmin] rounded-full border border-primary/20 rotate-slow" />
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vmin] h-[60vmin] rounded-full border border-primary/15"
+        className="cyber-backdrop-orbit absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vmin] h-[60vmin] rounded-full border border-primary/15"
         style={{ animation: "rotate-border 22s linear infinite reverse" }}
       />
 
